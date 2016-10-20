@@ -61,7 +61,7 @@ class FormHelper
             ->setFrom($emailFrom)
             ->setBody(
                 $this->renderView(
-                    'networkingformgeneratorBundle:Email:email.txt.twig',
+                    '@NetworkingFormGeneratorBundle/Email/email.txt.twig',
                     array('data' => $data, 'form' => $form)
                 )
             );

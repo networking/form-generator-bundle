@@ -93,7 +93,7 @@ class FormPageContent implements ContentInterface
     public function getTemplateOptions($params = array())
     {
         return array(
-            'form' => $this->form,
+            'form_page_content' => $this->form,
             'params' => $params,
         );
     }
@@ -104,8 +104,8 @@ class FormPageContent implements ContentInterface
     public function getAdminContent()
     {
         return array(
-            'content' => array('form' => $this->form),
-            'template' => 'networkingformgeneratorBundle:Admin:formPageContent.html.twig'
+            'content' => array('form_page_content' => $this->form),
+            'template' => 'NetworkingFormGeneratorBundle:Admin:formPageContent.html.twig'
         );
     }
 
