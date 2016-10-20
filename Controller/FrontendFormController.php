@@ -47,7 +47,7 @@ class FrontendFormController extends Controller
     public function viewFormAction(Request $request, $id)
     {
         /** @var Form $form */
-        $form = $this->getDoctrine()->getRepository('networkingformgeneratorBundle:Form')->find($id);
+        $form = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:Form')->find($id);
         if (!$form) {
             throw new NotFoundHttpException(sprintf('Form with id %s could not be found', $id));
         }

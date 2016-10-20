@@ -61,11 +61,10 @@ class FormHelper
             ->setFrom($emailFrom)
             ->setBody(
                 $this->renderView(
-                    '@NetworkingFormGeneratorBundle/Email/email.txt.twig',
+                    'NetworkingFormGeneratorBundle:Email:email.txt.twig',
                     array('data' => $data, 'form' => $form)
                 )
             );
-
         foreach (explode(',', $form->getEmail()) as $email) {
             $message->addTo(trim($email));
         }

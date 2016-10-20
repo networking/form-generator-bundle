@@ -36,7 +36,7 @@ class FormAdminController extends FOSRestController
     public function getAction(Request $request, $id)
     {
         if ($id) {
-            $repo = $this->getDoctrine()->getRepository('networkingformgeneratorBundle:Form');
+            $repo = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:Form');
             /** @var Form $form */
             $form = $repo->find($id);
             if(!$form){
