@@ -29,7 +29,7 @@ Update your AppKernel.php with NetworkingFormGeneratorBundle and the FOSRestBund
 	    return array(
 	        // ...
             new Networking\InitCmsBundle\NetworkingInitCmsBundle(),
-            new Networking\FormgeneratorBundle\NetworkingFormgeneratorBundle(),
+            new Networking\FormGeneratorBundle\NetworkingFormGeneratorBundle,
             new FOS\RestBundle\FOSRestBundle()
 	    );
 	}
