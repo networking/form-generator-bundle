@@ -1,0 +1,16 @@
+Networking\FormGeneratorBundle\Entity\Form:
+    properties:
+        id:
+            type: integer
+        form:
+            exclude: true
+        name:
+            type: string
+        infoText:
+            type: string
+        options:
+            type: string
+        formData:
+            exclude: true
+        collection:
+            type: array

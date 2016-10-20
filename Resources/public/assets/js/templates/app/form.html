@@ -1,0 +1,115 @@
+<div id="messageBox"></div>
+<div class="row">
+    <div class="col-md-6">
+        <h2><%= polyglot.t('Drag & Drop components') %></h2>
+        <hr>
+        <div class="tabbable">
+            <ul class="nav nav-tabs" id="formtabs">
+                <!-- Tab nav -->
+            </ul>
+            <form class="form-horizontal" id="components" role="form">
+                <fieldset>
+                    <div class="tab-content">
+                        <!-- Tabs of snippets go here -->
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h2><%= polyglot.t('Drag items here') %></h2>
+        <hr>
+        <form class="form-horizontal"  id="target" role="form">
+            <fieldset >
+                <div id="collection"></div>
+            </fieldset>
+            <div class="clearfix">&nbsp;</div>
+        </form>
+
+    </div>
+</div>
+
+
+<div class="col-md-12">
+    <h2><%= polyglot.t('Form configuration') %></h2>
+    <hr>
+    <form>
+        <fieldset class="form-horizontal">
+            <div class="form-group formName">
+                <label for="formName" class="col-md-3  "><%=polyglot.t('Title') %> *</label>
+
+                <div class="col-md-9">
+
+                    <input id="formName" name="title" class="form-control input-xlarge" value="<%= model.name %>"/>
+
+                    <div class="help-inline"></div>
+                </div>
+            </div>
+            <div class="form-group email">
+                <label for="email" class="col-md-3 "><%=polyglot.t('Email addresses') %></label>
+
+                <div class="col-md-9">
+
+                    <input type="text" id="email" name="email" class="form-control input-xlarge" value="<%= model.email %>"/>
+
+                    <div class="help-block"><%=polyglot.t('Comma separated list of email addresses') %></div>
+                    <div class="help-inline"></div>
+                </div>
+            </div>
+            <div class="form-group action">
+                <label for="action" class="col-md-3  "><%=polyglot.t('Form action') %></label>
+
+                <div class="col-md-9">
+                    <select id="action" name="action" class="form-control input-xlarge">
+                        <option value="email"
+                        <% if(model.action == 'email'){%> selected="selected"<%}%>>Email</option>
+                        <option value="db"
+                        <% if(model.action == 'db'){%> selected="selected"<%}%>>DB</option>
+                        <option value="email_db"
+                        <% if(model.action == 'email_db'){%> selected="selected"<%}%>>Email & DB</option>
+                    </select>
+
+                </div>
+            </div>
+            <div class="form-group redirect">
+                <label for="formName" class="col-md-3  "><%=polyglot.t('Redirect URL (Success Page)') %></label>
+
+                <div class="col-md-9">
+
+                    <input id="redirect" name="redirect" class="form-control input-xlarge" value="<%= model.redirect %>"/>
+
+                    <div class="help-inline"></div>
+                </div>
+            </div>
+            <div class="form-group infoText">
+                <label for="infoText" class="col-md-3 "><%=polyglot.t('Info Text') %></label>
+
+                <div class="col-md-9">
+
+                    <textarea id="infoText" name="infoText" class="form-control input-xlarge ckeditor"><%= model.info_text
+                        %></textarea>
+                </div>
+            </div>
+            <div class="form-group thankYouText">
+                <label for="infoText" class="col-md-3  "><%=polyglot.t('Thank you Text') %></label>
+
+                <div class="col-md-9">
+                    <textarea id="thankYouText" name="thankYouText" class="form-control input-xlarge ckeditor"><%=
+                        model.thank_you_text %></textarea>
+                </div>
+            </div>
+
+        </fieldset>
+        <div class="well form-actions">
+            <button type="button"
+            <% if (!model.name) {%>disabled=disabled<% } %> id="saveForm" data-loading-text="<%= polyglot.t('Loading...') %>" class="btn
+            btn-primary"><%=polyglot.t('Save') %></button>
+
+            <a class="btn btn-default sonata-action-element" href="<%= backToListUri %>">
+                <i class="icon-list"></i>
+                <%= polyglot.t('Back To List') %></a>
+        </div>
+    </form>
+</div>
+
+

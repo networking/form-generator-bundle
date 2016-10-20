@@ -1,0 +1,14 @@
+Networking\FormGeneratorBundle\Entity\FormField:
+    properties:
+        id:
+            type: integer
+        form:
+            exclude: true
+        name:
+            type: string
+        fieldLabel:
+            type: string
+        options:
+            type: array
+        mappable:
+            exclude: true

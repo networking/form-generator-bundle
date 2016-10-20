@@ -1,0 +1,8 @@
+breadcrumb.link_form_list: Form Generator
+form.admin.menu_label: Form Generator
+form.label.form: Formular
+list:
+    label_name: Form Name
+filter:
+    label_name: Form Name
+form_created: Form successfully created

@@ -1,0 +1,43 @@
+{% extends base_template %}
+{% block actions %}
+
+{% endblock %}
+{% block show %}
+    <div class="sonata-ba-view">
+        {% for formData in object.formData %}
+            <p>Form Submitted at {{ formData.createdAt|date('d.M.Y H:i') }}</p>
+            <table class="table table-hover table-compact">
+                <thead>
+                <tr class="sonata-ba-list-field-header ">
+                    <th>Field</th>
+                    <th>Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for fieldData in formData.formFields %}
+                    <tr class="sonata-ba-view-container">
+                        <td>{{ fieldData.label }}</td>
+                        <td>
+                            {% if fieldData.value is iterable %}
+                                {{ fieldData.value|join(', ') }}
+                            {% else %}
+                                {{ fieldData.value}}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <hr/>
+        {% endfor %}
+
+        {% block formactions %}
+            <div class="well form-actions">
+                {% include 'networkingformgeneratorBundle:Button:edit_button.html.twig' %}
+                {% include 'networkingformgeneratorBundle:Button:history_button.html.twig' %}
+                {% include 'networkingformgeneratorBundle:Button:create_button.html.twig' %}
+                {% include 'networkingformgeneratorBundle:Button:list_button.html.twig' %}
+            </div>
+        {% endblock formactions %}
+    </div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends base_template %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/networkingformgenerator/assets/css/lib/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('bundles/networkingformgenerator/assets/css/custom.css') }}" rel="stylesheet">
+{% endblock %}
+{% block body %}
+    {% block init_cms_top_nav %}
+        {% include 'NetworkingInitCmsBundle:Navbar:admin_navbar.html.twig' %}
+    {% endblock init_cms_top_nav %}
+
+    <div class="{% block container_class %}container{% if app.user and app.user.getAdminSetting('admin_portal_width') != 'small' %}-fluid{% endif %}{% endblock container_class %} row-offcanvas">
+        <div class="notice-block affix">
+            {% block notice %}
+                {% for notice_level in ['success','error','info', 'warning'] %}
+                    {% set session_var = 'sonata_flash_' ~ notice_level %}
+                    {% for flash in app.session.flashbag.get(session_var) %}
+
+                        <div class="col-sm-12 col-xs-12 col-md-offset-2 col-md-10 alert {{ (notice_level=='error')?'alert-danger':'alert-' ~ notice_level }}"
+                             role="alert">
+                            <a class="close" data-dismiss="alert" href="#">×</a>
+                            {{ flash|trans([], 'NetworkingInitCmsBundle') }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            {% endblock notice %}
+        </div>
+        <div class="row-fluid clearfix">
+            {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
+            <h1>{% if admin.id(object) is not null%}
+                    {% set title =  "title_edit"|trans({'%admin_label%': admin_label}, admin.translationDomain)  %}
+                    {% if  title ==  "title_edit" %}
+                        {{ "title_edit"|trans({'%name%': admin.toString(object),'%admin_label%': admin_label }, 'SonataAdminBundle') }}
+                    {% else %}
+                        {{ title }}
+                    {% endif %}
+                {% else %}
+                    {% set title =  "title_create"|trans({'%admin_label%': admin_label}, admin.translationDomain)  %}
+                    {% if title == 'title_create' %}
+                        {{ "title_create"|trans({}, 'SonataAdminBundle') }}
+                    {% else %}
+                        {{ title }}
+                    {% endif %}
+                {% endif %}</h1>
+            <!-- Building Form. -->
+
+                    <div id="build">
+                    </div>
+            <!-- / Building Form. -->
+        </div>
+        {% block formactions %}
+
+        {% endblock formactions %}
+    </div>
+    {% block before_body_end %}
+        <script type="text/javascript">
+            window.SONATA_TRANSLATIONS = {
+                CONFIRM_EXIT: '{{ 'confirm_exit'|trans({}, 'SonataAdminBundle')|escape('js') }}'
+            };
+        </script>
+
+        <script src="{{ asset('bundles/networkingformgenerator/assets/js/lib/polyglot.js') }}"></script>
+        <script src="{{ asset('/bundles/networkingformgenerator/assets/js/data/' ~app.request.locale|slice(0, 2)~'.js') }}"></script>
+        <script data-main="{{ asset('bundles/networkingformgenerator/assets/js/main.js') }}"
+                src="{{ asset('bundles/networkingformgenerator/assets/js/lib/require.js') }}"></script>
+        <script>
+            var polyglot = new Polyglot({phrases: polyglot_phrases});
+            define('config', function () {
+                return {
+                    backToListUri: '{{ admin.generateUrl('list') }}',
+                {% if admin.subject.id %}id: {{ admin.subject.id }},{% endif %}
+                    url: '{{ url('get_forms') }}',
+                    locale: '{{ app.request.locale|slice(0, 2) }}'
+
+                };
+            });
+        </script>
+    {% endblock %}
+{% endblock body %}

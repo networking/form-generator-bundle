@@ -1,0 +1,10 @@
+<div class="form-group">
+    <label class='col-md-12 control-label'> <%= polyglot.t(label) %> </label>
+    <div class="col-md-12">
+        <select class="form-control field" data-type="<%= type %>" id='<%= name %>'>
+            <% _.each(value, function(v,k){ %>
+            <option value="<%= v["value"] %>" <% if (v["selected"]){ %> selected <% } %> ><%= polyglot.t(v["label"]) %></option>
+            <% }); %>
+        </select>
+    </div>
+</div>

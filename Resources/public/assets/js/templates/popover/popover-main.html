@@ -1,0 +1,11 @@
+
+<form role="form">
+    <% var compiled =  _.reduce(items, function(str, v, k){ %>
+    <% v["name"] = k; %>
+    <% return str + popoverTemplates[v["type"]](v); %>
+    <% }, "") %>
+    <%= compiled %>
+    <hr/>
+    <button id="save" class='btn btn-info col-md-4'><%= polyglot.t('Save') %></button>&nbsp;<button id="cancel" class='btn btn-danger'>
+    <%= polyglot.t('Cancel') %></button>
+</form>
