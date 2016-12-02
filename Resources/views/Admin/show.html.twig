@@ -4,6 +4,16 @@
 {% endblock %}
 {% block show %}
     <div class="sonata-ba-view">
+
+        {% block formactionstop %}
+            <div class="well form-actions">
+                {% include 'NetworkingFormGeneratorBundle:Button:export_button.html.twig' %}
+                {% include 'NetworkingFormGeneratorBundle:Button:edit_button.html.twig' %}
+                {% include 'NetworkingFormGeneratorBundle:Button:list_button.html.twig' %}
+            </div>
+        {% endblock formactionstop %}
+
+
         {% for formData in object.formData %}
             <p>Form Submitted at {{ formData.createdAt|date('d.M.Y H:i') }}</p>
             <table class="table table-hover table-compact">
@@ -33,6 +43,7 @@
 
         {% block formactions %}
             <div class="well form-actions">
+                {% include 'NetworkingFormGeneratorBundle:Button:export_button.html.twig' %}
                 {% include 'NetworkingFormGeneratorBundle:Button:edit_button.html.twig' %}
                 {% include 'NetworkingFormGeneratorBundle:Button:list_button.html.twig' %}
             </div>

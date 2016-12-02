@@ -6,3 +6,5 @@ list:
 filter:
     label_name: Form Name
 form_created: Form successfully created
+link_action_export: Export
+date: Date

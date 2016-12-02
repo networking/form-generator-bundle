@@ -12,6 +12,7 @@ use FOS\RestBundle\Controller\Annotations\RouteResource;
 use Networking\FormGeneratorBundle\Entity\Form;
 use Networking\FormGeneratorBundle\Admin\FormAdmin;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * @RouteResource("Form")
@@ -189,5 +190,66 @@ class FormAdminController extends FOSRestController
         }
 
         $admin->delete($form);
+    }
+
+
+    public function exportAction(Request $request, $id)
+    {
+
+        $repo = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:Form');
+        /** @var Form $form */
+        $form = $repo->find($id);
+        $formFields = $form->getFormFields();
+        $formData = $form->getFormData();
+
+
+        $phpExcelObject = $this->get('phpexcel')->createPHPExcelObject();
+
+        $phpExcelObject->getProperties()->setCreator("initCms")
+            ->setTitle("Export")
+            ->setSubject("Export");
+
+
+        $col = 'A';
+        $row = '1';
+        //Titel-Zeile ausgeben
+        foreach($formFields as $key => $field){
+            $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row,$field->getName());
+            $col++;
+        }
+        $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row,'Date');
+
+        //Daten ausgeben
+        foreach ($formData as $rowData) {
+            $col = 'A';
+            $row++;
+            $formFields =  $rowData->getFormFields();
+            foreach($formFields as $field)
+            {   $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row, $field->getValue());
+                $col++;
+            }
+            $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row, $rowData->getCreatedAt());
+        }
+
+        $phpExcelObject->getActiveSheet()->setTitle('export');
+        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+        $phpExcelObject->setActiveSheetIndex(0);
+
+        // create the writer
+        $writer = $this->get('phpexcel')->createWriter($phpExcelObject, 'Excel5');
+        // create the response
+        $response = $this->get('phpexcel')->createStreamedResponse($writer);
+        // adding headers
+        $dispositionHeader = $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            'form-export-'.date('Y-m-d').'.xls'
+        );
+        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $response->headers->set('Pragma', 'public');
+        $response->headers->set('Cache-Control', 'maxage=1');
+        $response->headers->set('Content-Disposition', $dispositionHeader);
+
+        return $response;
+
     }
 }
