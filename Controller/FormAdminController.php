@@ -40,7 +40,7 @@ class FormAdminController extends FOSRestController
             $repo = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:Form');
             /** @var Form $form */
             $form = $repo->find($id);
-            if(!$form){
+            if (!$form) {
                 throw new NotFoundHttpException('Form not found');
             }
 
@@ -94,7 +94,7 @@ class FormAdminController extends FOSRestController
                 $admin = $this->get('networking_form_generator.admin.form');
 
                 $form = $admin->getObject($id);
-                if(!$form){
+                if (!$form) {
                     throw new NotFoundHttpException('Form not found');
                 }
 
@@ -104,10 +104,10 @@ class FormAdminController extends FOSRestController
                 $validator = $this->get('validator');
                 $errors = $validator->validate($form);
 
-                if(count($errors) > 0){
+                if (count($errors) > 0) {
                     $view = $this->view($errors, 500);
-                }else{
-                   $admin->update($form);
+                } else {
+                    $admin->update($form);
                     $view->setData(array('id' => $form->getId(), 'message' => 'Your form has been successfully updated'));
                 }
 
@@ -185,7 +185,7 @@ class FormAdminController extends FOSRestController
         $admin = $this->get('networking_form_generator.admin.form');
 
         $form = $admin->getObject($id);
-        if(!$form){
+        if (!$form) {
             throw new NotFoundHttpException('Form not found');
         }
 
@@ -193,7 +193,46 @@ class FormAdminController extends FOSRestController
     }
 
 
-    public function exportAction(Request $request, $id)
+    /*
+     * deletes a single entry
+     * */
+
+    public function deleteFormEntryAction(Request $request, $id, $rowid)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('NetworkingFormGeneratorBundle:FormData');
+
+        $formData = $repo->find($rowid);
+        $em->remove($formData);
+        $em->flush();
+        return $this->redirectToRoute('admin_networking_forms_show', array('id' => $id));
+
+    }
+
+
+    public function deleteAllFormEntryAction(Request $request, $id)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('NetworkingFormGeneratorBundle:FormData');
+
+        $formData = $repo->findBy(array('form' => $id));
+        foreach($formData as $record)
+        {
+            $em->remove($record);
+            $em->flush();
+        }
+
+
+
+        return $this->redirectToRoute('admin_networking_forms_show', array('id' => $id));
+    }
+
+    /*
+     * exports Excel File with the data
+     * */
+    public function excelExportAction(Request $request, $id)
     {
 
         $repo = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:Form');

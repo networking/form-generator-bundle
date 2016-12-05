@@ -8,3 +8,8 @@ filter:
 form_created: Form successfully created
 link_action_export: Export
 date: Date
+link_action_delete: delete
+confirm_deletion: Want to delete?
+
+link_action_delete_all: delete all records
+confirm_deletion_all: Want to delete all the records?

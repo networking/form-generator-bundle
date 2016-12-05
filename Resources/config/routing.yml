@@ -7,7 +7,3 @@ networking_form_view:
     path: /view_form/{id}
     defaults: { _controller: "NetworkingFormGeneratorBundle:FrontendForm:viewForm"}
 
-
-networking_form_export:
-  path: /form-excel-export/{id}
-  defaults: { _controller: "NetworkingFormGeneratorBundle:FormAdmin:export"}

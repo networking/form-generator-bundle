@@ -84,7 +84,7 @@ class FrontendFormController extends Controller
                 $this->setFormComplete(false);
             }
         }
-        return $this->redirect($request->headers->get('referer'));
+        return $this->redirect($request->headers->get('referer')."#formAnswer");
 
     }
 
@@ -97,6 +97,7 @@ class FrontendFormController extends Controller
     public function renderFormAction(Form $form, $actionUrl = null, $template =
     'NetworkingFormGeneratorBundle:Form:form.html.twig')
     {
+
         if(is_null($actionUrl)){
             $actionUrl = $this->generateUrl('networking_form_view', array('id' => $form->getId()));
         }

@@ -9,7 +9,10 @@
             <div class="well form-actions">
                 {% include 'NetworkingFormGeneratorBundle:Button:export_button.html.twig' %}
                 {% include 'NetworkingFormGeneratorBundle:Button:edit_button.html.twig' %}
+                {% include 'NetworkingFormGeneratorBundle:Button:delete_button.html.twig' %}
                 {% include 'NetworkingFormGeneratorBundle:Button:list_button.html.twig' %}
+
+
             </div>
         {% endblock formactionstop %}
 
@@ -21,13 +24,18 @@
                 <tr class="sonata-ba-list-field-header ">
                     <th>Field</th>
                     <th>Value</th>
+                    <th>
+                        <a  href="{{ admin.generateUrl('deleteFormEntry', {'id': object.id, 'rowid': formData.id}) }}" onClick="temp=window.confirm('{{ 'confirm_deletion'|trans({}, 'formGenerator') }}');return temp;" >
+                            <i class="glyphicon glyphicon-remove"></i>
+                            {{ 'link_action_delete'|trans({}, 'formGenerator') }}</a>
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for fieldData in formData.formFields %}
                     <tr class="sonata-ba-view-container">
                         <td>{{ fieldData.label }}</td>
-                        <td>
+                        <td colspan="2">
                             {% if fieldData.value is iterable %}
                                 {{ fieldData.value|join(', ') }}
                             {% else %}
@@ -38,6 +46,9 @@
                 {% endfor %}
                 </tbody>
             </table>
+
+
+
             <hr/>
         {% endfor %}
 

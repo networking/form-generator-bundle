@@ -19,7 +19,7 @@ Install bundle via composer.
         }
     ],
 
-Update your AppKernel.php with NetworkingFormGeneratorBundle and the FOSRestBundle
+Update your AppKernel.php with NetworkingFormGeneratorBundle, the FOSRestBundle and the LiuggioExcelBundle
 
 ```
 <?php
@@ -30,7 +30,8 @@ Update your AppKernel.php with NetworkingFormGeneratorBundle and the FOSRestBund
 	        // ...
             new Networking\InitCmsBundle\NetworkingInitCmsBundle(),
             new Networking\FormGeneratorBundle\NetworkingFormGeneratorBundle,
-            new FOS\RestBundle\FOSRestBundle()
+            new FOS\RestBundle\FOSRestBundle(),
+            new Liuggio\ExcelBundle\LiuggioExcelBundle(),
 	    );
 	}
 ```

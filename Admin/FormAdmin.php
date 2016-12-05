@@ -14,6 +14,8 @@ namespace Networking\FormGeneratorBundle\Admin;
 use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Route\RouteCollection;
+
 
 class FormAdmin extends BaseAdmin
 {
@@ -34,6 +36,16 @@ class FormAdmin extends BaseAdmin
     public function getIcon()
     {
         return 'glyphicon-file';
+    }
+
+
+    protected function configureRoutes(RouteCollection $collection)
+    {
+        $collection->add('excelExport', 'form-excel-export/{id}' ,  array('_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:excelExport')    );
+        $collection->add('deleteFormEntry', 'delete-form-entry/{id}/entry/{rowid}' ,  array('_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:deleteFormEntry')    );
+        $collection->add('deleteAllFormEntry', 'delete-all-form-entry/{id}' ,  array('_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:deleteAllFormEntry')    );
+
+
     }
 
 
