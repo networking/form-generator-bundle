@@ -145,5 +145,14 @@ class FormData
         $formField->setFormData($this);
         $this->formFields[] = $formField;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getId();
+    }
+
 }
 
