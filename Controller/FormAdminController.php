@@ -253,7 +253,7 @@ class FormAdminController extends FOSRestController
         $row = '1';
         //Titel-Zeile ausgeben
         foreach($formFields as $key => $field){
-            $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row,$field->getName());
+            $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row,$field->getFieldLabel());
             $col++;
         }
         $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row,'Date');
