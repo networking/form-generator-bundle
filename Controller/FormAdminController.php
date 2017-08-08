@@ -264,7 +264,10 @@ class FormAdminController extends FOSRestController
             $row++;
             $formFields =  $rowData->getFormFields();
             foreach($formFields as $field)
-            {   $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row, $field->getValue());
+            {
+                $value = $field->getValue();
+                if(is_array($value)){ $value = implode(" ",$value); }
+                $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row, $value);
                 $col++;
             }
             $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row, $rowData->getCreatedAt());
