@@ -3,13 +3,22 @@ form.admin.menu_label: Form Generator
 form.label.form: Formular
 list:
     label_name: Form Name
+    label_pages: Pages
 filter:
     label_name: Form Name
 form_created: Form successfully created
 link_action_export: Export
 date: Date
 link_action_delete: delete
-confirm_deletion: Want to delete?
+confirm_deletion: Do you wish to delete this entry?
 
 link_action_delete_all: delete all records
-confirm_deletion_all: Want to delete all the records?
+confirm_deletion_all: Would you like to delete all the records?
+
+title.duplicate_form: Copy form
+info.duplicate_form: Would you like to copy this form?
+button:
+    cancel: Cancel
+    duplicate_form: Copy form
+
+message.copy_saved: A copy of the form was successfully created.

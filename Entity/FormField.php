@@ -118,6 +118,11 @@ class FormField
         'Multiple Radios Inline' => array('options' => 'radios', 'values' => 'radiosValues')
     );
 
+    public function __clone()
+    {
+        $this->id = null;
+    }
+
 
     /**
      * Get id.

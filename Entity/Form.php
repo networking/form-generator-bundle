@@ -90,6 +90,15 @@ class Form
      */
     private $collection = array();
 
+    public function __clone()
+    {
+        $this->id = null;
+        $this->formData = new ArrayCollection();
+        $this->formFields = new ArrayCollection();
+        $date = new \DateTime();
+        $this->name = $this->name .' copy '.$date->format('d.m.Y H:i:s');
+    }
+
 
     /**
      * Get id.

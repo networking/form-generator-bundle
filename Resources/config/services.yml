@@ -18,3 +18,10 @@ services:
             - [setTemplates, [{'edit': 'NetworkingFormGeneratorBundle:Admin:edit.html.twig', 'show': 'NetworkingFormGeneratorBundle:Admin:show.html.twig'}]]
         tags:
             - { name: sonata.admin, manager_type: orm, label: 'form.admin.menu_label', label_translator_strategy: sonata.admin.label.strategy.underscore, persist_filters: true }
+
+    networking_form_generator.helper.twig:
+        class: Networking\FormGeneratorBundle\Twig\Extension\FormHelperExtension
+        calls:
+            - [setcontainer, ['@service_container']]
+        tags:
+            - { name: twig.extension }

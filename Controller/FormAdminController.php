@@ -4,6 +4,8 @@ namespace Networking\FormGeneratorBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
 use Networking\FormGeneratorBundle\Entity\FormField;
+use Sonata\AdminBundle\Admin\AdminInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations;
@@ -11,6 +13,7 @@ use FOS\RestBundle\Controller\Annotations\Route;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use Networking\FormGeneratorBundle\Entity\Form;
 use Networking\FormGeneratorBundle\Admin\FormAdmin;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
@@ -19,6 +22,40 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
  */
 class FormAdminController extends FOSRestController
 {
+    /**
+     * @var AdminInterface
+     */
+    protected $admin;
+
+    /**
+     * Sets the Container associated with this Controller.
+     *
+     * @param ContainerInterface $container A ContainerInterface instance
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+
+        $this->configure();
+    }
+
+    /**
+     *
+     */
+    public function configure()
+    {
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+
+
+
+        $adminCode = $request->get('_sonata_admin');
+
+        if (!$adminCode) {
+            $adminCode = 'networking_form_generator.admin.form';
+        }
+
+        $this->admin = $this->container->get('sonata.admin.pool')->getAdminByAdminCode($adminCode);
+    }
     /**
      * @Route(requirements={"_format"="json|xml"})
      * @param Request $request
@@ -293,5 +330,112 @@ class FormAdminController extends FOSRestController
 
         return $response;
 
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    public function copyAction(Request $request, $id)
+    {
+        $repo = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:Form');
+        $em = $this->getDoctrine()->getManager();
+        /** @var Form $form */
+        $form = $repo->find($id);
+
+        if (!$form) {
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+        }
+
+        if ($request->getMethod() == 'POST') {
+
+            try {
+                /** @var Form $formCopy */
+                $formCopy = clone $form;
+
+                foreach ($form->getFormFields()->toArray() as $field){
+                    $fieldCopy = clone $field;
+                    $formCopy->addFormField($fieldCopy);
+                }
+
+                $status = 'success';
+                $message = $this->admin->trans(
+                    'message.copy_saved',
+                    array('%page%' => $formCopy)
+                );
+                $em->persist($formCopy);
+                $em->flush();
+
+            } catch (\Exception $e) {
+                $status = 'error';
+                $message = $e->getMessage();
+            }
+
+            $this->admin->createObjectSecurity($formCopy);
+
+            $this->get('session')->getFlashBag()->add(
+                'sonata_flash_' . $status,
+                $message
+            );
+
+            $request->getSession()->set('Page.last_edited', $formCopy->getId());
+
+            return $this->redirect($this->admin->generateUrl('list'));
+        }
+
+        return $this->render(
+            'NetworkingFormGeneratorBundle:Admin:copy.html.twig',
+            array(
+                'action' => 'copy',
+                'form' => $form,
+                'id' => $id,
+                'admin' => $this->admin
+            )
+        );
+    }
+
+    /**
+     * Returns true if the request is a XMLHttpRequest.
+     *
+     * @return bool True if the request is an XMLHttpRequest, false otherwise
+     */
+    protected function isXmlHttpRequest()
+    {
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        return $request->isXmlHttpRequest() || $request->get('_xml_http_request');
+    }
+
+    /**
+     * Returns the base template name.
+     *
+     * @return string The template name
+     */
+    protected function getBaseTemplate()
+    {
+        if ($this->isXmlHttpRequest()) {
+            return $this->admin->getTemplate('ajax');
+        }
+
+        return $this->admin->getTemplate('layout');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function render($view, array $parameters = array(), Response $response = null)
+    {
+        $parameters['admin'] = isset($parameters['admin']) ?
+            $parameters['admin'] :
+            $this->admin;
+
+        $parameters['base_template'] = isset($parameters['base_template']) ?
+            $parameters['base_template'] :
+            $this->getBaseTemplate();
+
+        $parameters['admin_pool'] = $this->get('sonata.admin.pool');
+
+        return parent::render($view, $parameters, $response);
     }
 }

@@ -3,6 +3,7 @@ form.admin.menu_label: Formular Generator
 form.label.form: Formular
 list:
     label_name: Formurlarname
+    label_pages: Seiten
 filter:
     label_name: Formularname
 form_created: Formular wurde erfolgreich erstellt
@@ -13,3 +14,11 @@ confirm_deletion: Soll dieser Datensatz gelöscht werden?
 
 link_action_delete_all: Alle Beiträge löschen
 confirm_deletion_all: Sollen alle Beiträge gelöscht werden?
+
+title.duplicate_form: Formular kopieren
+info.duplicate_form: Möchten Sie dieses Formular kopieren?
+button:
+    cancel: Abbrechen
+    duplicate_form: Formular kopieren
+
+message.copy_saved: Eine Kopie des Formulars wurde erfolgreich erstellt
