@@ -11,6 +11,7 @@
 namespace Networking\FormGeneratorBundle\Twig\Extension;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Networking\InitCmsBundle\Entity\LayoutBlock;
 use Networking\InitCmsBundle\Model\LayoutBlockInterface;
@@ -50,6 +51,11 @@ class FormHelperExtension extends \Twig_Extension implements ContainerAwareInter
      * @var bool
      */
     protected $ckeditorRendered = false;
+
+    /**
+     * @var ArrayCollection
+     */
+    protected $formBlocks;
 
 
     /**
@@ -93,16 +99,28 @@ class FormHelperExtension extends \Twig_Extension implements ContainerAwareInter
      */
     public function getPageLinks($formId)
     {
-        $blocks = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:LayoutBlock')->findBy(
-            array('classType' => 'Networking\\FormGeneratorBundle\\Entity\\FormPageContent', 'objectId' => $formId)
+
+
+        $content = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:FormPageContent')->findBy(
+            array('form' => $formId)
         );
+
+        $blocks = $this->getFormPageContentLayoutBlocks();
+
+        $filteredBlocks = $blocks->filter(function(LayoutBlock $block)use ($content){
+                foreach ($content as $item){
+                    if($item->getId() == $block->getObjectId()){
+                        return true;
+                    }
+                }
+        });
 
         $links = array();
         $pageClass = $this->container->getParameter('networking_init_cms.admin.page.class');
         $pageAdmin = $this->container->get('sonata.admin.pool')->getAdminByClass($pageClass);
 
         /** @var LayoutBlock $block */
-        foreach ($blocks as $block){
+        foreach ($filteredBlocks as $block){
 
             $url = $pageAdmin->generateUrl('show', array('id' => $block->getPageId()));
             $links[] = array('url' => $url, 'title' => $block->getPage()->getAdminTitle());
@@ -110,6 +128,19 @@ class FormHelperExtension extends \Twig_Extension implements ContainerAwareInter
 
         return $links;
 
+    }
+
+    protected function getFormPageContentLayoutBlocks()
+    {
+        if(!$this->formBlocks){
+            $blocks = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:LayoutBlock')->findBy(
+                array('classType' => 'Networking\\FormGeneratorBundle\\Entity\\FormPageContent')
+            );
+
+            $this->formBlocks = new ArrayCollection($blocks);
+        }
+
+        return $this->formBlocks;
     }
 
 

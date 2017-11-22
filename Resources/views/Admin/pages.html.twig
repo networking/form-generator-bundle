@@ -12,6 +12,6 @@ file that was distributed with this source code.
 
 {% block field %}
 {% for link in get_form_page_links(object.id) %}
-        <a href="{{ link.url }}" target="_blank" class="link-underlined"><i class="fa fa-search"></i> {{ link.title }}s</a> <br>
+        <a href="{{ link.url }}" target="_blank" class="link-underlined"><i class="fa fa-search"></i> {{ link.title }}</a> <br>
 {% endfor %}
 {% endblock %}
