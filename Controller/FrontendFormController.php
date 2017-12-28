@@ -84,15 +84,9 @@ class FrontendFormController extends Controller
                 $this->setSubmittedFormData($request->request->get($formType->getName()));
                 $this->setFormComplete(false);
             }
-            $cookie = new Cookie('form_sent', time());
+            $request->getSession()->set('form_sent', time());
         }
-        $response = $this->redirect($request->headers->get('referer')."#formAnswer");
-        $response->headers->clearCookie('form_sent');
-        if($cookie){
-            $response->headers->setCookie($cookie);
-        }
-
-        return $response;
+        return  $this->redirect($request->headers->get('referer')."#formAnswer");
     }
 
     /**
