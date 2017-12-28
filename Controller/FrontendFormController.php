@@ -16,6 +16,7 @@ use Networking\FormGeneratorBundle\Entity\FormFieldData;
 use Networking\FormGeneratorBundle\Form\FormType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Networking\FormGeneratorBundle\Entity\Form;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -55,7 +56,7 @@ class FrontendFormController extends Controller
         $formType = $this->createForm(new FormType(array()), array(), array('form' => $form));
 
         $this->clearSessionVariables();
-
+        $cookie = null;
 
         if ($request->getMethod() == 'POST') {
             $formType->handleRequest($request);
@@ -83,9 +84,15 @@ class FrontendFormController extends Controller
                 $this->setSubmittedFormData($request->request->get($formType->getName()));
                 $this->setFormComplete(false);
             }
+            $cookie = new Cookie('form_sent', time());
         }
-        return $this->redirect($request->headers->get('referer')."#formAnswer");
+        $response = $this->redirect($request->headers->get('referer')."#formAnswer");
+        $response->headers->clearCookie('form_sent');
+        if($cookie){
+            $response->headers->setCookie($cookie);
+        }
 
+        return $response;
     }
 
     /**
