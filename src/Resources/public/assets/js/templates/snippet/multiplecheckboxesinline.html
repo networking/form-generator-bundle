@@ -1,0 +1,10 @@
+<!-- Multiple Checkboxes (inline) -->
+<div class="form-group">
+    <label class="col-md-4 control-label"><%= polyglot.t(label, { _: label}) %></label>
+    <div class="col-md-8"><% _.each(checkboxes, function(checkbox, i){ %>
+        <label class="checkbox-inline" for="inline-<%= name+'-'+i %>">
+            <input type="checkbox" name="<%= name %>" id="inline-<%= name+'-'+i %>" value="<%= checkboxesValues[i] %>">
+            <%= checkbox %>
+        </label><% }); %>
+    </div>
+</div>
