@@ -16,7 +16,7 @@ use Networking\FormGeneratorBundle\Entity\FormFieldData;
 use Networking\FormGeneratorBundle\Form\FormType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Networking\FormGeneratorBundle\Entity\Form;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -31,7 +31,7 @@ class FrontendFormController extends Controller
     /**
      * @var SessionInterface
      */
-     protected $session;
+    protected $session;
 
     /**
      * Sets the Container associated with this Controller.
@@ -45,21 +45,27 @@ class FrontendFormController extends Controller
         $this->session = $this->container->get('session');
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function viewFormAction(Request $request, $id)
     {
         /** @var Form $form */
-        $form = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:Form')->find($id);
+        $form = $this->getDoctrine()->getRepository(Form::class)->find($id);
         if (!$form) {
             throw new NotFoundHttpException(sprintf('Form with id %s could not be found', $id));
         }
 
-        $formType = $this->createForm(new FormType(array()), array(), array('form' => $form));
+        $formType = $this->createForm(FormType::class, [], ['form' => $form]);
 
         $this->clearSessionVariables();
-        $cookie = null;
+        $formType->handleRequest($request);
 
-        if ($request->getMethod() == 'POST') {
-            $formType->handleRequest($request);
+        $redirect = $request->headers->get('referer');
+
+        if ($formType->isSubmitted()) {
 
             if ($formType->isValid()) {
                 /** @var FormHelper $formHelper */
@@ -77,16 +83,18 @@ class FrontendFormController extends Controller
                 }
 
                 if ($form->getRedirect()) {
-                    $this->session->getFlashBag()->add('form_notice',$form->getThankYouText());
-                    return $this->redirect($form->getRedirect());
+                    $this->session->getFlashBag()->add('form_notice', $form->getThankYouText());
+                    $redirect = $form->getRedirect();
                 }
             } else {
                 $this->setSubmittedFormData($request->request->get($formType->getName()));
                 $this->setFormComplete(false);
             }
-            $request->getSession()->set('form_sent', time());
         }
-        return  $this->redirect($request->headers->get('referer')."#formAnswer");
+
+        $request->getSession()->set('no_cache', true);
+        return new RedirectResponse($redirect);
+
     }
 
     /**
@@ -98,25 +106,25 @@ class FrontendFormController extends Controller
     public function renderFormAction(Form $form, $actionUrl = null, $template =
     'NetworkingFormGeneratorBundle:Form:form.html.twig')
     {
-
-        if(is_null($actionUrl)){
-            $actionUrl = $this->generateUrl('networking_form_view', array('id' => $form->getId()));
+        if (is_null($actionUrl)) {
+            $actionUrl = $this->generateUrl('networking_form_view', ['id' => $form->getId()]);
         }
-        $formType = $this->createForm(new FormType(array()), array(), array('action' => $actionUrl, 'form'  => $form));
+        $formType = $this->createForm(FormType::class, [], ['action' => $actionUrl, 'form' => $form]);
+
         $formData = $this->getSubmittedFormData();
         $formComplete = $this->getFormComplete();
 
         $this->clearSessionVariables();
 
-        if(!empty($formData)){
+        if (!empty($formData)) {
             $formType->submit($formData);
         }
         return $this->render($template,
-            array(
+            [
                 'formComplete' => $formComplete,
                 'formView' => $formType->createView(),
                 'form' => $form
-            ));
+            ]);
     }
 
     /**
@@ -157,6 +165,6 @@ class FrontendFormController extends Controller
      */
     protected function getSubmittedFormData()
     {
-        return $this->session->get(self::FORM_DATA, array());
+        return $this->session->get(self::FORM_DATA, []);
     }
 } 

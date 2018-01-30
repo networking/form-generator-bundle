@@ -1,16 +1,23 @@
 services:
-    networking_form_generator.type.legend_type:
-        class: Networking\FormGeneratorBundle\Form\Type\LegendType
+
+    Networking\FormGeneratorBundle\Form\Type\LegendType:
+        autowire: true
+        public: true
         tags:
             - { name: 'form.type', alias: 'form_legend'}
 
 
-    networking_form_generator.helper.form:
-        class: Networking\FormGeneratorBundle\Helper\FormHelper
-        arguments: [@mailer, @doctrine, @templating.engine.twig]
+    Networking\FormGeneratorBundle\Helper\FormHelper:
+        autowire: true
 
-    networking_form_generator.admin.form:
-        class: Networking\FormGeneratorBundle\Admin\FormAdmin
+    Networking\FormGeneratorBundle\Controller\FormAdminController:
+          autowire: true
+          public: true
+          tags:
+              - { name: 'controller.service_arguments'}
+
+
+    Networking\FormGeneratorBundle\Admin\FormAdmin:
         arguments: [null, Networking\FormGeneratorBundle\Entity\Form, NetworkingInitCmsBundle:CRUD]
         calls:
             - [setTranslationDomain, ['formGenerator']]

@@ -431,7 +431,7 @@
             "id": {
                 "label": "ID / Name",
                 "type": "input",
-                "value": "appendedtext"
+                "value": "appendedicon"
             },
             "label": {
                 "label": "Label Text",

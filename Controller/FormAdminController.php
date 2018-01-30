@@ -3,6 +3,7 @@
 namespace Networking\FormGeneratorBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
+use Networking\FormGeneratorBundle\Admin\FormFieldAdmin;
 use Networking\FormGeneratorBundle\Entity\FormField;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -27,49 +28,25 @@ class FormAdminController extends FOSRestController
      */
     protected $admin;
 
-    /**
-     * Sets the Container associated with this Controller.
-     *
-     * @param ContainerInterface $container A ContainerInterface instance
-     */
-    public function setContainer(ContainerInterface $container = null)
+    public function __construct(FormAdmin $formAdmin)
     {
-        $this->container = $container;
-
-        $this->configure();
+        $this->admin = $formAdmin;
     }
 
-    /**
-     *
-     */
-    public function configure()
-    {
-        $request = $this->container->get('request_stack')->getCurrentRequest();
-
-
-
-        $adminCode = $request->get('_sonata_admin');
-
-        if (!$adminCode) {
-            $adminCode = 'networking_form_generator.admin.form';
-        }
-
-        $this->admin = $this->container->get('sonata.admin.pool')->getAdminByAdminCode($adminCode);
-    }
     /**
      * @Route(requirements={"_format"="json|xml"})
-     * @param Request $request
-     * @return JsonResponse
      */
-    public function cgetAction(Request $request)
+    public function cgetAction()
     {
         throw new NotFoundHttpException('Action should not be used');
     }
 
     /**
      * @Route(requirements={"_format"="json|xml"})
+     *
      * @param Request $request
-     * @return JsonResponse
+     * @param $id
+     * @return Response
      */
     public function getAction(Request $request, $id)
     {
@@ -93,11 +70,11 @@ class FormAdminController extends FOSRestController
      * @Route(requirements={"_format"="json|xml"})
      *
      * @param Request $request
-     * @return Form
+     * @return Response
      */
     public function postAction(Request $request)
     {
-        $view = $this->view(array(), 200);
+        $view = $this->view([], 200);
         try {
             /** @var FormAdmin $admin */
             $admin = $this->get('networking_form_generator.admin.form');
@@ -105,10 +82,10 @@ class FormAdminController extends FOSRestController
             $form = $this->setFields($request, $form);
 
             $admin->create($form);
-            $view->setData(array('id' => $form->getId(), 'message' => $this->get('translator')->trans('form_created',
-                [], 'formGenerator')));
+            $view->setData(['id' => $form->getId(), 'message' => $this->get('translator')->trans('form_created',
+                [], 'formGenerator')]);
         } catch (\Exception $e) {
-            $view = $this->view(array('message' => $e->getMessage()), 500);
+            $view = $this->view(['message' => $e->getMessage()], 500);
         }
 
         $view->setFormat('json');
@@ -120,11 +97,11 @@ class FormAdminController extends FOSRestController
      *
      * @param Request $request
      * @param $id
-     * @return array|Form
+     * @return Response
      */
     public function putAction(Request $request, $id)
     {
-        $view = $this->view(array(), 200);
+        $view = $this->view([], 200);
         try {
             if ($id) {
                 /** @var FormAdmin $admin */
@@ -145,13 +122,13 @@ class FormAdminController extends FOSRestController
                     $view = $this->view($errors, 500);
                 } else {
                     $admin->update($form);
-                    $view->setData(array('id' => $form->getId(), 'message' => 'Your form has been successfully updated'));
+                    $view->setData(['id' => $form->getId(), 'message' => 'Your form has been successfully updated']);
                 }
 
 
             }
         } catch (\Exception $e) {
-            $view = $this->view(array('message' => $e->getMessage()), 500);
+            $view = $this->view(['message' => $e->getMessage()], 500);
         }
 
         $view->setFormat('json');
@@ -243,7 +220,7 @@ class FormAdminController extends FOSRestController
         $formData = $repo->find($rowid);
         $em->remove($formData);
         $em->flush();
-        return $this->redirectToRoute('admin_networking_forms_show', array('id' => $id));
+        return $this->redirectToRoute('admin_networking_forms_show', ['id' => $id]);
 
     }
 
@@ -254,7 +231,7 @@ class FormAdminController extends FOSRestController
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('NetworkingFormGeneratorBundle:FormData');
 
-        $formData = $repo->findBy(array('form' => $id));
+        $formData = $repo->findBy(['form' => $id]);
         foreach($formData as $record)
         {
             $em->remove($record);
@@ -263,7 +240,7 @@ class FormAdminController extends FOSRestController
 
 
 
-        return $this->redirectToRoute('admin_networking_forms_show', array('id' => $id));
+        return $this->redirectToRoute('admin_networking_forms_show', ['id' => $id]);
     }
 
     /*
@@ -362,7 +339,7 @@ class FormAdminController extends FOSRestController
                 $status = 'success';
                 $message = $this->admin->trans(
                     'message.copy_saved',
-                    array('%page%' => $formCopy)
+                    ['%page%' => $formCopy]
                 );
                 $em->persist($formCopy);
                 $em->flush();
@@ -386,12 +363,12 @@ class FormAdminController extends FOSRestController
 
         return $this->render(
             'NetworkingFormGeneratorBundle:Admin:copy.html.twig',
-            array(
+            [
                 'action' => 'copy',
                 'form' => $form,
                 'id' => $id,
                 'admin' => $this->admin
-            )
+            ]
         );
     }
 
@@ -424,7 +401,7 @@ class FormAdminController extends FOSRestController
     /**
      * {@inheritdoc}
      */
-    public function render($view, array $parameters = array(), Response $response = null)
+    public function render($view, array $parameters = [], Response $response = null)
     {
         $parameters['admin'] = isset($parameters['admin']) ?
             $parameters['admin'] :

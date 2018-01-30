@@ -1,5 +1,5 @@
 require.config({
-    baseUrl: "/bundles/networkingformgenerator/assets/js/lib/",
+    baseUrl: "/bundles/",
     shim: {
         'backbone': {
             deps: ['underscore', 'jquery'],
@@ -18,14 +18,21 @@ require.config({
 
     },
     paths: {
-        app: "..",
-        ckeditor: 'ckeditor/ckeditor',
-        collections: "../collections",
-        data: "../data",
-        models: "../models",
-        helper: "../helper",
-        templates: "../templates",
-        views: "../views"
+        app: "networkingformgenerator/assets/js",
+        ckeditor: 'ivoryckeditor/ckeditor',
+        collections: "networkingformgenerator/assets/js/collections",
+        data: "networkingformgenerator/assets/js/data",
+        models: "networkingformgenerator/assets/js/models",
+        helper: "networkingformgenerator/assets/js/helper",
+        templates: "networkingformgenerator/assets/js/templates",
+        views: "networkingformgenerator/assets/js/views",
+        underscore: "networkingformgenerator/assets/js/lib/underscore",
+        jquery: "networkingformgenerator/assets/js/lib/jquery",
+        backbone: "networkingformgenerator/assets/js/lib/backbone",
+        globals: "networkingformgenerator/assets/js/lib/globals",
+        config: "networkingformgenerator/assets/js/lib/config",
+        bootstrap: "networkingformgenerator/assets/js/lib/bootstrap",
+        text: "networkingformgenerator/assets/js/lib/text"
     }
 });
 require([

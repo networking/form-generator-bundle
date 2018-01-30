@@ -1,9 +1,9 @@
 <!-- Multiple Radios (inline) -->
 <div class="form-group">
-    <label class="col-md-4 control-label" for="<%= name %>"><%= polyglot.t(label) %></label>
+    <label class="col-md-4 control-label"><%= polyglot.t(label, { _: label}) %></label>
     <div class="col-md-8"><% _.each(radios, function(radio, i){ %>
-        <label class="radio-inline" for="<%= name+'-'+i %>">
-            <input type="radio" name="<%= name %>" id="<%= name+'-'+i %>" value="<%= radiosValues[i] %>"  <% if (i < 1) { %> checked="checked" <% } %>>
+        <label class="radio-inline" for="inline-<%= name+'-'+i %>">
+            <input type="radio" name="<%= name %>" id="inline-<%= name+'-'+i %>" value="<%= radiosValues[i] %>"  <% if (i < 1) { %> checked="checked" <% } %>>
             <%= radio %>
         </label><% }); %>
     </div>

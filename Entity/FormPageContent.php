@@ -11,8 +11,10 @@
 namespace Networking\FormGeneratorBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Networking\InitCmsBundle\Form\Type\AutocompleteType;
 use Networking\InitCmsBundle\Model\ContentInterface;
 use Ibrows\Bundle\SonataAdminAnnotationBundle\Annotation as Sonata;
+use Symfony\Component\Form\FormBuilder;
 
 /**
  * FormPageContent
@@ -35,17 +37,6 @@ class FormPageContent implements ContentInterface
 
     /**
      * @var Form
-     * @Sonata\FormMapper(
-     *      name="form",
-     *      type="networking_type_autocomplete",
-     *      options={
-     *          "label" = "form.label.form",
-     *          "translation_domain" = "formGenerator",
-     *          "class"="Networking\FormGeneratorBundle\Entity\Form",
-     *          "attr"={"style"="width: 220px;"}
-     *      }
-     *  )
-     *
      * @ORM\ManyToOne(targetEntity="Networking\FormGeneratorBundle\Entity\Form",cascade={"merge"})
      * @ORM\JoinColumn(name="form_id", referencedColumnName="id", onDelete="CASCADE")
      */
@@ -57,6 +48,25 @@ class FormPageContent implements ContentInterface
     public function __clone()
     {
         $this->id = null;
+    }
+
+    /**
+     * @param \Symfony\Component\Form\FormBuilder $formBuilder
+     * @Sonata\FormCallback
+     */
+    public static function configureFormFields(FormBuilder $formBuilder)
+    {
+        $formBuilder->add(
+            'form',
+            AutocompleteType::class,
+               [
+                   'label' => 'form.label.form',
+                   'translation_domain' =>'formGenerator',
+                   'class'=> Form::class,
+                   'attr'=> ['style'=>'width: 220px;'],
+                   'layout' => 'horizontal'
+               ]
+        );
     }
 
     /**
@@ -90,12 +100,12 @@ class FormPageContent implements ContentInterface
      * @param array $params
      * @return array
      */
-    public function getTemplateOptions($params = array())
+    public function getTemplateOptions($params = [])
     {
-        return array(
+        return [
             'form_page_content' => $this->form,
             'params' => $params,
-        );
+        ];
     }
 
     /**
@@ -103,10 +113,10 @@ class FormPageContent implements ContentInterface
      */
     public function getAdminContent()
     {
-        return array(
-            'content' => array('form_page_content' => $this->form),
+        return [
+            'content' => ['form_page_content' => $this->form],
             'template' => 'NetworkingFormGeneratorBundle:Admin:formPageContent.html.twig'
-        );
+        ];
     }
 
     /**

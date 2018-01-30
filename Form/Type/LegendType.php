@@ -26,9 +26,9 @@ class LegendType extends AbstractType{
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setRequired(array(
+        $resolver->setRequired([
             'label'
-        ));
+        ]);
     }
 
     /**

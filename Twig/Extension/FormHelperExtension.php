@@ -45,7 +45,7 @@ class FormHelperExtension extends \Twig_Extension implements ContainerAwareInter
     /**
      * @var array
      */
-    protected $collectedHtml = array();
+    protected $collectedHtml = [];
 
     /**
      * @var bool
@@ -88,9 +88,9 @@ class FormHelperExtension extends \Twig_Extension implements ContainerAwareInter
      */
     public function getFunctions()
     {
-        return array(
-            new \Twig_SimpleFunction('get_form_page_links', array($this, 'getPageLinks'), array('is_safe' => array('html'))),
-        );
+        return [
+            new \Twig_SimpleFunction('get_form_page_links', [$this, 'getPageLinks'], ['is_safe' => ['html']]),
+        ];
     }
 
     /**
@@ -102,7 +102,7 @@ class FormHelperExtension extends \Twig_Extension implements ContainerAwareInter
 
 
         $content = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:FormPageContent')->findBy(
-            array('form' => $formId)
+            ['form' => $formId]
         );
 
         $blocks = $this->getFormPageContentLayoutBlocks();
@@ -115,15 +115,15 @@ class FormHelperExtension extends \Twig_Extension implements ContainerAwareInter
                 }
         });
 
-        $links = array();
+        $links = [];
         $pageClass = $this->container->getParameter('networking_init_cms.admin.page.class');
         $pageAdmin = $this->container->get('sonata.admin.pool')->getAdminByClass($pageClass);
 
         /** @var LayoutBlock $block */
         foreach ($filteredBlocks as $block){
 
-            $url = $pageAdmin->generateUrl('show', array('id' => $block->getPageId()));
-            $links[] = array('url' => $url, 'title' => $block->getPage()->getAdminTitle());
+            $url = $pageAdmin->generateUrl('show', ['id' => $block->getPageId()]);
+            $links[] = ['url' => $url, 'title' => $block->getPage()->getAdminTitle()];
         }
 
         return $links;
@@ -134,7 +134,7 @@ class FormHelperExtension extends \Twig_Extension implements ContainerAwareInter
     {
         if(!$this->formBlocks){
             $blocks = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:LayoutBlock')->findBy(
-                array('classType' => 'Networking\\FormGeneratorBundle\\Entity\\FormPageContent')
+                ['classType' => 'Networking\\FormGeneratorBundle\\Entity\\FormPageContent']
             );
 
             $this->formBlocks = new ArrayCollection($blocks);

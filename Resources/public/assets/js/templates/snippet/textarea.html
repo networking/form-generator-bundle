@@ -1,7 +1,7 @@
 <!-- Textarea -->
 <div class="form-group">
-    <label class="col-md-4 control-label" for ="<%= id %>"><%= polyglot.t(label) %></label>
+    <label class="col-md-4 control-label" for ="<%= id %>"><%= polyglot.t(label, { _: label}) %></label>
     <div class="col-md-8" >
-        <textarea class="form-control" id="<%= id %>" name="<%= id %>" ><%= polyglot.t(textarea) %></textarea>
+        <textarea class="form-control" id="<%= id %>" name="<%= id %>" ><%= polyglot.t(textarea, { _: textarea}) %></textarea>
     </div>
 </div>

@@ -88,7 +88,7 @@ class Form
     /**
      * @var array
      */
-    private $collection = array();
+    private $collection = [];
 
     public function __clone()
     {
@@ -129,7 +129,7 @@ class Form
             foreach ($emailArr as $email) {
                 if (!preg_match('/^.+\@\S+\.\S+$/', trim($email))) {
                     $context
-                        ->buildViolation('%email% is not a valid email address',array( '%email%' => $email))
+                        ->buildViolation('%email% is not a valid email address', ['%email%' => $email])
                         ->atPath('email')
                         ->addViolation();
                     break;
@@ -143,7 +143,7 @@ class Form
      */
     public function isEmailAction()
     {
-        return in_array($this->getAction(), array(self::EMAIL, self::EMAIL_DB));
+        return in_array($this->getAction(), [self::EMAIL, self::EMAIL_DB]);
     }
 
     /**
@@ -283,10 +283,10 @@ class Form
     public function setCollection()
     {
         foreach ($this->getFormFields() as $formField) {
-            $this->collection[] = array(
+            $this->collection[] = [
                 "title" => $formField->getType(),
                 "fields" => $formField->getOptions()
-            );
+            ];
         }
         return $this;
     }
@@ -355,7 +355,7 @@ class Form
      */
     public function isDbAction()
     {
-        return in_array($this->getAction(), array(self::DB, self::EMAIL_DB));
+        return in_array($this->getAction(), [self::DB, self::EMAIL_DB]);
     }
 
     /**

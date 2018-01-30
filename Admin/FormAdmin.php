@@ -44,19 +44,19 @@ class FormAdmin extends BaseAdmin
         $collection->add(
             'excelExport',
             'form-excel-export/{id}' ,
-            array('_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:excelExport'))
+            ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:excelExport'])
             ->add(
                 'deleteFormEntry',
                 'delete-form-entry/{id}/entry/{rowid}' ,
-                array('_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:deleteFormEntry'))
+                ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:deleteFormEntry'])
             ->add(
                 'deleteAllFormEntry',
                 'delete-all-form-entry/{id}' ,
-                array('_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:deleteAllFormEntry'))
+                ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:deleteAllFormEntry'])
             ->add(
                 'copy',
                 'copy/{id}' ,
-                array('_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:copy'))
+                ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:copy'])
         ;
 
 
@@ -73,21 +73,21 @@ class FormAdmin extends BaseAdmin
 
     protected function configureListFields(ListMapper $listMapper){
         parent::configureListFields($listMapper);
-        $listMapper->add('pages', 'string', array('template' => 'NetworkingFormGeneratorBundle:Admin:pages.html.twig'));
+        $listMapper->add('pages', 'string', ['template' => 'NetworkingFormGeneratorBundle:Admin:pages.html.twig']);
         $listMapper->add(
             '_action',
             'actions',
-            array(
+            [
                 'label' => ' ',
-                'actions' => array(
-                    'edit' => array(),
-                    'show' => array(),
-                    'copy' => array(
+                'actions' => [
+                    'edit' => [],
+                    'show' => [],
+                    'copy' => [
                         'template' => 'NetworkingFormGeneratorBundle:Admin:list_action_copy.html.twig',
-                    ),
-                    'delete' => array(),
-                )
-            )
+                    ],
+                    'delete' => [],
+                ]
+            ]
         );
     }
 

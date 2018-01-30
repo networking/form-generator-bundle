@@ -23,7 +23,7 @@ define([
         tagName: "div"
         , className: "component"
         , initialize: function(){
-            this.template = _.template(_snippetTemplates[this.model.idFriendlyTitle()])
+            this.template = _.template(_snippetTemplates[this.model.idFriendlyTitle()]);
             this.popoverTemplates = {
                 "input" : _.template(_PopoverInput)
                 , "select" : _.template(_PopoverSelect)
@@ -35,7 +35,7 @@ define([
         , render: function(withAttributes){
             var that = this;
             var content = _.template(_PopoverMain)({
-                "title": polyglot.t(that.model.get("title")),
+                "title": polyglot.t(that.model.get("title"), {_: that.model.get("title")}),
                 "items" : that.model.get("fields"),
                 "popoverTemplates": that.popoverTemplates
             });
@@ -44,7 +44,7 @@ define([
                     that.template(that.model.getValues())
                 ).attr({
                         "data-content"     : content
-                        , "data-title"     : polyglot.t(that.model.get("title"))
+                        , "data-title"     : polyglot.t(that.model.get("title"), {_: that.model.get("title")})
                         , "data-trigger"   : "manual"
                         , "data-html"      : true
                     });

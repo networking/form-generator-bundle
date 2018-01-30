@@ -13,6 +13,7 @@ var polyglot_phrases = {
     'Drag & Drop components': 'Drag & Drop-Komponenten',
     'Drag items here': 'Ziehen Sie Elemente hierher',
     'placeholder': 'Platzhalter',
+    'Placeholder': 'Platzhalter',
     'Input': 'Eingabefelder',
     'Radios / Checkboxes': 'Radios / Checkboxen',
     'Select': 'Auswahl Felder',
@@ -63,6 +64,8 @@ var polyglot_phrases = {
     'Option one': 'Option Eins',
     'Option two': 'Option zwei',
     'default text': 'Text',
-    'Starting Text': 'Voreingefüllter Text'
+    'Starting Text': 'Voreingefüllter Text',
+    'Rendered': 'Generierter HTML',
+    'success': 'Erfolgreich gespeichert'
 
 };

@@ -55,7 +55,7 @@ class FormField
     private $type;
 
     /**
-     * @var string
+     * @var array
      *
      * @ORM\Column(name="options", type="json")
      */
@@ -109,14 +109,14 @@ class FormField
      *
      * @var array
      */
-    protected $mappable = array(
-        'Select Basic' => array('options' => 'options', 'values' => 'values'),
-        'Select Multiple' => array('options' => 'options', 'values' => 'values'),
-        'Multiple Checkboxes' => array('options' => 'checkboxes', 'values' => 'checkboxesValues'),
-        'Multiple Checkboxes Inline' => array('options' => 'checkboxes', 'values' => 'checkboxesValues'),
-        'Multiple Radios' => array('options' => 'radios', 'values' => 'radiosValues'),
-        'Multiple Radios Inline' => array('options' => 'radios', 'values' => 'radiosValues')
-    );
+    protected $mappable = [
+        'Select Basic' => ['options' => 'options', 'values' => 'values'],
+        'Select Multiple' => ['options' => 'options', 'values' => 'values'],
+        'Multiple Checkboxes' => ['options' => 'checkboxes', 'values' => 'checkboxesValues'],
+        'Multiple Checkboxes Inline' => ['options' => 'checkboxes', 'values' => 'checkboxesValues'],
+        'Multiple Radios' => ['options' => 'radios', 'values' => 'radiosValues'],
+        'Multiple Radios Inline' => ['options' => 'radios', 'values' => 'radiosValues']
+    ];
 
     public function __clone()
     {
@@ -240,7 +240,7 @@ class FormField
     /**
      * Get options.
      *
-     * @return string
+     * @return array
      */
     public function getOptions()
     {
@@ -386,7 +386,7 @@ class FormField
     public function getValueMap()
     {
         if (array_key_exists($this->getType(), $this->mappable)) {
-            $map = array();
+            $map = [];
             $key = $this->mappable[$this->getType()];
             $options = $key['options'];
             $values = $key['values'];
@@ -394,7 +394,7 @@ class FormField
             foreach ($this->options[$values]['value'] as $k => $val) {
                 if(array_key_exists($k, $this->options[$options]['value'])){
 
-                $map[$val] = $this->options[$options]['value'][$k];
+                    $map[$this->options[$options]['value'][$k]] = $val;
                 }
             }
             return $map;

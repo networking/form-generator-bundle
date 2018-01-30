@@ -14,10 +14,8 @@ namespace Networking\FormGeneratorBundle\Helper;
 use Networking\FormGeneratorBundle\Entity\Form;
 use Networking\FormGeneratorBundle\Entity\FormData;
 use Networking\FormGeneratorBundle\Entity\FormFieldData;
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Templating\EngineInterface;
 
 class FormHelper
 {
@@ -33,11 +31,17 @@ class FormHelper
     protected $doctrine;
 
     /**
-     * @var TwigEngine
+     * @var EngineInterface
      */
     protected $twig;
 
-    public function __construct(\Swift_Mailer $mailer, Registry $doctrine, TwigEngine $twig)
+    /**
+     * FormHelper constructor.
+     * @param \Swift_Mailer $mailer
+     * @param Registry $doctrine
+     * @param EngineInterface $twig
+     */
+    public function __construct(\Swift_Mailer $mailer, Registry $doctrine, EngineInterface $twig)
     {
         $this->mailer = $mailer;
         $this->doctrine = $doctrine;
@@ -62,7 +66,7 @@ class FormHelper
             ->setBody(
                 $this->renderView(
                     'NetworkingFormGeneratorBundle:Email:email.txt.twig',
-                    array('data' => $data, 'form' => $form)
+                    ['data' => $data, 'form' => $form]
                 )
             );
         foreach (explode(',', $form->getEmail()) as $email) {
@@ -77,14 +81,7 @@ class FormHelper
      *
      * @param Form $form
      * @param array $data
-     * @param AbstractType $originalForm
-     * @return bool
-     */
-    /**
-     * @param Form $form
-     * @param array $data
      * @param \Symfony\Component\Form\Form|null $originalForm
-     * @return bool
      */
     public function saveToDb(Form $form, array $data, \Symfony\Component\Form\Form $originalForm = null)
     {
@@ -124,7 +121,7 @@ class FormHelper
      *
      * @return string The rendered view
      */
-    public function renderView($view, array $parameters = array())
+    public function renderView($view, array $parameters = [])
     {
         return $this->twig->render($view, $parameters);
     }

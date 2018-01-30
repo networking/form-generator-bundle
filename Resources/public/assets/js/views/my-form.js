@@ -57,8 +57,14 @@ define([
 
             this.$el.appendTo("#build");
             this.delegateEvents();
+
+
+
+            CKEDITOR.config.customConfig = '../networkingformgenerator/assets/js/lib/ckeditor_config.js';
+
             CKEDITOR.replace( 'infoText',{width:'100%'} );
             CKEDITOR.replace( 'thankYouText',{width:'100%'});
+
 
             var module = this;
             for (var i in CKEDITOR.instances) {
@@ -136,7 +142,7 @@ define([
                 $(".targetbefore").removeClass("targetbefore");
                 $(".target").removeClass("target");
             }
-        }, handleTempDrop: function (mouseEvent, model, index) {
+        }, handleTempDrop: function (mouseEvent, model) {
             var target = $(".target");
             var targetBefore = $(".targetbefore");
 
@@ -161,9 +167,12 @@ define([
             var module = this;
             this.model.save(this.getModelViewAttr(), {
                 success: function (model, xhr) {
-                    that.createMessageBox('success', 'Yay!',xhr.message);
+                    that.createMessageBox('success', polyglot.t('success'),xhr.message);
                     btn.button('reset');
                     module.confirm = false;
+                    $('html, body').animate({
+                        scrollTop: $(".initcms").offset().top
+                    }, 2000);
                 },
                 error: function (model, xhr) {
                     var errors = [];
