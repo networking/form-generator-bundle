@@ -89,7 +89,7 @@ class FormFieldData
     {
         if (is_array($value) && $map = $formField->getValueMap()) {
             foreach ($value as $key => $val) {
-                $value[$key] = $map[$val];
+                $value[$key] = $val; //$map[$val];
             }
         }
 
