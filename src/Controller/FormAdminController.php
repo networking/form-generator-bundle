@@ -5,6 +5,7 @@ namespace Networking\FormGeneratorBundle\Controller;
 use FOS\RestBundle\Controller\FOSRestController;
 use Networking\FormGeneratorBundle\Admin\FormFieldAdmin;
 use Networking\FormGeneratorBundle\Entity\FormField;
+use Networking\FormGeneratorBundle\Helper\FormHelper;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,11 +24,17 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
  */
 class FormAdminController extends FOSRestController
 {
+
     /**
      * @var AdminInterface
      */
     protected $admin;
 
+
+    /**
+     * FormAdminController constructor.
+     * @param FormAdmin $formAdmin
+     */
     public function __construct(FormAdmin $formAdmin)
     {
         $this->admin = $formAdmin;
@@ -77,8 +84,8 @@ class FormAdminController extends FOSRestController
         $view = $this->view([], 200);
         try {
             /** @var FormAdmin $admin */
-            $admin = $this->get('networking_form_generator.admin.form');
-            $form = $admin->getNewInstance();
+           ;
+            $form = $this->admin->getNewInstance();
             $form = $this->setFields($request, $form);
 
             $admin->create($form);
@@ -104,10 +111,8 @@ class FormAdminController extends FOSRestController
         $view = $this->view([], 200);
         try {
             if ($id) {
-                /** @var FormAdmin $admin */
-                $admin = $this->get('networking_form_generator.admin.form');
 
-                $form = $admin->getObject($id);
+                $form = $this->admin->getObject($id);
                 if (!$form) {
                     throw new NotFoundHttpException('Form not found');
                 }

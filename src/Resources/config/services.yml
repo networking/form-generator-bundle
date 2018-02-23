@@ -10,7 +10,17 @@ services:
     Networking\FormGeneratorBundle\Helper\FormHelper:
         autowire: true
 
+    networking_form_generator.helper.form:
+          alias: Networking\FormGeneratorBundle\Helper\FormHelper
+          public: true
+
     Networking\FormGeneratorBundle\Controller\FormAdminController:
+          autowire: true
+          public: true
+          tags:
+              - { name: 'controller.service_arguments'}
+
+    Networking\FormGeneratorBundle\Controller\FormController:
           autowire: true
           public: true
           tags:

@@ -34,6 +34,22 @@ class FrontendFormController extends Controller
     protected $session;
 
     /**
+     * @var FormHelper
+     */
+    protected $formHelper;
+
+    /**
+     * FrontendFormController constructor.
+     * @param FormHelper $formHelper
+     * @param SessionInterface $session
+     */
+    public function __construct(FormHelper $formHelper, SessionInterface $session)
+    {
+        $this->formHelper = $formHelper;
+        $this->session = $session;
+    }
+
+    /**
      * Sets the Container associated with this Controller.
      *
      * @param ContainerInterface $container A ContainerInterface instance
@@ -42,7 +58,6 @@ class FrontendFormController extends Controller
     {
         $this->container = $container;
 
-        $this->session = $this->container->get('session');
     }
 
     /**
@@ -68,18 +83,16 @@ class FrontendFormController extends Controller
         if ($formType->isSubmitted()) {
 
             if ($formType->isValid()) {
-                /** @var FormHelper $formHelper */
-                $formHelper = $this->get('networking_form_generator.helper.form');
                 $data = $request->get($formType->getName());
                 $this->setFormComplete(true);
 
                 if ($form->isEmailAction()) {
-                    $formHelper->sendEmail($form, $data, $this->container->getParameter
+                    $this->formHelper->sendEmail($form, $data, $this->container->getParameter
                     ('form_generator_from_email'));
                 }
 
                 if ($form->isDbAction()) {
-                    $formHelper->saveToDb($form, $data);
+                    $this->formHelper->saveToDb($form, $data);
                 }
 
                 if ($form->getRedirect()) {
