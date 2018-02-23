@@ -88,7 +88,7 @@ class FormAdminController extends FOSRestController
             $form = $this->admin->getNewInstance();
             $form = $this->setFields($request, $form);
 
-            $admin->create($form);
+            $this->admin->create($form);
             $view->setData(['id' => $form->getId(), 'message' => $this->get('translator')->trans('form_created',
                 [], 'formGenerator')]);
         } catch (\Exception $e) {
