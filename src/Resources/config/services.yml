@@ -20,7 +20,7 @@ services:
           tags:
               - { name: 'controller.service_arguments'}
 
-    Networking\FormGeneratorBundle\Controller\FormController:
+    Networking\FormGeneratorBundle\Controller\FrontendFormController:
           autowire: true
           public: true
           tags:
