@@ -57,6 +57,10 @@ class FormAdmin extends BaseAdmin
                 'copy',
                 'copy/{id}' ,
                 ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:copy'])
+            ->add(
+                'addressConfig',
+                'address_config/{id}' ,
+                ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:addressConfig'])
         ;
 
 
@@ -74,6 +78,7 @@ class FormAdmin extends BaseAdmin
     protected function configureListFields(ListMapper $listMapper){
         parent::configureListFields($listMapper);
         $listMapper->add('pages', 'string', ['template' => 'NetworkingFormGeneratorBundle:Admin:pages.html.twig']);
+       // $listMapper->add('address', 'string', ['template' => 'NetworkingFormGeneratorBundle:Admin:addressConfigButton.html.twig']);
         $listMapper->add(
             '_action',
             'actions',
@@ -84,6 +89,9 @@ class FormAdmin extends BaseAdmin
                     'show' => [],
                     'copy' => [
                         'template' => 'NetworkingFormGeneratorBundle:Admin:list_action_copy.html.twig',
+                    ],
+                    'address' => [
+                        'template' => 'NetworkingFormGeneratorBundle:Admin:addressConfigButton.html.twig',
                     ],
                     'delete' => [],
                 ]

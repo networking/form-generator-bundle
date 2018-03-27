@@ -96,6 +96,16 @@ class FormField
      */
     private $validationType;
 
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="mapping", type="string", length=255)
+     */
+    private $mapping;
+
+
+
     /**
      * @var int
      *
@@ -401,6 +411,26 @@ class FormField
         }
         return false;
     }
+
+    /**
+     * @return string
+     */
+    public function getMapping()
+    {
+        return $this->mapping;
+    }
+
+    /**
+     * @param string $mapping
+     */
+    public function setMapping($mapping)
+    {
+        $this->mapping = $mapping;
+    }
+
+
+
+
 
 }
 

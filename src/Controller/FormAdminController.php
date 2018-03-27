@@ -19,6 +19,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+
 /**
  * @RouteResource("Form")
  */
@@ -313,6 +317,103 @@ class FormAdminController extends FOSRestController
         return $response;
 
     }
+
+
+    public function getAddressFieldArray()
+    {
+        $array = array();
+        $array['Sprache'] = 'language';
+        $array['Anrede'] = 'salutation';
+        $array['Vorname'] = 'firstname';
+        $array['Name'] = 'name';
+        $array['Organisation'] = 'organisation';
+        $array['Abteilung'] = 'departement';
+        $array['Funktion'] = 'function';
+        $array['Adresse 1'] = 'street1';
+        $array['Adresse 2'] = 'street2';
+        $array['PLZ'] = 'zip';
+        $array['Ort'] = 'city';
+        $array['Land'] = 'country';
+        $array['Telefon'] = 'tel';
+        $array['Mobile Telefon'] = 'mobile';
+        $array['E-Mail'] = 'email';
+        $array['URL'] = 'url';
+        $array['Adresse 1 (privat)'] = 'street1Private';
+        $array['Adresse 2 (privat)'] = 'street2Private';
+        $array['PLZ (privat)'] = 'zipPrivate';
+        $array['Ort (privat)'] = 'cityPrivate';
+        $array['Land (privat)'] = 'countryPrivate';
+        $array['Telefon (privat)'] = 'phonePrivate';
+        $array['Mobile Telefon (privat)'] = 'mobilePrivate';
+        $array['E-Mail (privat)'] = 'emailPrivate';
+        $array['Korrespondenzadresse'] = 'corresponcende';
+        $array['Kommentar'] = 'comment';
+        return $array;
+    }
+
+
+    public function addressConfigAction(Request $request, $id)
+    {
+        $param = array();
+        $data = array();
+        $showForm = true;
+        $em = $this->getDoctrine()->getManager();
+        $repo = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:Form');
+        /** @var Form $form */
+        $formEntity = $repo->find($id);
+        $formFields = $formEntity->getFormFields();
+        $addressFieldArray = $this->getAddressFieldArray();
+        $message = 'Bitte mappen Sie die Felder vom Formular mit den Feldern aus der Adress-Datenbank.';
+
+        $formBuilder = $this->createFormBuilder();
+        foreach ($formFields as $formField) {
+            $formBuilder->add($formField->getId(), ChoiceType::class, array(
+                'choices' =>  $addressFieldArray,
+                'label' => $formField->getFieldLabel(),
+                'data' => $formField->getMapping(),
+                'required' => false));
+        }
+        $formBuilder->add('send', SubmitType::class, array('label' => 'Speichern'));
+        $form = $formBuilder->getForm();
+
+
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // data is an array with "name", "email", and "message" keys
+            $data = $form->getData();
+            //mapping speichern
+            foreach ($formFields as $formField)
+            {
+                //formular daten in mapping feld speichern
+                if($data[$formField->getId()] != '')
+                {   $formField->setMapping($data[$formField->getId()]);
+                }else
+                {   $formField->setMapping(NULL);
+                }
+                $em->persist($formField);
+                $em->flush();
+            }
+            $message = 'Daten wurden gespeichert.';
+            $showForm = false;
+        }
+
+
+
+
+        $param['action'] = 'address_config';
+        $param['data'] = $data;
+        $param['formObject'] = $formEntity;
+        $param['form'] = $form->createView();
+        $param['message'] = $message;
+        $param['showForm'] = $showForm;
+
+        return $this->render(
+            'NetworkingFormGeneratorBundle:Admin:addressConfig.html.twig',$param
+        );
+    }
+
 
     /**
      * @param Request $request

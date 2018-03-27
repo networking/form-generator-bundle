@@ -1,0 +1,53 @@
+{% extends base_template %}
+
+{% block page_title %}
+
+
+    <div class="col-xs-12 col-md-10 content-main">
+
+        <div class="row content-top">
+            <div class="col-md-4">
+            </div>
+        </div>
+        <div class="row content-head">
+            <div class="col-xs-7 page_title">
+                <h1>
+                    <small>Mapping  Adress-Felder</small> {{ formObject.name }}
+
+                </h1>
+            </div>
+
+            <div class="col-xs-5 context-head">
+
+            </div>
+        </div>
+
+{% endblock %}
+
+
+
+
+{% block sonata_admin_content %}
+    <div class="row row-content-wide">
+        <div class="sonata-ba-content col-md-10">
+
+        <p>{{ message }}</p>
+
+            {% if showForm %}
+
+
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            {{ form_end(form) }}
+
+            {% else %}
+
+            <a href="../list">Zurück</a>
+
+            {% endif %}
+        </div>
+
+        {#{{ dump(data) }}#}
+
+    </div>
+{% endblock %}

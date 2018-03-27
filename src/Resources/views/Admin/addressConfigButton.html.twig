@@ -1,0 +1,30 @@
+{#
+
+This file is part of the Networking package.
+
+(c) net working AG <info@networking.ch>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+
+{% if admin.isGranted('EDIT', object) and admin.hasRoute('edit') %}
+
+
+    <a  href="{{ admin.generateUrl('addressConfig', {'id': object.id}) }}"
+        class="btn btn-default"
+       >
+        <i class="glyphicon glyphicon-user"></i>
+    </a>
+{% endif %}
+
+
+{#{% extends 'NetworkingInitCmsBundle:CRUD:base_list_field.html.twig' %}#}
+
+{#{% block field %}#}
+
+
+
+{#{% endblock %}#}

@@ -4,6 +4,7 @@ form.label.form: Formular
 list:
     label_name: Formurlarname
     label_pages: Seiten
+    label_address: Adress-DB
 filter:
     label_name: Formularname
 form_created: Formular wurde erfolgreich erstellt
