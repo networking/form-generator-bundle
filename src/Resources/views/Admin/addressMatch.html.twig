@@ -49,6 +49,7 @@
 
             {% for match in  matches %}
                 <tr>
+                    <td>{{ match.organisation }}</td>
                     <td>{{ match.firstname }}  {{ match.name }} </td>
                     <td>{{ match.email }}</td>
                     <td> <a  href="{{ admin.generateUrl('addMatch', {'id': id, 'rowid': rowid, 'addressid':  match.id  }) }}" >
