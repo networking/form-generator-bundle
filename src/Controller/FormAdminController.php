@@ -397,6 +397,10 @@ class FormAdminController extends FOSRestController
                 {  $address->setFirstname($row['value']);
                 }
 
+                if($row['mapping'] == 'name')
+                {  $address->setName($row['value']);
+                }
+
                 if($row['mapping'] == 'organisation')
                 {  $address->setOrganisation($row['value']);
                 }
