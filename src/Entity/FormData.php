@@ -47,6 +47,15 @@ class FormData
      */
     private $formFields;
 
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="address_id", type="integer", nullable =true)
+     */
+    private $addressId;
+
+
     /**
      * @ORM\PrePersist
      */
@@ -136,6 +145,25 @@ class FormData
 
         }
     }
+
+    /**
+     * @return int
+     */
+    public function getAddressId()
+    {
+        return $this->addressId;
+    }
+
+    /**
+     * @param int $addressId
+     */
+    public function setAddressId($addressId)
+    {
+        $this->addressId = $addressId;
+    }
+
+
+
 
     /**
      * @param FormFieldData $formField

@@ -23,6 +23,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
+use Application\Networking\InitCmsBundle\Entity\Address;
+
 /**
  * @RouteResource("Form")
  */
@@ -352,6 +354,175 @@ class FormAdminController extends FOSRestController
     }
 
 
+    /* verknuepft form data mit bestehender adresse */
+    public function addMatchAction(Request $request, $id, $rowid, $addressid)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $repoData = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:FormData');
+        $formData = $repoData->find($rowid);
+        $formData->setAddressId($addressid);
+        $em->persist($formData);
+        $em->flush();
+        return $this->redirectToRoute('admin_networking_forms_show', ['id' => $id]);
+
+
+
+    }
+
+
+    /* erstellt neue adresse */
+    public function addAddressAction(Request $request, $id, $rowid)
+    {
+        $dataArray = $this->getDataArrayforMapping($request, $id, $rowid);
+        $em = $this->getDoctrine()->getManager();
+        $address = new Address();
+        $address->setStatus('aktiv');
+        $address->setLanguage('de');
+        $address->setCorresponcende('gesch');
+        $address->setCreationDate(new \DateTime());
+        foreach ($dataArray as $row)
+        {
+            if($row['value'] != '')
+            {
+                if($row['mapping'] == 'language')
+                {  $address->setLanguage($row['value']);
+                }
+
+                if($row['mapping'] == 'salutation')
+                {  $address->setSalutation($row['value']);
+                }
+
+                if($row['mapping'] == 'firstname')
+                {  $address->setFirstname($row['value']);
+                }
+
+                if($row['mapping'] == 'organisation')
+                {  $address->setOrganisation($row['value']);
+                }
+
+                if($row['mapping'] == 'departement')
+                {  $address->setDepartement($row['value']);
+                }
+
+                if($row['mapping'] == 'function')
+                {  $address->setFunction($row['value']);
+                }
+
+                if($row['mapping'] == 'street1')
+                {  $address->setStreet1($row['value']);
+                }
+
+                if($row['mapping'] == 'street2')
+                {  $address->setStreet2($row['value']);
+                }
+
+                if($row['mapping'] == 'zip')
+                {  $address->setZip($row['value']);
+                }
+
+                if($row['mapping'] == 'city')
+                {  $address->setCity($row['value']);
+                }
+
+                if($row['mapping'] == 'country')
+                {  $address->setCountry($row['value']);
+                }
+
+                if($row['mapping'] == 'tel')
+                {  $address->setTel($row['value']);
+                }
+
+                if($row['mapping'] == 'mobile')
+                {  $address->setMobile($row['value']);
+                }
+
+                if($row['mapping'] == 'email')
+                {  $address->setEmail($row['value']);
+                }
+
+                if($row['mapping'] == 'url')
+                {  $address->setUrl($row['value']);
+                }
+                //TODO add more fields
+            }
+        }
+
+        //daten speichern
+        $em->persist($address);
+        $em->flush();
+        $addressID = $address->getId();
+
+        //address Id speichern
+        $repoData = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:FormData');
+        $formData = $repoData->find($rowid);
+        $formData->setAddressId($addressID);
+        $em->persist($formData);
+        $em->flush();
+
+        return $this->redirectToRoute('admin_networking_forms_show', ['id' => $id]);
+
+    }
+
+
+    /*function that returns an array with  mapping an value, required for mapping and creating new user */
+    public function getDataArrayforMapping(Request $request, $id, $rowid)
+    {
+        $dataArray = array();
+        //get formular with all fields and matching fields
+        $repo = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:Form');
+        $form = $repo->find($id);
+        $formFields = $form->getFormFields();
+        foreach ($formFields as $formField) {
+            $dataArray[$formField->getFieldLabel()] = array('id' => $formField->getId(), 'label' => $formField->getFieldLabel(), 'mapping' => $formField->getMapping());
+
+        }
+        //get formular data
+        $repoData = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:FormData');
+        $formData = $repoData->find($rowid);
+        $formFieldData = $formData->getFormFields();
+        foreach ($formFieldData as $formField) {
+            $dataArray[$formField->getLabel()]['value'] = $formField->getValue();
+        }
+
+        return $dataArray;
+    }
+
+
+    /*
+     * function to add form data to address db
+     * */
+    public function matchFormEntryAction(Request $request, $id, $rowid)
+    {
+        $param = array();
+        $mappingArray = array('firstname' => '', 'name' => '', 'email' => '');
+        $dataArray = $this->getDataArrayforMapping($request, $id, $rowid);
+
+        //populate mapping array
+        foreach ($dataArray as $row)
+        {
+            $mappingArray[$row['mapping']] = $row['value'];
+        }
+
+        //find possible matches
+        $repoAddress = $this->getDoctrine()->getRepository(Address::class);
+        $matches = $repoAddress->findMatches($mappingArray['firstname'], $mappingArray['name'], $mappingArray['email']);
+        //Application\Networking\InitCmsBundle\Entity
+
+        $param['dataArray'] = $dataArray;
+        $param['id'] = $id;
+        $param['rowid'] = $rowid;
+        $param['mappingArray'] = $mappingArray;
+        $param['matches'] = $matches;
+        return $this->render(
+            'NetworkingFormGeneratorBundle:Admin:addressMatch.html.twig',$param
+        );
+    }
+
+
+    /*
+     * form to match form fields to adress db
+     * */
     public function addressConfigAction(Request $request, $id)
     {
         $param = array();

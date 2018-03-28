@@ -24,18 +24,32 @@
                 <tr class="sonata-ba-list-field-header ">
                     <th>Field</th>
                     <th>Value</th>
-                    <th>
+                    <th width="150">
                         <a  href="{{ admin.generateUrl('deleteFormEntry', {'id': object.id, 'rowid': formData.id}) }}" onClick="temp=window.confirm('{{ 'confirm_deletion'|trans({}, 'formGenerator') }}');return temp;" >
                             <i class="glyphicon glyphicon-remove"></i>
                             {{ 'link_action_delete'|trans({}, 'formGenerator') }}</a>
                     </th>
+
+                    <th width="270">
+
+                        {% if formData.addressId is null  %}
+                            <a  href="{{ admin.generateUrl('matchFormEntry', {'id': object.id, 'rowid': formData.id}) }}" >
+                                <i class="glyphicon glyphicon-search"></i>
+                                Adresse zur Datenbank hinzufügen</a>
+                        {% else %}
+                            <a  href="/admin/cms/adressen/{{ formData.addressId }}/edit" >
+                                <i class="glyphicon glyphicon-user"></i>
+                                Zur Adresse gehen</a>
+                        {% endif %}
+                    </th>
+
                 </tr>
                 </thead>
                 <tbody>
                 {% for fieldData in formData.formFields %}
                     <tr class="sonata-ba-view-container">
                         <td>{{ fieldData.label }}</td>
-                        <td colspan="2">
+                        <td colspan="3">
                             {% if fieldData.value is iterable %}
                                 {{ fieldData.value|join(', ') }}
                             {% else %}

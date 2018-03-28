@@ -1,0 +1,65 @@
+{% extends base_template %}
+
+{% block page_title %}
+
+
+    <div class="col-xs-12 col-md-10 content-main">
+
+        <div class="row content-top">
+            <div class="col-md-4">
+            </div>
+        </div>
+        <div class="row content-head">
+            <div class="col-xs-7 page_title">
+                <h1>
+                    <small>Adress Datenbank</small> {{ mappingArray.firstname }} {{ mappingArray.name }}
+
+                </h1>
+            </div>
+
+            <div class="col-xs-5 context-head">
+
+            </div>
+        </div>
+
+{% endblock %}
+
+
+
+
+{% block sonata_admin_content %}
+    <div class="row row-content-wide">
+        <div class="sonata-ba-content col-md-10">
+
+        {% if matches|length == '1' %}
+            <h3>{{ matches|length }} möglicher Match gefunden.</h3>
+        {% else %}
+            <h3>{{ matches|length }} mögliche Matches gefunden.</h3>
+        {% endif %}
+
+            <table class="table table-hover table-compact">
+
+
+
+            {% for match in  matches %}
+                <tr>
+                    <td>{{ match.firstname }}  {{ match.name }} </td>
+                    <td>{{ match.email }}</td>
+                    <td> <a  href="{{ admin.generateUrl('addMatch', {'id': id, 'rowid': rowid, 'addressid':  match.id  }) }}" >
+                            <i class="glyphicon glyphicon-ok"></i>
+                            Adresse verknüpfen</a></td>
+
+                </tr>
+
+            {% endfor %}
+            </table>
+
+            <h3>Neue Adresse erstellen</h3>
+
+
+            <a  href="{{ admin.generateUrl('addNewAddress', {'id': id, 'rowid': rowid }) }}" >
+                <i class="glyphicon glyphicon-user"></i>
+                Adresse zur Datenbank hinzufügen</a>
+
+    </div>
+{% endblock %}

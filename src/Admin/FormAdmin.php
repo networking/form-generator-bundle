@@ -50,6 +50,18 @@ class FormAdmin extends BaseAdmin
                 'delete-form-entry/{id}/entry/{rowid}' ,
                 ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:deleteFormEntry'])
             ->add(
+                'matchFormEntry',
+                'match-form-entry/{id}/entry/{rowid}' ,
+                ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:matchFormEntry'])
+            ->add(
+                'addMatch',
+                'add-match/{id}/entry/{rowid}/addressId/{addressid}' ,
+                ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:addMatch'])
+            ->add(
+                'addNewAddress',
+                'add-address/{id}/entry/{rowid}' ,
+                ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:addAddress'])
+            ->add(
                 'deleteAllFormEntry',
                 'delete-all-form-entry/{id}' ,
                 ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:deleteAllFormEntry'])
