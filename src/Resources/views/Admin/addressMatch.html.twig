@@ -31,6 +31,12 @@
     <div class="row row-content-wide">
         <div class="sonata-ba-content col-md-10">
 
+            <p>
+                {% for row  in mappingArray %}
+                    {{ row }}<br />
+                {% endfor %}
+            </p>
+
         {% if matches|length == '1' %}
             <h3>{{ matches|length }} möglicher Match gefunden.</h3>
         {% else %}
