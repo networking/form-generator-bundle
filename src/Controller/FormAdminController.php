@@ -2,6 +2,7 @@
 
 namespace Networking\FormGeneratorBundle\Controller;
 
+use Application\Networking\InitCmsBundle\ApplicationNetworkingInitCmsBundle;
 use FOS\RestBundle\Controller\FOSRestController;
 use Networking\FormGeneratorBundle\Admin\FormFieldAdmin;
 use Networking\FormGeneratorBundle\Entity\FormField;
@@ -22,8 +23,10 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 use Application\Networking\InitCmsBundle\Entity\Address;
+use Application\Networking\InitCmsBundle\Entity\AddressCategory;
 
 /**
  * @RouteResource("Form")
@@ -354,25 +357,240 @@ class FormAdminController extends FOSRestController
     }
 
 
+    /* ansicht form data =>
+
+    Adresse verknüpfen ohne Daten zu übernehmen
+    Formular Daten überschreiben die bestehenden Daten
+    Folgende Formular Felder sollen übernommen werden*/
+
+
     /* verknuepft form data mit bestehender adresse */
     public function addMatchAction(Request $request, $id, $rowid, $addressid)
     {
 
+        $param = array();
+        $em = $this->getDoctrine()->getManager();
+        $mappingArray = array('firstname' => '', 'name' => '', 'email' => '');
+        $dataArray = $this->getDataArrayforMapping($request, $id, $rowid);
+
+        //populate mapping array
+        foreach ($dataArray as $row)
+        {
+            $mappingArray[$row['mapping']] = $row['value'];
+        }
+
+        $repoAddress = $this->getDoctrine()->getRepository(Address::class);
+        $address = $repoAddress->find($addressid);
+
+        if(isset($_POST['Submit']))
+        {
+            //formular wurde übermittelt, daten speichern
+            $todo = $_POST['todo'];
+            if($todo == 'option3')
+            {   //Folgende Formular Felder sollen übernommen werden
+                if(isset($_POST['language']))
+                {   $address->setLanguage($_POST['language']);
+                }
+
+                if(isset($_POST['salutation']))
+                {   $address->setSalutation($_POST['salutation']);
+                }
+
+                if(isset($_POST['firstname']))
+                {   $address->setFirstname($_POST['firstname']);
+                }
+
+                if(isset($_POST['name']))
+                {   $address->setName($_POST['name']);
+                }
+
+                if(isset($_POST['organisation']))
+                {  $address->setOrganisation($_POST['organisation']);
+                }
+
+                if(isset($_POST['departement']))
+                {  $address->setDepartement($_POST['departement']);
+                }
+
+                if(isset($_POST['function']))
+                {   $address->setFunction($_POST['function']);
+                }
+
+                if(isset($_POST['street1']))
+                {   $address->setStreet1($_POST['street1']);
+                }
+
+                if(isset($_POST['street2']))
+                {   $address->setStreet2($_POST['street2']);
+                }
+
+                if(isset($_POST['zip']))
+                {   $address->setZip($_POST['zip']);
+                }
+
+                if(isset($_POST['city']))
+                {    $address->setCity($_POST['city']);
+                }
+
+                if(isset($_POST['country']))
+                {   $address->setCountry($_POST['country']);
+                }
+
+                if(isset($_POST['tel']))
+                {   $address->setTel($_POST['tel']);
+                }
+
+                if(isset($_POST['mobile']))
+                {   $address->setMobile($_POST['mobile']);
+                }
+
+                if(isset($_POST['email']))
+                {   $address->setEmail($_POST['email']);
+                }
+
+                if(isset($_POST['url']))
+                {   $address->setUrl($_POST['url']);
+                }
+
+                    //daten speichern
+                $em->persist($address);
+                $em->flush();
+            }
+            elseif($todo == 'option2')
+            {   //Formular Daten überschreiben die bestehenden Daten
+                $address = $this->updateAddressDataValue($address, $dataArray);
+            }
+
+            $this->setAddressIdToFormData($rowid, $addressid);
+            return $this->redirectToRoute('admin_networking_forms_show', ['id' => $id]);
+
+        }
+
+        $param['dataArray'] = $dataArray;
+        $param['id'] = $id;
+        $param['rowid'] = $rowid;
+        $param['mappingArray'] = $mappingArray;
+        $param['address'] = $address;
+        $param['addressArray'] = $this->transformAdressObjectToArray($address);
+        return $this->render('NetworkingFormGeneratorBundle:Admin:addressShowMatchFields.html.twig',$param);
+    }
+
+
+    public function setAddressIdToFormData($rowid, $addressid)
+    {
         $em = $this->getDoctrine()->getManager();
         $repoData = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:FormData');
         $formData = $repoData->find($rowid);
         $formData->setAddressId($addressid);
         $em->persist($formData);
         $em->flush();
-        return $this->redirectToRoute('admin_networking_forms_show', ['id' => $id]);
-
-
-
     }
 
 
-    /* erstellt neue adresse */
-    public function addAddressAction(Request $request, $id, $rowid)
+    public function transformAdressObjectToArray(Address $address)
+    {
+        $array = array();
+        $array['language'] = $address->getLanguage();
+        $array['salutation'] = $address->getSalutation();
+        $array['firstname'] = $address->getFirstname();
+        $array['name'] = $address->getName();
+        $array['organisation'] = $address->getOrganisation();
+        $array['departement'] = $address->getDepartement();
+        $array['function'] = $address->getFunction();
+        $array['street1'] = $address->getStreet1();
+        $array['street2'] = $address->getStreet2();
+        $array['zip'] = $address->getZip();
+        $array['city'] = $address->getCity();
+        $array['country'] = $address->getCountry();
+        $array['tel'] = $address->getTel();
+        $array['mobile'] = $address->getMobile();
+        $array['email'] = $address->getEmail();
+        $array['url'] = $address->getUrl();
+        $array['street1Private'] = $address->getStreet1();
+        $array['street2Private'] = $address->getStreet2();
+        $array['zipPrivate'] = $address->getZipPrivate();
+        $array['cityPrivate'] = $address->getCityPrivate();
+        $array['countryPrivate'] = $address->getCountryPrivate();
+        $array['phonePrivate'] = $address->getPhonePrivate();
+        $array['mobilePrivate'] = $address->getMobilePrivate();
+        $array['emailPrivate'] = $address->getEmailPrivate();
+        $array['corresponcende'] = $address->getCorresponcende();
+        $array['comment'] = $address->getComment();
+
+        return $array;
+    }
+
+    public function updateAddressDataValue($address, $dataArray)
+    {
+        foreach ($dataArray as $row)
+        {
+            if ($row['value'] != '')
+            {
+                switch ($row['mapping'])
+                {
+                    case 'language':
+                        $address->setLanguage($row['value']);
+                        break;
+                    case 'salutation':
+                        $address->setSalutation($row['value']);
+                        break;
+                    case 'firstname':
+                        $address->setFirstname($row['value']);
+                        break;
+                    case 'name':
+                        $address->setName($row['value']);
+                        break;
+                    case 'organisation':
+                        $address->setOrganisation($row['value']);
+                        break;
+                    case 'departement':
+                        $address->setDepartement($row['value']);
+                        break;
+                    case 'function':
+                        $address->setFunction($row['value']);
+                        break;
+                    case 'street1':
+                        $address->setStreet1($row['value']);
+                        break;
+                    case 'street2':
+                        $address->setStreet2($row['value']);
+                        break;
+                    case 'zip':
+                        $address->setZip($row['value']);
+                        break;
+                    case 'city':
+                        $address->setCity($row['value']);
+                        break;
+                    case 'country':
+                        $address->setCountry($row['value']);
+                        break;
+                    case 'tel':
+                        $address->setTel($row['value']);
+                        break;
+                    case 'mobile':
+                        $address->setMobile($row['value']);
+                        break;
+                    case 'email':
+                        $address->setEmail($row['value']);
+                        break;
+                    case 'url':
+                        $address->setUrl($row['value']);
+                        break;
+
+
+                    //TODO add more fields
+                }
+            }
+        }
+        //daten speichern
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($address);
+        $em->flush();
+        return $address;
+    }
+
+    /*erstellt neue Adresse und gibt Address Object zurueck*/
+    public function createNewAddress($request, $id, $rowid)
     {
         $dataArray = $this->getDataArrayforMapping($request, $id, $rowid);
         $em = $this->getDoctrine()->getManager();
@@ -381,80 +599,7 @@ class FormAdminController extends FOSRestController
         $address->setLanguage('de');
         $address->setCorresponcende('gesch');
         $address->setCreationDate(new \DateTime());
-        foreach ($dataArray as $row)
-        {
-            if($row['value'] != '')
-            {
-                if($row['mapping'] == 'language')
-                {  $address->setLanguage($row['value']);
-                }
-
-                if($row['mapping'] == 'salutation')
-                {  $address->setSalutation($row['value']);
-                }
-
-                if($row['mapping'] == 'firstname')
-                {  $address->setFirstname($row['value']);
-                }
-
-                if($row['mapping'] == 'name')
-                {  $address->setName($row['value']);
-                }
-
-                if($row['mapping'] == 'organisation')
-                {  $address->setOrganisation($row['value']);
-                }
-
-                if($row['mapping'] == 'departement')
-                {  $address->setDepartement($row['value']);
-                }
-
-                if($row['mapping'] == 'function')
-                {  $address->setFunction($row['value']);
-                }
-
-                if($row['mapping'] == 'street1')
-                {  $address->setStreet1($row['value']);
-                }
-
-                if($row['mapping'] == 'street2')
-                {  $address->setStreet2($row['value']);
-                }
-
-                if($row['mapping'] == 'zip')
-                {  $address->setZip($row['value']);
-                }
-
-                if($row['mapping'] == 'city')
-                {  $address->setCity($row['value']);
-                }
-
-                if($row['mapping'] == 'country')
-                {  $address->setCountry($row['value']);
-                }
-
-                if($row['mapping'] == 'tel')
-                {  $address->setTel($row['value']);
-                }
-
-                if($row['mapping'] == 'mobile')
-                {  $address->setMobile($row['value']);
-                }
-
-                if($row['mapping'] == 'email')
-                {  $address->setEmail($row['value']);
-                }
-
-                if($row['mapping'] == 'url')
-                {  $address->setUrl($row['value']);
-                }
-                //TODO add more fields
-            }
-        }
-
-        //daten speichern
-        $em->persist($address);
-        $em->flush();
+        $address = $this->updateAddressDataValue($address, $dataArray);
         $addressID = $address->getId();
 
         //address Id speichern
@@ -463,7 +608,16 @@ class FormAdminController extends FOSRestController
         $formData->setAddressId($addressID);
         $em->persist($formData);
         $em->flush();
+        return $address;
 
+    }
+
+
+    /* erstellt neue adresse */
+    public function addAddressAction(Request $request, $id, $rowid)
+    {
+
+        $this->createNewAddress($request, $id, $rowid);
         return $this->redirectToRoute('admin_networking_forms_show', ['id' => $id]);
 
     }
@@ -494,7 +648,7 @@ class FormAdminController extends FOSRestController
 
 
     /*
-     * function to add form data to address db
+     * match overview, show all possible matches and possibility to create new address
      * */
     public function matchFormEntryAction(Request $request, $id, $rowid)
     {
@@ -511,8 +665,35 @@ class FormAdminController extends FOSRestController
         //find possible matches
         $repoAddress = $this->getDoctrine()->getRepository(Address::class);
         $matches = $repoAddress->findMatches($mappingArray['firstname'], $mappingArray['name'], $mappingArray['email']);
-        //Application\Networking\InitCmsBundle\Entity
 
+        $formBuilder = $this->createFormBuilder(null, array('show_legend' => false));
+        $formBuilder->add('addressCategory', EntityType::class, array(
+            'class' => AddressCategory::class,
+            'choice_label' => 'name',
+            'multiple' => true,
+            'expanded' => true,
+            'required' => false,
+            'label' => 'Kategorie'
+        ));
+        $formBuilder->add('send', SubmitType::class, array('label' => 'Neue Adresse erfassen'));
+        $form = $formBuilder->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $em = $this->getDoctrine()->getManager();
+            $data = $form->getData();
+            $address = $this->createNewAddress($request, $id, $rowid);
+            foreach($data['addressCategory'] as $addressCategory){
+                $address->addCategory($addressCategory);
+            }
+            $em->persist($address);
+            $em->flush();
+            //umleitung auf formular uebersicht
+            return $this->redirectToRoute('admin_networking_forms_show', ['id' => $id]);
+        }
+
+        $param['form'] = $form->createView();
         $param['dataArray'] = $dataArray;
         $param['id'] = $id;
         $param['rowid'] = $rowid;

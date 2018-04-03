@@ -1,0 +1,95 @@
+{% extends base_template %}
+
+{% block page_title %}
+
+
+    <div class="col-xs-12 col-md-10 content-main">
+
+        <div class="row content-top">
+            <div class="col-md-4">
+            </div>
+        </div>
+        <div class="row content-head">
+            <div class="col-xs-7 page_title">
+                <h1>
+                    <small>Adress Datenbank</small> {{ mappingArray.firstname }} {{ mappingArray.name }}
+
+                </h1>
+            </div>
+
+            <div class="col-xs-5 context-head">
+
+            </div>
+        </div>
+
+{% endblock %}
+
+
+
+
+{% block sonata_admin_content %}
+    <div class="row row-content-wide">
+        <div class="sonata-ba-content col-md-10">
+
+
+            {#{{ dump(mappingArray) }}#}
+
+            {#{{ dump(dataArray) }}#}
+
+            {#{{ dump(address) }}#}
+
+            <form method="post" action="" enctype="multipart/form-data">
+
+                <input type="radio" name="todo" id="radio1" value="option1" checked />
+                <label for="radio1" class="radiobox">Adresse verknüpfen ohne Daten zu übernehmen</label>
+                <div class="cleaner">&nbsp;</div>
+
+
+                <input type="radio" name="todo" id="radio2" value="option2" />
+                <label for="radio2" class="radiobox">Formular Daten überschreiben die bestehenden Daten</label>
+                <div class="cleaner">&nbsp;</div>
+
+
+                <input type="radio" name="todo" id="radio3" value="option3" />
+                <label for="radio3" class="radiobox">Folgende Formular Felder sollen übernommen werden</label>
+                <div class="cleaner">&nbsp;</div>
+
+
+
+                <table class="table table-hover table-compact">
+                    <tr>
+                        <td><strong>Feld</strong></td>
+                        <td width="10"><strong>&nbsp;</strong></td>
+                        <td><strong>Formular</strong></td>
+                        <td  width="10"><strong>&nbsp;</strong></td>
+                        <td><strong>Adress-DB</strong></td>
+
+
+                    </tr>
+
+                    {% for row in dataArray %}
+                        <tr>
+                            <td>{{ row.label }}</td>
+                            <td><input type="radio" name="{{ row.mapping }}" value="{{ row.value }}"></td>
+                            <td>{{ row.value }}</td>
+                            <td><input type="radio" name="{{ row.mapping }}" value="{{ addressArray[row.mapping] }}" checked></td>
+                            <td>{{ addressArray[row.mapping] }}</td>
+
+
+                        </tr>
+                    {% endfor %}
+
+
+                </table>
+
+
+                <div class="cleaner">&nbsp;</div>
+                <div class="button">
+                    <input type='hidden' name='submit_formgenerator' value="1">
+                    <input name="Submit" value="speichern" type="submit">
+                </div>
+
+            </form>
+
+    </div>
+{% endblock %}

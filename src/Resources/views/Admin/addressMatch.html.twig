@@ -52,6 +52,22 @@
                     <td>{{ match.organisation }}</td>
                     <td>{{ match.firstname }}  {{ match.name }} </td>
                     <td>{{ match.email }}</td>
+                    <td><a class="" role="button" data-toggle="collapse" href="#collapseExampleNote{{ match.id }}" aria-expanded="false" aria-controls="collapseExample"> <i class="glyphicon glyphicon-plus"></i> alles anzeigen</a>
+                        <div class="collapse" id="collapseExampleNote{{ match.id }}">
+                           Status: {{ match.status }}<br />
+                           Sprache: {{ match.language }}<br />
+                           Anrede: {{ match.salutation }}<br />
+                           Abteilung: {{ match.departement }}<br />
+                           Funktion: {{ match.function }}<br />
+                           Strasse 1: {{ match.street1 }}<br />
+                           Strasse 2:  {{ match.street2 }}<br />
+                           PLZ: {{ match.zip }}<br />
+                           Ort: {{ match.city }}<br />
+                           Tel: {{ match.tel }}<br />
+                           Mobile: {{ match.mobile }}<br />
+
+
+                        </div></td>
                     <td> <a  href="{{ admin.generateUrl('addMatch', {'id': id, 'rowid': rowid, 'addressid':  match.id  }) }}" >
                             <i class="glyphicon glyphicon-ok"></i>
                             Adresse verknüpfen</a></td>
@@ -64,9 +80,13 @@
             <h3>Neue Adresse erstellen</h3>
 
 
-            <a  href="{{ admin.generateUrl('addNewAddress', {'id': id, 'rowid': rowid }) }}" >
-                <i class="glyphicon glyphicon-user"></i>
-                Adresse zur Datenbank hinzufügen</a>
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            {{ form_end(form) }}
+
+            {#<a  href="{{ admin.generateUrl('addNewAddress', {'id': id, 'rowid': rowid }) }}" >#}
+                {#<i class="glyphicon glyphicon-user"></i>#}
+                {#Adresse zur Datenbank hinzufügen</a>#}
 
     </div>
 {% endblock %}

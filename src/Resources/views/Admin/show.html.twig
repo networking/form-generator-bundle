@@ -17,54 +17,119 @@
         {% endblock formactionstop %}
 
 
+        <table class="table table-hover table-compact">
         {% for formData in object.formData %}
-            <p>Form Submitted at {{ formData.createdAt|date('d.M.Y H:i') }}</p>
-            <table class="table table-hover table-compact">
+
+            {% if loop.first %}
+                {#Kopfzeile ausgeben#}
                 <thead>
-                <tr class="sonata-ba-list-field-header ">
-                    <th>Field</th>
-                    <th>Value</th>
-                    <th width="150">
-                        <a  href="{{ admin.generateUrl('deleteFormEntry', {'id': object.id, 'rowid': formData.id}) }}" onClick="temp=window.confirm('{{ 'confirm_deletion'|trans({}, 'formGenerator') }}');return temp;" >
-                            <i class="glyphicon glyphicon-remove"></i>
-                            {{ 'link_action_delete'|trans({}, 'formGenerator') }}</a>
-                    </th>
+                    <tr class="sonata-ba-list-field-header ">
+                        {% if formData.formFields | length > 4  %}
+                            {#nur die ersten 4 Form Felder ausgeben , rest muss man sich anzeigen lassen#}
+                            <th>{{ formData.formFields.0.label }}</th>
+                            <th>{{ formData.formFields.1.label }}</th>
+                            <th>{{ formData.formFields.2.label }}</th>
+                            <th>{{ formData.formFields.3.label }}</th>
+                            <th>&nbsp;</th>
 
-                    <th width="270">
-
-                        {% if formData.addressId is null  %}
-                            <a  href="{{ admin.generateUrl('matchFormEntry', {'id': object.id, 'rowid': formData.id}) }}" >
-                                <i class="glyphicon glyphicon-search"></i>
-                                Adresse zur Datenbank hinzufügen</a>
                         {% else %}
-                            <a  href="/admin/cms/adressen/{{ formData.addressId }}/edit" >
-                                <i class="glyphicon glyphicon-user"></i>
-                                Zur Adresse gehen</a>
-                        {% endif %}
-                    </th>
+                            {% for fieldData in formData.formFields %}
+                                <th>{{ fieldData.label }}</th>
+                            {% endfor %}
 
-                </tr>
+                        {% endif %}
+                        <th>Datum</th>
+                        <th>&nbsp;</th>
+                        <th>&nbsp;</th>
+                    </tr>
                 </thead>
-                <tbody>
-                {% for fieldData in formData.formFields %}
-                    <tr class="sonata-ba-view-container">
-                        <td>{{ fieldData.label }}</td>
-                        <td colspan="3">
-                            {% if fieldData.value is iterable %}
+            {% endif %}
+
+            {#daten ausgeben#}
+            <tr>
+
+                {% if formData.formFields | length > 4  %}
+                    {#nur die ersten 4 Form Felder ausgeben , rest muss man sich anzeigen lassen#}
+
+                    <td>
+                        {% if formData.formFields.0.value is iterable %}
+                            {{ formData.formFields.0.value|join(', ') }}
+                        {% else %}
+                            {{ formData.formFields.0.value}}
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if formData.formFields.1.value is iterable %}
+                            {{ formData.formFields.1.value|join(', ') }}
+                        {% else %}
+                            {{ formData.formFields.1.value}}
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if formData.formFields.2.value is iterable %}
+                            {{ formData.formFields.2.value|join(', ') }}
+                        {% else %}
+                            {{ formData.formFields.2.value}}
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if formData.formFields.2.value is iterable %}
+                            {{ formData.formFields.2.value|join(', ') }}
+                        {% else %}
+                            {{ formData.formFields.2.value}}
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <a class="" role="button" data-toggle="collapse" href="#collapseExampleNote{{ formData.id }}" aria-expanded="false" aria-controls="collapseExample"> <i class="glyphicon glyphicon-plus"></i> alles anzeigen</a>
+                        <div class="collapse" id="collapseExampleNote{{ formData.id }}">
+                            {% for fieldData in formData.formFields %}
+                                {{ fieldData.label }}: {% if fieldData.value is iterable %}
                                 {{ fieldData.value|join(', ') }}
                             {% else %}
                                 {{ fieldData.value}}
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                            {% endif %}<br />
+                            {% endfor %}
+                        </div>
+                    </td>
 
 
+                {% else %}
+                    {% for fieldData in formData.formFields %}
+                        <td>{% if fieldData.value is iterable %}
+                                {{ fieldData.value|join(', ') }}
+                            {% else %}
+                                {{ fieldData.value}}
+                            {% endif %}</td>
+                    {% endfor %}
 
-            <hr/>
+                {% endif %}
+
+                <td>{{ formData.createdAt|date('d.m.Y H:i') }}</td>
+                <td>
+                    <a  href="{{ admin.generateUrl('deleteFormEntry', {'id': object.id, 'rowid': formData.id}) }}" onClick="temp=window.confirm('{{ 'confirm_deletion'|trans({}, 'formGenerator') }}');return temp;" >
+                    <i class="glyphicon glyphicon-trash"></i>
+                   </a>
+                </td>
+                <td class="{% if formData.addressId is null %}alert-danger{% else %}alert-success{% endif %}">
+                    {% if formData.addressId is null  %}
+                    <a  href="{{ admin.generateUrl('matchFormEntry', {'id': object.id, 'rowid': formData.id}) }}" >
+                    <i class="glyphicon glyphicon-search"></i>
+                    Adresse zur Datenbank hinzufügen</a>
+                    {% else %}
+                    <a  href="/admin/cms/adressen/{{ formData.addressId }}/edit" >
+                    <i class="glyphicon glyphicon-user"></i>
+                    Zur Adresse gehen</a>
+                    {% endif %}
+                </td>
+            </tr>
+
         {% endfor %}
+        </table>
+
 
         {% block formactions %}
             <div class="well form-actions">
