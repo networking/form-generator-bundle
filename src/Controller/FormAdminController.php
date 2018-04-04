@@ -353,6 +353,7 @@ class FormAdminController extends FOSRestController
         $array['E-Mail (privat)'] = 'emailPrivate';
         $array['Korrespondenzadresse'] = 'corresponcende';
         $array['Kommentar'] = 'comment';
+        $array['Geschlecht'] = 'sex';
         return $array;
     }
 
@@ -406,6 +407,10 @@ class FormAdminController extends FOSRestController
 
                 if(isset($_POST['organisation']))
                 {  $address->setOrganisation($_POST['organisation']);
+                }
+
+                if(isset($_POST['sex']))
+                {  $address->setSex($_POST['sex']);
                 }
 
                 if(isset($_POST['departement']))
@@ -495,6 +500,7 @@ class FormAdminController extends FOSRestController
         $array['firstname'] = $address->getFirstname();
         $array['name'] = $address->getName();
         $array['organisation'] = $address->getOrganisation();
+        $array['sex'] = $address->getSex();
         $array['departement'] = $address->getDepartement();
         $array['function'] = $address->getFunction();
         $array['street1'] = $address->getStreet1();
@@ -542,6 +548,9 @@ class FormAdminController extends FOSRestController
                         break;
                     case 'organisation':
                         $address->setOrganisation($row['value']);
+                        break;
+                    case 'sex':
+                        $address->setSex($row['value']);
                         break;
                     case 'departement':
                         $address->setDepartement($row['value']);
