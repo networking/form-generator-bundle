@@ -28,6 +28,12 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Application\Networking\InitCmsBundle\Entity\Address;
 use Application\Networking\InitCmsBundle\Entity\AddressCategory;
 
+
+
+use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
+use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+
 /**
  * @RouteResource("Form")
  */
@@ -617,6 +623,23 @@ class FormAdminController extends FOSRestController
         $formData->setAddressId($addressID);
         $em->persist($formData);
         $em->flush();
+
+        //rechte setzten
+        //rechte anpassen
+        $securityIdentity = new RoleSecurityIdentity("ROLE_ADMIN");
+
+        $aclProvider = $this->get('security.acl.provider');
+        $objectIdentity = ObjectIdentity::fromDomainObject($address);
+        try {
+            $acl = $aclProvider->findAcl($objectIdentity);
+        } catch (\Symfony\Component\Security\Acl\Exception\AclNotFoundException $e) {
+            $acl = $aclProvider->createAcl($objectIdentity);
+        }
+
+        $acl->insertClassAce($securityIdentity, MaskBuilder::MASK_OWNER);
+        $aclProvider->updateAcl($acl);
+
+
         return $address;
 
     }
