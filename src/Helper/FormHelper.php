@@ -14,7 +14,7 @@ namespace Networking\FormGeneratorBundle\Helper;
 use Networking\FormGeneratorBundle\Entity\Form;
 use Networking\FormGeneratorBundle\Entity\FormData;
 use Networking\FormGeneratorBundle\Entity\FormFieldData;
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Templating\EngineInterface;
 
 class FormHelper
@@ -26,7 +26,7 @@ class FormHelper
     public $mailer;
 
     /**
-     * @var Registry
+     * @var ManagerRegistry
      */
     protected $doctrine;
 
@@ -38,10 +38,10 @@ class FormHelper
     /**
      * FormHelper constructor.
      * @param \Swift_Mailer $mailer
-     * @param Registry $doctrine
+     * @param ManagerRegistry $doctrine
      * @param EngineInterface $twig
      */
-    public function __construct(\Swift_Mailer $mailer, Registry $doctrine, EngineInterface $twig)
+    public function __construct(\Swift_Mailer $mailer, ManagerRegistry $doctrine, EngineInterface $twig)
     {
         $this->mailer = $mailer;
         $this->doctrine = $doctrine;

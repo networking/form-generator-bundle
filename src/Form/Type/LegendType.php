@@ -16,7 +16,8 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class LegendType extends AbstractType{
+class LegendType extends AbstractType
+{
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
@@ -36,7 +37,7 @@ class LegendType extends AbstractType{
      *
      * @return string The name of this type
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'form_legend';
     }

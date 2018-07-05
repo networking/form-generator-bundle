@@ -366,7 +366,7 @@ class FormAdminController extends FOSRestController
             return $this->redirect($this->admin->generateUrl('list'));
         }
 
-        return $this->render(
+        return $this->renderWithExtraParams(
             'NetworkingFormGeneratorBundle:Admin:copy.html.twig',
             [
                 'action' => 'copy',
@@ -406,7 +406,7 @@ class FormAdminController extends FOSRestController
     /**
      * {@inheritdoc}
      */
-    public function render($view, array $parameters = [], Response $response = null)
+    public function renderWithExtraParams($view, array $parameters = [], Response $response = null)
     {
         $parameters['admin'] = isset($parameters['admin']) ?
             $parameters['admin'] :
@@ -418,6 +418,35 @@ class FormAdminController extends FOSRestController
 
         $parameters['admin_pool'] = $this->get('sonata.admin.pool');
 
-        return parent::render($view, $parameters, $response);
+        return parent::renderTemplate($view, $parameters, $response);
+    }
+
+    /**
+     * @param $view
+     * @param array $parameters
+     * @param Response|null $response
+     * @return Response
+     * @throws \Twig\Error\Error
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function renderTemplate($view, array $parameters = [], Response $response = null)
+    {
+        if ($this->container->has('templating')) {
+            $content = $this->container->get('templating')->render($view, $parameters);
+        } elseif ($this->container->has('twig')) {
+            $content = $this->container->get('twig')->render($view, $parameters);
+        } else {
+            throw new \LogicException('You can not use the "render" method if the Templating Component or the Twig Bundle are not available. Try running "composer require symfony/twig-bundle".');
+        }
+
+        if (null === $response) {
+            $response = new Response();
+        }
+
+        $response->setContent($content);
+
+        return $response;
     }
 }

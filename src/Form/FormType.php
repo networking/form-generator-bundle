@@ -235,4 +235,9 @@ class FormType extends AbstractType
         return $text;
     }
 
+    public function getBlockPrefix()
+    {
+        return 'generated_form';
+    }
+
 }
