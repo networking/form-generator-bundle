@@ -127,7 +127,8 @@ class FormAdminController extends FOSRestController
                     $view = $this->view($errors, 500);
                 } else {
                     $this->admin->update($form);
-                    $view->setData(['id' => $form->getId(), 'message' => 'Your form has been successfully updated']);
+                    $view->setData(['id' => $form->getId(), 'message' => $this->get('translator')->trans('form_updated',
+                        [], 'formGenerator')]);
                 }
 
 

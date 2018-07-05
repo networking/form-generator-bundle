@@ -7,6 +7,7 @@ list:
 filter:
     label_name: Formularname
 form_created: Formular wurde erfolgreich erstellt
+form_updated: Formular wurde erfolgreich aktualisiert
 link_action_export: Export Daten
 date: Datum
 link_action_delete: Löschen
