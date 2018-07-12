@@ -73,7 +73,7 @@ class FormAdmin extends BaseAdmin
 
     protected function configureListFields(ListMapper $listMapper){
         parent::configureListFields($listMapper);
-        $listMapper->add('pages', 'string', ['template' => 'NetworkingFormGeneratorBundle:Admin:pages.html.twig']);
+        $listMapper->add('pages', 'string', ['template' => '@NetworkingFormGenerator/Admin/pages.html.twig']);
         $listMapper->add(
             '_action',
             'actions',
@@ -83,7 +83,7 @@ class FormAdmin extends BaseAdmin
                     'edit' => [],
                     'show' => [],
                     'copy' => [
-                        'template' => 'NetworkingFormGeneratorBundle:Admin:list_action_copy.html.twig',
+                        'template' => '@NetworkingFormGenerator/Admin/list_action_copy.html.twig',
                     ],
                     'delete' => [],
                 ]

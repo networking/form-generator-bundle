@@ -116,8 +116,7 @@ class FrontendFormController extends Controller
      * @param string $template
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function renderFormAction(Form $form, $actionUrl = null, $template =
-    'NetworkingFormGeneratorBundle:Form:form.html.twig')
+    public function renderFormAction($form, $actionUrl = null, $template = '@NetworkingFormGenerator/Form/form.html.twig')
     {
         if (is_null($actionUrl)) {
             $actionUrl = $this->generateUrl('networking_form_view', ['id' => $form->getId()]);

@@ -115,7 +115,7 @@ class FormPageContent implements ContentInterface
     {
         return [
             'content' => ['form_page_content' => $this->form],
-            'template' => 'NetworkingFormGeneratorBundle:Admin:formPageContent.html.twig'
+            'template' => '@NetworkingFormGenerator/Admin/formPageContent.html.twig'
         ];
     }
 

@@ -6,7 +6,7 @@
 {% endblock %}
 {% block body %}
     {% block init_cms_top_nav %}
-        {% include 'NetworkingInitCmsBundle:Navbar:admin_navbar.html.twig' %}
+        {% include '@NetworkingInitCms/Navbar/admin_navbar.html.twig' %}
     {% endblock init_cms_top_nav %}
 
     <div class="{% block container_class %}container{% if app.user and app.user.getAdminSetting('admin_portal_width') != 'small' %}-fluid{% endif %}{% endblock container_class %} row-offcanvas">

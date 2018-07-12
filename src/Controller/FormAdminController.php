@@ -202,7 +202,7 @@ class FormAdminController extends FOSRestController
     {
 
         /** @var FormAdmin $admin */
-        $admin = $this->get('networking_form_generator.admin.form');
+        $admin = $this->get('Networking\FormGeneratorBundle\Admin\FormAdmin');
 
         $form = $admin->getObject($id);
         if (!$form) {
@@ -368,7 +368,7 @@ class FormAdminController extends FOSRestController
         }
 
         return $this->renderWithExtraParams(
-            'NetworkingFormGeneratorBundle:Admin:copy.html.twig',
+            '@NetworkingFormGenerator/Admin/copy.html.twig',
             [
                 'action' => 'copy',
                 'form' => $form,
