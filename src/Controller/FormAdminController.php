@@ -3,14 +3,9 @@
 namespace Networking\FormGeneratorBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
-use Networking\FormGeneratorBundle\Admin\FormFieldAdmin;
 use Networking\FormGeneratorBundle\Entity\FormField;
-use Networking\FormGeneratorBundle\Helper\FormHelper;
 use Sonata\AdminBundle\Admin\AdminInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\Annotations\Route;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use Networking\FormGeneratorBundle\Entity\Form;

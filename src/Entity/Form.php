@@ -35,7 +35,7 @@ class Form
     /**
      * @var string
      * @Sonata\ListMapper(identifier=true)
-     * @Sonata\DatagridMapper()
+     * @Sonata\DatagridMapper(fieldOptions={"translation_domain"="formGenerator"})
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;

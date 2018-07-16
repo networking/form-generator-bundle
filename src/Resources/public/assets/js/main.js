@@ -19,7 +19,7 @@ require.config({
     },
     paths: {
         app: "networkingformgenerator/assets/js",
-        ckeditor: 'ivoryckeditor/ckeditor',
+        ckeditor: 'fosckeditor/ckeditor',
         collections: "networkingformgenerator/assets/js/collections",
         data: "networkingformgenerator/assets/js/data",
         models: "networkingformgenerator/assets/js/models",

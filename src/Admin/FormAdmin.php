@@ -78,7 +78,7 @@ class FormAdmin extends BaseAdmin
             '_action',
             'actions',
             [
-                'label' => ' ',
+                'label' => false,
                 'actions' => [
                     'edit' => [],
                     'show' => [],
