@@ -10,7 +10,6 @@
 
 namespace Networking\FormGeneratorBundle\Helper;
 
-
 use Networking\FormGeneratorBundle\Entity\Form;
 use Networking\FormGeneratorBundle\Entity\FormData;
 use Networking\FormGeneratorBundle\Entity\FormFieldData;
@@ -19,7 +18,6 @@ use Symfony\Component\Templating\EngineInterface;
 
 class FormHelper
 {
-
     /**
      * @var \Swift_Mailer
      */
@@ -37,7 +35,8 @@ class FormHelper
 
     /**
      * FormHelper constructor.
-     * @param \Swift_Mailer $mailer
+     *
+     * @param \Swift_Mailer   $mailer
      * @param ManagerRegistry $doctrine
      * @param EngineInterface $twig
      */
@@ -46,20 +45,19 @@ class FormHelper
         $this->mailer = $mailer;
         $this->doctrine = $doctrine;
         $this->twig = $twig;
-
     }
 
     /**
-     * Send an plain text email of the data
+     * Send an plain text email of the data.
      *
-     * @param Form $form
-     * @param array $data
+     * @param Form   $form
+     * @param array  $data
      * @param string $emailFrom
+     *
      * @return int
      */
     public function sendEmail(Form $form, array $data, $emailFrom = '')
     {
-
         $message = \Swift_Message::newInstance()
             ->setSubject($form->getName())
             ->setFrom($emailFrom)
@@ -72,15 +70,15 @@ class FormHelper
         foreach (explode(',', $form->getEmail()) as $email) {
             $message->addTo(trim($email));
         }
-        return $this->mailer->send($message);
 
+        return $this->mailer->send($message);
     }
 
     /**
-     * Save form data to the DB
+     * Save form data to the DB.
      *
-     * @param Form $form
-     * @param array $data
+     * @param Form                              $form
+     * @param array                             $data
      * @param \Symfony\Component\Form\Form|null $originalForm
      */
     public function saveToDb(Form $form, array $data, \Symfony\Component\Form\Form $originalForm = null)
@@ -89,20 +87,20 @@ class FormHelper
         $formData->setForm($form);
 
         foreach ($data as $key => $val) {
-            if($key == '_token') continue;
+            if ($key == '_token') {
+                continue;
+            }
             $formFieldData = new FormFieldData();
             if ($field = $form->getField($key)) {
                 $formFieldData->setLabel($field->getFieldLabel());
                 $formFieldData->setFormFieldValue($field, $val);
-
             } else {
                 if ($originalForm) {
                     $field = $originalForm->get($key);
-                    $label =$field->get('label');
+                    $label = $field->get('label');
                     $formFieldData->setLabel($label);
                     $formFieldData->setValue($val);
                 }
-
             }
             $formData->addFormField($formFieldData);
         }
@@ -110,14 +108,13 @@ class FormHelper
         $em = $this->doctrine->getManager();
         $em->persist($formData);
         $em->flush();
-
     }
 
     /**
      * Returns a rendered view.
      *
-     * @param string $view The view name
-     * @param array $parameters An array of parameters to pass to the view
+     * @param string $view       The view name
+     * @param array  $parameters An array of parameters to pass to the view
      *
      * @return string The rendered view
      */
@@ -125,4 +122,4 @@ class FormHelper
     {
         return $this->twig->render($view, $parameters);
     }
-} 
+}

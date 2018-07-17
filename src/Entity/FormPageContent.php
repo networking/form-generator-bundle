@@ -17,21 +17,19 @@ use Ibrows\Bundle\SonataAdminAnnotationBundle\Annotation as Sonata;
 use Symfony\Component\Form\FormBuilder;
 
 /**
- * FormPageContent
+ * FormPageContent.
  *
  * @ORM\Table(name="form_page_content")
  * @ORM\Entity
  */
 class FormPageContent implements ContentInterface
 {
-
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     *
      */
     private $id;
 
@@ -61,10 +59,10 @@ class FormPageContent implements ContentInterface
             AutocompleteType::class,
                [
                    'label' => 'form.label.form',
-                   'translation_domain' =>'formGenerator',
-                   'class'=> Form::class,
-                   'attr'=> ['style'=>'width: 220px;'],
-                   'layout' => 'horizontal'
+                   'translation_domain' => 'formGenerator',
+                   'class' => Form::class,
+                   'attr' => ['style' => 'width: 220px;'],
+                   'layout' => 'horizontal',
                ]
         );
     }
@@ -87,6 +85,7 @@ class FormPageContent implements ContentInterface
 
     /**
      * @param Form $form
+     *
      * @return $this
      */
     public function setForm(Form $form)
@@ -98,6 +97,7 @@ class FormPageContent implements ContentInterface
 
     /**
      * @param array $params
+     *
      * @return array
      */
     public function getTemplateOptions($params = [])
@@ -115,7 +115,7 @@ class FormPageContent implements ContentInterface
     {
         return [
             'content' => ['form_page_content' => $this->form],
-            'template' => '@NetworkingFormGenerator/Admin/formPageContent.html.twig'
+            'template' => '@NetworkingFormGenerator/Admin/formPageContent.html.twig',
         ];
     }
 

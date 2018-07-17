@@ -4,10 +4,9 @@ namespace Networking\FormGeneratorBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Networking\FormGeneratorBundle\Entity\Form;
 
 /**
- * FormData
+ * FormData.
  *
  * @ORM\Table(name="form_data")
  * @ORM\Entity
@@ -16,7 +15,7 @@ use Networking\FormGeneratorBundle\Entity\Form;
 class FormData
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -40,7 +39,6 @@ class FormData
     private $form;
 
     /**
-     *
      * @var ArrayCollection;
      *
      * @ORM\OneToMany(targetEntity="Networking\FormGeneratorBundle\Entity\FormFieldData",cascade={"persist", "remove"}, mappedBy="formData", orphanRemoval=true)
@@ -55,11 +53,10 @@ class FormData
         $this->createdAt = new \DateTime();
     }
 
-
     /**
      * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -133,7 +130,6 @@ class FormData
 
         foreach ($formFields as $field) {
             $this->addFormField($field);
-
         }
     }
 
@@ -153,6 +149,4 @@ class FormData
     {
         return $this->getId();
     }
-
 }
-

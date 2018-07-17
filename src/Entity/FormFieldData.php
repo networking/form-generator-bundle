@@ -5,7 +5,7 @@ namespace Networking\FormGeneratorBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * FieldData
+ * FieldData.
  *
  * @ORM\Table(name="form_field_data")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class FormFieldData
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -42,11 +42,10 @@ class FormFieldData
      */
     private $value;
 
-
     /**
      * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -77,12 +76,12 @@ class FormFieldData
         return $this->formData;
     }
 
-
     /**
      * Set value.
      *
      * @param FormField $formField
      * @param $value
+     *
      * @return $this
      */
     public function setFormFieldValue(FormField $formField, $value)
@@ -130,6 +129,4 @@ class FormFieldData
     {
         $this->label = $label;
     }
-
 }
-

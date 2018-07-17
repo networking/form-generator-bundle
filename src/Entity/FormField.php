@@ -4,10 +4,9 @@ namespace Networking\FormGeneratorBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * FormField
+ * FormField.
  *
  * @ORM\Table(name="form_field")
  * @ORM\Entity
@@ -15,7 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class FormField
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -69,7 +68,7 @@ class FormField
     private $placeholder;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="mandatory", type="boolean", nullable =true)
      */
@@ -105,7 +104,7 @@ class FormField
     protected $position;
 
     /**
-     * Mapping of choice fields to there option, value lists
+     * Mapping of choice fields to there option, value lists.
      *
      * @var array
      */
@@ -115,7 +114,7 @@ class FormField
         'Multiple Checkboxes' => ['options' => 'checkboxes', 'values' => 'checkboxesValues'],
         'Multiple Checkboxes Inline' => ['options' => 'checkboxes', 'values' => 'checkboxesValues'],
         'Multiple Radios' => ['options' => 'radios', 'values' => 'radiosValues'],
-        'Multiple Radios Inline' => ['options' => 'radios', 'values' => 'radiosValues']
+        'Multiple Radios Inline' => ['options' => 'radios', 'values' => 'radiosValues'],
     ];
 
     public function __clone()
@@ -123,11 +122,10 @@ class FormField
         $this->id = null;
     }
 
-
     /**
      * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -149,7 +147,6 @@ class FormField
     {
         $this->form = $form;
     }
-
 
     /**
      * Set name.
@@ -274,7 +271,7 @@ class FormField
     /**
      * Set mandatory.
      *
-     * @param boolean $mandatory
+     * @param bool $mandatory
      *
      * @return FormField
      */
@@ -288,7 +285,7 @@ class FormField
     /**
      * Get mandatory.
      *
-     * @return boolean
+     * @return bool
      */
     public function getMandatory()
     {
@@ -392,15 +389,14 @@ class FormField
             $values = $key['values'];
 
             foreach ($this->options[$values]['value'] as $k => $val) {
-                if(array_key_exists($k, $this->options[$options]['value'])){
-
+                if (array_key_exists($k, $this->options[$options]['value'])) {
                     $map[$this->options[$options]['value'][$k]] = $val;
                 }
             }
+
             return $map;
         }
+
         return false;
     }
-
 }
-

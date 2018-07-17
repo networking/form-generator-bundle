@@ -12,26 +12,19 @@ namespace Networking\FormGeneratorBundle\Twig\Extension;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityRepository;
 use Networking\InitCmsBundle\Entity\LayoutBlock;
-use Networking\InitCmsBundle\Model\LayoutBlockInterface;
-use Networking\InitCmsBundle\Model\PageInterface;
-use Networking\InitCmsBundle\Model\PageManagerInterface;
-use Networking\InitCmsBundle\Twig\TokenParser\JSTokenParser;
-use Sonata\AdminBundle\Admin\AdminInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Form\FormView;
 
 /**
- * Class NetworkingHelperExtension
- * @package Networking\InitCmsBundle\Twig\Extension
+ * Class NetworkingHelperExtension.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class FormHelperExtension extends \Twig_Extension implements ContainerAwareInterface
 {
     /**
-     * Container
+     * Container.
      *
      * @var ContainerInterface
      */
@@ -57,7 +50,6 @@ class FormHelperExtension extends \Twig_Extension implements ContainerAwareInter
      */
     protected $formBlocks;
 
-
     /**
      * Sets the Container.
      *
@@ -80,7 +72,6 @@ class FormHelperExtension extends \Twig_Extension implements ContainerAwareInter
         return 'networking_form_generator.helper.twig';
     }
 
-
     /**
      * Returns a list of functions to add to the existing list.
      *
@@ -95,24 +86,23 @@ class FormHelperExtension extends \Twig_Extension implements ContainerAwareInter
 
     /**
      * @param $formId
+     *
      * @return array
      */
     public function getPageLinks($formId)
     {
-
-
         $content = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:FormPageContent')->findBy(
             ['form' => $formId]
         );
 
         $blocks = $this->getFormPageContentLayoutBlocks();
 
-        $filteredBlocks = $blocks->filter(function(LayoutBlock $block)use ($content){
-                foreach ($content as $item){
-                    if($item->getId() == $block->getObjectId()){
-                        return true;
-                    }
+        $filteredBlocks = $blocks->filter(function (LayoutBlock $block) use ($content) {
+            foreach ($content as $item) {
+                if ($item->getId() == $block->getObjectId()) {
+                    return true;
                 }
+            }
         });
 
         $links = [];
@@ -120,19 +110,17 @@ class FormHelperExtension extends \Twig_Extension implements ContainerAwareInter
         $pageAdmin = $this->container->get('sonata.admin.pool')->getAdminByClass($pageClass);
 
         /** @var LayoutBlock $block */
-        foreach ($filteredBlocks as $block){
-
+        foreach ($filteredBlocks as $block) {
             $url = $pageAdmin->generateUrl('show', ['id' => $block->getPageId()]);
             $links[] = ['url' => $url, 'title' => $block->getPage()->getAdminTitle()];
         }
 
         return $links;
-
     }
 
     protected function getFormPageContentLayoutBlocks()
     {
-        if(!$this->formBlocks){
+        if (!$this->formBlocks) {
             $blocks = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:LayoutBlock')->findBy(
                 ['classType' => 'Networking\\FormGeneratorBundle\\Entity\\FormPageContent']
             );
@@ -142,7 +130,6 @@ class FormHelperExtension extends \Twig_Extension implements ContainerAwareInter
 
         return $this->formBlocks;
     }
-
 
     /**
      * Shortcut to return the Doctrine Registry service.
@@ -181,7 +168,7 @@ class FormHelperExtension extends \Twig_Extension implements ContainerAwareInter
     }
 
     /**
-     * Get parameters from the service container
+     * Get parameters from the service container.
      *
      * @param string $name
      *
@@ -191,5 +178,4 @@ class FormHelperExtension extends \Twig_Extension implements ContainerAwareInter
     {
         return $this->container->getParameter($name);
     }
-
 }

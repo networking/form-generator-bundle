@@ -19,15 +19,14 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
  */
 class FormAdminController extends FOSRestController
 {
-
     /**
      * @var AdminInterface
      */
     protected $admin;
 
-
     /**
      * FormAdminController constructor.
+     *
      * @param FormAdmin $formAdmin
      */
     public function __construct(FormAdmin $formAdmin)
@@ -48,6 +47,7 @@ class FormAdminController extends FOSRestController
      *
      * @param Request $request
      * @param $id
+     *
      * @return Response
      */
     public function getAction(Request $request, $id)
@@ -64,6 +64,7 @@ class FormAdminController extends FOSRestController
 
             $view = $this->view($form);
             $view->setFormat('json');
+
             return $this->handleView($view);
         }
     }
@@ -72,6 +73,7 @@ class FormAdminController extends FOSRestController
      * @Route(requirements={"_format"="json|xml"})
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function postAction(Request $request)
@@ -79,7 +81,6 @@ class FormAdminController extends FOSRestController
         $view = $this->view([], 200);
         try {
             /** @var FormAdmin $admin */
-           ;
             $form = $this->admin->getNewInstance();
             $form = $this->setFields($request, $form);
 
@@ -91,6 +92,7 @@ class FormAdminController extends FOSRestController
         }
 
         $view->setFormat('json');
+
         return $this->handleView($view);
     }
 
@@ -99,6 +101,7 @@ class FormAdminController extends FOSRestController
      *
      * @param Request $request
      * @param $id
+     *
      * @return Response
      */
     public function putAction(Request $request, $id)
@@ -106,7 +109,6 @@ class FormAdminController extends FOSRestController
         $view = $this->view([], 200);
         try {
             if ($id) {
-
                 $form = $this->admin->getObject($id);
                 if (!$form) {
                     throw new NotFoundHttpException('Form not found');
@@ -125,21 +127,20 @@ class FormAdminController extends FOSRestController
                     $view->setData(['id' => $form->getId(), 'message' => $this->get('translator')->trans('form_updated',
                         [], 'formGenerator')]);
                 }
-
-
             }
         } catch (\Exception $e) {
             $view = $this->view(['message' => $e->getMessage()], 500);
         }
 
         $view->setFormat('json');
+
         return $this->handleView($view);
     }
 
     /**
      * @param Request $request
+     * @param Form    $form
      *
-     * @param Form $form
      * @return Form
      */
     protected function setFields(Request $request, Form $form)
@@ -186,11 +187,13 @@ class FormAdminController extends FOSRestController
                 }
             }
         }
+
         return $form;
     }
 
     /**
      * @Route(requirements={"_format"="json|xml"}, defaults={"_format": "json"})
+     *
      * @param Request $request
      */
     public function deleteAction(Request $request, $id)
@@ -207,39 +210,32 @@ class FormAdminController extends FOSRestController
         $admin->delete($form);
     }
 
-
     /*
      * deletes a single entry
      * */
 
     public function deleteFormEntryAction(Request $request, $id, $rowid)
     {
-
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('NetworkingFormGeneratorBundle:FormData');
 
         $formData = $repo->find($rowid);
         $em->remove($formData);
         $em->flush();
+
         return $this->redirectToRoute('admin_networking_forms_show', ['id' => $id]);
-
     }
-
 
     public function deleteAllFormEntryAction(Request $request, $id)
     {
-
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('NetworkingFormGeneratorBundle:FormData');
 
         $formData = $repo->findBy(['form' => $id]);
-        foreach($formData as $record)
-        {
+        foreach ($formData as $record) {
             $em->remove($record);
             $em->flush();
         }
-
-
 
         return $this->redirectToRoute('admin_networking_forms_show', ['id' => $id]);
     }
@@ -249,41 +245,39 @@ class FormAdminController extends FOSRestController
      * */
     public function excelExportAction(Request $request, $id)
     {
-
         $repo = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:Form');
         /** @var Form $form */
         $form = $repo->find($id);
         $formFields = $form->getFormFields();
         $formData = $form->getFormData();
 
-
         $phpExcelObject = $this->get('phpexcel')->createPHPExcelObject();
 
-        $phpExcelObject->getProperties()->setCreator("initCms")
-            ->setTitle("Export")
-            ->setSubject("Export");
-
+        $phpExcelObject->getProperties()->setCreator('initCms')
+            ->setTitle('Export')
+            ->setSubject('Export');
 
         $col = 'A';
         $row = '1';
         //Titel-Zeile ausgeben
-        foreach($formFields as $key => $field){
-            $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row,$field->getFieldLabel());
-            $col++;
+        foreach ($formFields as $key => $field) {
+            $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row, $field->getFieldLabel());
+            ++$col;
         }
-        $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row,'Date');
+        $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row, 'Date');
 
         //Daten ausgeben
         foreach ($formData as $rowData) {
             $col = 'A';
-            $row++;
-            $formFields =  $rowData->getFormFields();
-            foreach($formFields as $field)
-            {
+            ++$row;
+            $formFields = $rowData->getFormFields();
+            foreach ($formFields as $field) {
                 $value = $field->getValue();
-                if(is_array($value)){ $value = implode(" ",$value); }
+                if (is_array($value)) {
+                    $value = implode(' ', $value);
+                }
                 $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row, $value);
-                $col++;
+                ++$col;
             }
             $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row, $rowData->getCreatedAt());
         }
@@ -307,12 +301,12 @@ class FormAdminController extends FOSRestController
         $response->headers->set('Content-Disposition', $dispositionHeader);
 
         return $response;
-
     }
 
     /**
      * @param Request $request
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function copyAction(Request $request, $id)
@@ -327,12 +321,11 @@ class FormAdminController extends FOSRestController
         }
 
         if ($request->getMethod() == 'POST') {
-
             try {
                 /** @var Form $formCopy */
                 $formCopy = clone $form;
 
-                foreach ($form->getFormFields()->toArray() as $field){
+                foreach ($form->getFormFields()->toArray() as $field) {
                     $fieldCopy = clone $field;
                     $formCopy->addFormField($fieldCopy);
                 }
@@ -344,7 +337,6 @@ class FormAdminController extends FOSRestController
                 );
                 $em->persist($formCopy);
                 $em->flush();
-
             } catch (\Exception $e) {
                 $status = 'error';
                 $message = $e->getMessage();
@@ -353,7 +345,7 @@ class FormAdminController extends FOSRestController
             $this->admin->createObjectSecurity($formCopy);
 
             $this->get('session')->getFlashBag()->add(
-                'sonata_flash_' . $status,
+                'sonata_flash_'.$status,
                 $message
             );
 
@@ -368,7 +360,7 @@ class FormAdminController extends FOSRestController
                 'action' => 'copy',
                 'form' => $form,
                 'id' => $id,
-                'admin' => $this->admin
+                'admin' => $this->admin,
             ]
         );
     }
@@ -419,9 +411,11 @@ class FormAdminController extends FOSRestController
 
     /**
      * @param $view
-     * @param array $parameters
+     * @param array         $parameters
      * @param Response|null $response
+     *
      * @return Response
+     *
      * @throws \Twig\Error\Error
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
