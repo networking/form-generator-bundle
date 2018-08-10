@@ -243,9 +243,14 @@ class FormAdminController extends FOSRestController
         return $this->redirectToRoute('admin_networking_forms_show', ['id' => $id]);
     }
 
-    /*
-     * exports Excel File with the data
-     * */
+	/**
+	 * @param Request $request
+	 * @param $id
+	 *
+	 * @return StreamedResponse
+	 * @throws \PhpOffice\PhpSpreadsheet\Exception
+	 * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+	 */
     public function excelExportAction(Request $request, $id)
     {
         $repo = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:Form');
