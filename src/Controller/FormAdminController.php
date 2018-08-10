@@ -409,9 +409,17 @@ class FormAdminController extends FOSRestController
         return $this->admin->getTemplate('layout');
     }
 
-    /**
-     * {@inheritdoc}
-     */
+	/**
+	 * @param $view
+	 * @param array $parameters
+	 * @param Response|null $response
+	 *
+	 * @return Response
+	 * @throws \Twig\Error\Error
+	 * @throws \Twig_Error_Loader
+	 * @throws \Twig_Error_Runtime
+	 * @throws \Twig_Error_Syntax
+	 */
     public function renderWithExtraParams($view, array $parameters = [], Response $response = null)
     {
         $parameters['admin'] = isset($parameters['admin']) ?
@@ -424,7 +432,7 @@ class FormAdminController extends FOSRestController
 
         $parameters['admin_pool'] = $this->get('sonata.admin.pool');
 
-        return parent::renderTemplate($view, $parameters, $response);
+        return $this->renderTemplate($view, $parameters, $response);
     }
 
     /**
