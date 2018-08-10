@@ -4,6 +4,8 @@ namespace Networking\FormGeneratorBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
 use Networking\FormGeneratorBundle\Entity\FormField;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\Route;
@@ -11,6 +13,7 @@ use FOS\RestBundle\Controller\Annotations\RouteResource;
 use Networking\FormGeneratorBundle\Entity\Form;
 use Networking\FormGeneratorBundle\Admin\FormAdmin;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
@@ -250,10 +253,9 @@ class FormAdminController extends FOSRestController
         $form = $repo->find($id);
         $formFields = $form->getFormFields();
         $formData = $form->getFormData();
+	    $spreadsheet = new Spreadsheet();
 
-        $phpExcelObject = $this->get('phpexcel')->createPHPExcelObject();
-
-        $phpExcelObject->getProperties()->setCreator('initCms')
+	    $spreadsheet->getProperties()->setCreator('initCms')
             ->setTitle('Export')
             ->setSubject('Export');
 
@@ -261,10 +263,10 @@ class FormAdminController extends FOSRestController
         $row = '1';
         //Titel-Zeile ausgeben
         foreach ($formFields as $key => $field) {
-            $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row, $field->getFieldLabel());
+	        $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, $field->getFieldLabel());
             ++$col;
         }
-        $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row, 'Date');
+	    $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, 'Date');
 
         //Daten ausgeben
         foreach ($formData as $rowData) {
@@ -276,26 +278,36 @@ class FormAdminController extends FOSRestController
                 if (is_array($value)) {
                     $value = implode(' ', $value);
                 }
-                $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row, $value);
+	            $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, $value);
                 ++$col;
             }
-            $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row, $rowData->getCreatedAt());
+	        $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, $rowData->getCreatedAt());
         }
 
-        $phpExcelObject->getActiveSheet()->setTitle('export');
+	    $spreadsheet->getActiveSheet()->setTitle('export');
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-        $phpExcelObject->setActiveSheetIndex(0);
+	    $spreadsheet->setActiveSheetIndex(0);
 
         // create the writer
-        $writer = $this->get('phpexcel')->createWriter($phpExcelObject, 'Excel5');
+
+	    $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+
         // create the response
-        $response = $this->get('phpexcel')->createStreamedResponse($writer);
+        $response = new StreamedResponse(
+	        function () use ($writer) {
+		        $writer->save('php://output');
+	        },
+	        200,
+	        []
+        );
+
         // adding headers
         $dispositionHeader = $response->headers->makeDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            'form-export-'.date('Y-m-d').'.xls'
+            'form-export-'.date('Y-m-d').'.xlsx'
         );
-        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+
+        $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8');
         $response->headers->set('Pragma', 'public');
         $response->headers->set('Cache-Control', 'maxage=1');
         $response->headers->set('Content-Disposition', $dispositionHeader);
