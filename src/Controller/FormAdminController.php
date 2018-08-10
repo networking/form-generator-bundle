@@ -243,14 +243,15 @@ class FormAdminController extends FOSRestController
         return $this->redirectToRoute('admin_networking_forms_show', ['id' => $id]);
     }
 
-	/**
-	 * @param Request $request
-	 * @param $id
-	 *
-	 * @return StreamedResponse
-	 * @throws \PhpOffice\PhpSpreadsheet\Exception
-	 * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-	 */
+    /**
+     * @param Request $request
+     * @param $id
+     *
+     * @return StreamedResponse
+     *
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function excelExportAction(Request $request, $id)
     {
         $repo = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:Form');
@@ -258,9 +259,9 @@ class FormAdminController extends FOSRestController
         $form = $repo->find($id);
         $formFields = $form->getFormFields();
         $formData = $form->getFormData();
-	    $spreadsheet = new Spreadsheet();
+        $spreadsheet = new Spreadsheet();
 
-	    $spreadsheet->getProperties()->setCreator('initCms')
+        $spreadsheet->getProperties()->setCreator('initCms')
             ->setTitle('Export')
             ->setSubject('Export');
 
@@ -268,10 +269,10 @@ class FormAdminController extends FOSRestController
         $row = '1';
         //Titel-Zeile ausgeben
         foreach ($formFields as $key => $field) {
-	        $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, $field->getFieldLabel());
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, $field->getFieldLabel());
             ++$col;
         }
-	    $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, 'Date');
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, 'Date');
 
         //Daten ausgeben
         foreach ($formData as $rowData) {
@@ -283,27 +284,27 @@ class FormAdminController extends FOSRestController
                 if (is_array($value)) {
                     $value = implode(' ', $value);
                 }
-	            $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, $value);
+                $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, $value);
                 ++$col;
             }
-	        $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, $rowData->getCreatedAt());
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, $rowData->getCreatedAt());
         }
 
-	    $spreadsheet->getActiveSheet()->setTitle('export');
+        $spreadsheet->getActiveSheet()->setTitle('export');
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-	    $spreadsheet->setActiveSheetIndex(0);
+        $spreadsheet->setActiveSheetIndex(0);
 
         // create the writer
 
-	    $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
 
         // create the response
         $response = new StreamedResponse(
-	        function () use ($writer) {
-		        $writer->save('php://output');
-	        },
-	        200,
-	        []
+            function () use ($writer) {
+                $writer->save('php://output');
+            },
+            200,
+            []
         );
 
         // adding headers
