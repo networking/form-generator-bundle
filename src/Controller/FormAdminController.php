@@ -738,7 +738,7 @@ class FormAdminController extends FOSRestController
         $param['rowid'] = $rowid;
         $param['mappingArray'] = $mappingArray;
         $param['matches'] = $matches;
-        return $this->render(
+        return $this->renderWithExtraParams(
             'NetworkingFormGeneratorBundle:Admin:addressMatch.html.twig',$param
         );
     }
@@ -804,7 +804,7 @@ class FormAdminController extends FOSRestController
         $param['message'] = $message;
         $param['showForm'] = $showForm;
 
-        return $this->render(
+        return $this->renderWithExtraParams(
             'NetworkingFormGeneratorBundle:Admin:addressConfig.html.twig',$param
         );
     }
