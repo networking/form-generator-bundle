@@ -10,7 +10,6 @@
 
 namespace Networking\FormGeneratorBundle\Form;
 
-
 use Networking\FormGeneratorBundle\Entity\Form;
 use Networking\FormGeneratorBundle\Entity\FormField;
 use Networking\FormGeneratorBundle\Form\Type\LegendType;
@@ -26,16 +25,14 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FormType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
         /** @var Form $form */
         $form = $options['form'];
 
-        if(!is_null($form)){
+        if (!is_null($form)) {
             foreach ($form->getFormFields() as $field) {
-
                 $builder->add(
                     self::slugify($field->getName()),
                     $this->getFieldType($field->getType()),
@@ -43,14 +40,12 @@ class FormType extends AbstractType
                 );
             }
         }
-
-
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired([
-            'form'
+            'form',
         ]);
         $resolver->setDefaults([
             'horizontal' => true,
@@ -58,14 +53,13 @@ class FormType extends AbstractType
             'render_fieldset' => false,
             'error_bubbling' => true,
             'csrf_protection' => false,
-            'error_type' => 'block'
+            'error_type' => 'block',
 
         ]);
         $resolver->setDefined([
             'translation_domain',
-            'form'
+            'form',
         ]);
-
     }
 
     protected function getFieldType($type)
@@ -107,10 +101,9 @@ class FormType extends AbstractType
         $fieldOptions['label'] = $field->getFieldLabel() ? $field->getFieldLabel() : false;
         if (!$field->getFieldLabel()) {
             $fieldOptions['label_render'] = false;
-        }else{
+        } else {
             $fieldOptions['label_render'] = true;
         }
-
 
         switch ($field->getType()) {
             case 'Legend':
@@ -181,10 +174,9 @@ class FormType extends AbstractType
 
         if (array_key_exists('required', $options)) {
             $fieldOptions['required'] = $options['required']['value'];
-            if($fieldOptions['required'] ){
+            if ($fieldOptions['required']) {
                 $fieldOptions['constraints'] = new NotBlank();
             }
-
         } elseif (!array_key_exists('required', $fieldOptions)) {
             $fieldOptions['required'] = false;
         }
@@ -196,19 +188,19 @@ class FormType extends AbstractType
             $fieldOptions['layout'] = 'horizontal';
         }
 
-        if(!$fieldOptions['label_render']){
+        if (!$fieldOptions['label_render']) {
             $fieldOptions['horizontal_label_offset_class'] = ' ';
             $fieldOptions['horizontal_input_wrapper_class'] = 'col-md-12';
         }
 
         $fieldOptions['error_type'] = $formOptions['error_type'];
 
-
         return $fieldOptions;
     }
 
     /**
      * @param $text
+     *
      * @return string
      */
     public static function slugify($text)
@@ -235,4 +227,8 @@ class FormType extends AbstractType
         return $text;
     }
 
+    public function getBlockPrefix()
+    {
+        return 'generated_form';
+    }
 }

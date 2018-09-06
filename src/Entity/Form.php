@@ -7,35 +7,33 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Sluggable\Util\Urlizer;
 use Ibrows\Bundle\SonataAdminAnnotationBundle\Annotation as Sonata;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\EmailValidator;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * Form
+ * Form.
  *
  * @ORM\Table(name="form")
  * @ORM\Entity
  */
 class Form
 {
-    CONST EMAIL = 'email';
-    CONST DB = 'db';
-    CONST EMAIL_DB = 'email_db';
+    const EMAIL = 'email';
+    const DB = 'db';
+    const EMAIL_DB = 'email_db';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     *
      */
     private $id;
 
     /**
      * @var string
      * @Sonata\ListMapper(identifier=true)
-     * @Sonata\DatagridMapper()
+     * @Sonata\DatagridMapper(fieldOptions={"translation_domain"="formGenerator"})
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
@@ -51,7 +49,6 @@ class Form
      * @ORM\Column(name="thank_you_text", type="text", nullable=true)
      */
     private $thankYouText;
-
 
     /**
      * @var ArrayCollection;
@@ -96,20 +93,18 @@ class Form
         $this->formData = new ArrayCollection();
         $this->formFields = new ArrayCollection();
         $date = new \DateTime();
-        $this->name = $this->name .' copy '.$date->format('d.m.Y H:i:s');
+        $this->name = $this->name.' copy '.$date->format('d.m.Y H:i:s');
     }
-
 
     /**
      * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
         return $this->id;
     }
-
 
     /**
      * @Assert\Callback
@@ -226,9 +221,6 @@ class Form
         return $this;
     }
 
-    /**
-     *
-     */
     public function removeFields()
     {
         foreach ($this->formFields as $field) {
@@ -277,17 +269,19 @@ class Form
     }
 
     /**
-     * Set up the collection variable
+     * Set up the collection variable.
+     *
      * @return $this
      */
     public function setCollection()
     {
         foreach ($this->getFormFields() as $formField) {
             $this->collection[] = [
-                "title" => $formField->getType(),
-                "fields" => $formField->getOptions()
+                'title' => $formField->getType(),
+                'fields' => $formField->getOptions(),
             ];
         }
+
         return $this;
     }
 
@@ -308,7 +302,6 @@ class Form
 
         foreach ($formFields as $field) {
             $this->addFormField($field);
-
         }
     }
 
@@ -360,6 +353,7 @@ class Form
 
     /**
      * @param $key
+     *
      * @return FormField
      */
     public function getField($key)
@@ -374,7 +368,4 @@ class Form
 
         return false;
     }
-
-
 }
-

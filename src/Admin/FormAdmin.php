@@ -10,16 +10,13 @@
 
 namespace Networking\FormGeneratorBundle\Admin;
 
-
 use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
 
-
 class FormAdmin extends BaseAdmin
 {
-
     /**
      * @var string
      */
@@ -38,16 +35,15 @@ class FormAdmin extends BaseAdmin
         return 'glyphicon-file';
     }
 
-
     protected function configureRoutes(RouteCollection $collection)
     {
         $collection->add(
             'excelExport',
-            'form-excel-export/{id}' ,
+            'form-excel-export/{id}',
             ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:excelExport'])
             ->add(
                 'deleteFormEntry',
-                'delete-form-entry/{id}/entry/{rowid}' ,
+                'delete-form-entry/{id}/entry/{rowid}',
                 ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:deleteFormEntry'])
             ->add(
                 'matchFormEntry',
@@ -63,21 +59,18 @@ class FormAdmin extends BaseAdmin
                 ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:addAddress'])
             ->add(
                 'deleteAllFormEntry',
-                'delete-all-form-entry/{id}' ,
+                'delete-all-form-entry/{id}',
                 ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:deleteAllFormEntry'])
             ->add(
                 'copy',
-                'copy/{id}' ,
+                'copy/{id}',
                 ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:copy'])
             ->add(
                 'addressConfig',
                 'address_config/{id}' ,
                 ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:addressConfig'])
         ;
-
-
     }
-
 
     /**
      * {@inheritdoc}
@@ -87,29 +80,27 @@ class FormAdmin extends BaseAdmin
         $form->add('name');
     }
 
-    protected function configureListFields(ListMapper $listMapper){
+    protected function configureListFields(ListMapper $listMapper)
+    {
         parent::configureListFields($listMapper);
-        $listMapper->add('pages', 'string', ['template' => 'NetworkingFormGeneratorBundle:Admin:pages.html.twig']);
-       // $listMapper->add('address', 'string', ['template' => 'NetworkingFormGeneratorBundle:Admin:addressConfigButton.html.twig']);
+        $listMapper->add('pages', 'string', ['template' => '@NetworkingFormGenerator/Admin/pages.html.twig']);
         $listMapper->add(
             '_action',
             'actions',
             [
-                'label' => ' ',
+                'label' => false,
                 'actions' => [
                     'edit' => [],
                     'show' => [],
                     'copy' => [
-                        'template' => 'NetworkingFormGeneratorBundle:Admin:list_action_copy.html.twig',
+                        'template' => '@NetworkingFormGenerator/Admin/list_action_copy.html.twig',
                     ],
                     'address' => [
                         'template' => 'NetworkingFormGeneratorBundle:Admin:addressConfigButton.html.twig',
                     ],
                     'delete' => [],
-                ]
+                ],
             ]
         );
     }
-
-
 }

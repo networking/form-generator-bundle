@@ -10,9 +10,6 @@
 
 namespace Networking\FormGeneratorBundle\Controller;
 
-
-use Networking\FormGeneratorBundle\Entity\FormData;
-use Networking\FormGeneratorBundle\Entity\FormFieldData;
 use Networking\FormGeneratorBundle\Form\FormType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -40,7 +37,8 @@ class FrontendFormController extends Controller
 
     /**
      * FrontendFormController constructor.
-     * @param FormHelper $formHelper
+     *
+     * @param FormHelper       $formHelper
      * @param SessionInterface $session
      */
     public function __construct(FormHelper $formHelper, SessionInterface $session)
@@ -57,12 +55,12 @@ class FrontendFormController extends Controller
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
-
     }
 
     /**
      * @param Request $request
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function viewFormAction(Request $request, $id)
@@ -81,14 +79,12 @@ class FrontendFormController extends Controller
         $redirect = $request->headers->get('referer');
 
         if ($formType->isSubmitted()) {
-
             if ($formType->isValid()) {
                 $data = $request->get($formType->getName());
                 $this->setFormComplete(true);
 
                 if ($form->isEmailAction()) {
-                    $this->formHelper->sendEmail($form, $data, $this->container->getParameter
-                    ('form_generator_from_email'));
+                    $this->formHelper->sendEmail($form, $data, $this->container->getParameter('form_generator_from_email'));
                 }
 
                 if ($form->isDbAction()) {
@@ -106,18 +102,18 @@ class FrontendFormController extends Controller
         }
 
         $request->getSession()->set('no_cache', true);
-        return new RedirectResponse($redirect);
 
+        return new RedirectResponse($redirect);
     }
 
     /**
-     * @param Form $form
-     * @param null $actionUrl
+     * @param Form   $form
+     * @param null   $actionUrl
      * @param string $template
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function renderFormAction(Form $form, $actionUrl = null, $template =
-    'NetworkingFormGeneratorBundle:Form:form.html.twig')
+    public function renderFormAction($form, $actionUrl = null, $template = '@NetworkingFormGenerator/Form/form.html.twig')
     {
         if (is_null($actionUrl)) {
             $actionUrl = $this->generateUrl('networking_form_view', ['id' => $form->getId()]);
@@ -132,17 +128,15 @@ class FrontendFormController extends Controller
         if (!empty($formData)) {
             $formType->submit($formData);
         }
+
         return $this->render($template,
             [
                 'formComplete' => $formComplete,
                 'formView' => $formType->createView(),
-                'form' => $form
+                'form' => $form,
             ]);
     }
 
-    /**
-     *
-     */
     protected function clearSessionVariables()
     {
         $this->session->remove(self::FORM_DATA);
@@ -158,7 +152,7 @@ class FrontendFormController extends Controller
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     protected function getFormComplete()
     {
@@ -180,4 +174,4 @@ class FrontendFormController extends Controller
     {
         return $this->session->get(self::FORM_DATA, []);
     }
-} 
+}

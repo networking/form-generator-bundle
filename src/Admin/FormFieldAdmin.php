@@ -10,12 +10,11 @@
 
 namespace Networking\FormGeneratorBundle\Admin;
 
-
 use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Sonata\AdminBundle\Form\FormMapper;
 
-class FormFieldAdmin extends BaseAdmin {
-
+class FormFieldAdmin extends BaseAdmin
+{
     /**
      * @var string
      */
@@ -34,8 +33,6 @@ class FormFieldAdmin extends BaseAdmin {
         return 'glyphicon-file';
     }
 
-
-
     /**
      * {@inheritdoc}
      */
@@ -51,11 +48,10 @@ class FormFieldAdmin extends BaseAdmin {
                         'textarea' => 'textarea',
                         'select' => 'select',
                         'radio' => 'radio',
-                        'checkboxes' => 'checkboxes'
-                    )
+                        'checkboxes' => 'checkboxes',
+                    ),
                 )
             )
         ;
     }
-
-} 
+}

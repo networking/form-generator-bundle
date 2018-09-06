@@ -8,7 +8,8 @@ list:
 
 filter:
     label_name: Form Name
-form_created: Form successfully created
+form_created: The form was successfully created
+form_updated: The form was successfully updated
 link_action_export: Export
 date: Date
 link_action_delete: delete

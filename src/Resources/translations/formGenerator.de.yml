@@ -8,6 +8,7 @@ list:
 filter:
     label_name: Formularname
 form_created: Formular wurde erfolgreich erstellt
+form_updated: Formular wurde erfolgreich aktualisiert
 link_action_export: Export Daten
 date: Datum
 link_action_delete: Löschen
@@ -23,3 +24,4 @@ button:
     duplicate_form: Formular kopieren
 
 message.copy_saved: Eine Kopie des Formulars wurde erfolgreich erstellt
+link_action_create: Neues Formular erstellen
