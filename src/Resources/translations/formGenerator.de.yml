@@ -2,13 +2,16 @@ breadcrumb.link_form_list: Formular Generator
 form.admin.menu_label: Formular Generator
 form.label.form: Formular
 list:
-    label_name: Formurlarname
+    label_name: Formularname
     label_pages: Seiten
     label_address: Adress-DB
+    label_status: Status
 filter:
     label_name: Formularname
+    label_status: Status
+
 form_created: Formular wurde erfolgreich erstellt
-form_updated: Formular wurde erfolgreich aktualisiert
+form_updated: Formular wurde erfolgreich aktualisiert. Bitte Mapping kontrollieren, falls Namen oder Feld-Typ sich geändert haben.
 link_action_export: Export Daten
 date: Datum
 link_action_delete: Löschen

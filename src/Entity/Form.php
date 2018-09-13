@@ -50,6 +50,33 @@ class Form
      */
     private $thankYouText;
 
+
+    /**
+     * @var string
+     * @ORM\Column(name="double_opt_in_text_web", type="text", nullable=true)
+     */
+    private $doubleOptInTextWeb;
+
+
+    /**
+     * @var string
+     * @ORM\Column(name="double_opt_in_text_mail", type="text", nullable=true)
+     */
+    private $doubleOptInTextMail;
+
+    /**
+     * @var
+     * @ORM\Column(name="double_opt_in_text_mail_subject", type="string", length=255, nullable=true)
+     */
+    private $doubleOptInTextMailSubject;
+
+    /**
+     * @var
+     * @ORM\Column(name="double_opt_in_text_mail_sender", type="string", length=255, nullable=true)
+     */
+    private $doubleOptInTextMailSubjectSender;
+
+
     /**
      * @var ArrayCollection;
      * @ORM\OneToMany(targetEntity="Networking\FormGeneratorBundle\Entity\FormField",cascade={"persist", "remove"}, mappedBy="form", orphanRemoval=true)
@@ -75,6 +102,22 @@ class Form
      * @ORM\Column(name="action", type="string", length=255)
      */
     private $action = 'email';
+
+
+    /**
+     * @var
+     * @ORM\Column(name="status", type="string", length=255)
+     */
+    private $status = 'online';
+
+
+
+    /**
+     * @var
+     * @ORM\Column(name="double_opt_in", type="string", length=255)
+     */
+    private $doubleOptIn = 'no';
+
 
     /**
      * @var
@@ -368,4 +411,104 @@ class Form
 
         return false;
     }
+
+    /**
+     * @return string
+     */
+    public function getDoubleOptInTextWeb()
+    {
+        return $this->doubleOptInTextWeb;
+    }
+
+    /**
+     * @param string $doubleOptInTextWeb
+     */
+    public function setDoubleOptInTextWeb($doubleOptInTextWeb)
+    {
+        $this->doubleOptInTextWeb = $doubleOptInTextWeb;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDoubleOptInTextMail()
+    {
+        return $this->doubleOptInTextMail;
+    }
+
+    /**
+     * @param string $doubleOptInTextMail
+     */
+    public function setDoubleOptInTextMail($doubleOptInTextMail)
+    {
+        $this->doubleOptInTextMail = $doubleOptInTextMail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDoubleOptInTextMailSubject()
+    {
+        return $this->doubleOptInTextMailSubject;
+    }
+
+    /**
+     * @param mixed $doubleOptInTextMailSubject
+     */
+    public function setDoubleOptInTextMailSubject($doubleOptInTextMailSubject)
+    {
+        $this->doubleOptInTextMailSubject = $doubleOptInTextMailSubject;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDoubleOptInTextMailSubjectSender()
+    {
+        return $this->doubleOptInTextMailSubjectSender;
+    }
+
+    /**
+     * @param mixed $doubleOptInTextMailSubjectSender
+     */
+    public function setDoubleOptInTextMailSubjectSender($doubleOptInTextMailSubjectSender)
+    {
+        $this->doubleOptInTextMailSubjectSender = $doubleOptInTextMailSubjectSender;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDoubleOptIn()
+    {
+        return $this->doubleOptIn;
+    }
+
+    /**
+     * @param mixed $doubleOptIn
+     */
+    public function setDoubleOptIn($doubleOptIn)
+    {
+        $this->doubleOptIn = $doubleOptIn;
+    }
+
+
+
+
 }

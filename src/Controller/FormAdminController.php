@@ -100,7 +100,8 @@ class FormAdminController extends FOSRestController
         try {
             /** @var FormAdmin $admin */
             $form = $this->admin->getNewInstance();
-            $form = $this->setFields($request, $form);
+            $oldFormFields = $this->oldFieldsToArray($form->getFormFields());
+            $form = $this->setFields($request, $form, $oldFormFields);
 
             $this->admin->create($form);
             $view->setData(['id' => $form->getId(), 'message' => $this->get('translator')->trans('form_created',
@@ -131,9 +132,9 @@ class FormAdminController extends FOSRestController
                 if (!$form) {
                     throw new NotFoundHttpException('Form not found');
                 }
-
+                $oldFormFields = $this->oldFieldsToArray($form->getFormFields());
                 $form->removeFields();
-                $form = $this->setFields($request, $form);
+                $form = $this->setFields($request, $form, $oldFormFields);
 
                 $validator = $this->get('validator');
                 $errors = $validator->validate($form);
@@ -161,7 +162,7 @@ class FormAdminController extends FOSRestController
      *
      * @return Form
      */
-    protected function setFields(Request $request, Form $form)
+    protected function setFields(Request $request, Form $form, $oldFormFieldsArray = array())
     {
         $form->setName($request->get('name'));
         $form->setInfoText($request->get('infoText'));
@@ -180,26 +181,38 @@ class FormAdminController extends FOSRestController
                     case 'Multiple Checkboxes Inline':
                     case 'Multiple Radios Inline':
                         $formField = new FormField();
+                        $name = $field['fields']['name']['value'];
+                        $type = $field['title'];
+                        $mapping = $this->findMapping($name, $type,  $oldFormFieldsArray);
                         $formField->setFieldLabel($field['fields']['label']['value']);
-                        $formField->setName($field['fields']['name']['value']);
-                        $formField->setType($field['title']);
+                        $formField->setName($name);
+                        $formField->setType($type);
                         $formField->setOptions($field['fields']);
+                        $formField->setMapping($mapping);
                         $form->addFormField($formField);
                         break;
                     case 'Legend':
                         $formField = new FormField();
-                        $formField->setName($field['fields']['id']['value']);
+                        $name = $field['fields']['id']['value'];
+                        $type = $field['title'];
+                        $mapping = $this->findMapping($name, $type, $oldFormFieldsArray);
+                        $formField->setName($name);
                         $formField->setFieldLabel($field['fields']['name']['value']);
-                        $formField->setType($field['title']);
+                        $formField->setType($type);
                         $formField->setOptions($field['fields']);
+                        $formField->setMapping($mapping);
                         $form->addFormField($formField);
                         break;
                     default:
                         $formField = new FormField();
-                        $formField->setName($field['fields']['id']['value']);
-                        $formField->setFieldLabel($field['fields']['label']['value']);
+                        $name = $field['fields']['id']['value'];
+                        $type = $field['title'];
+                        $mapping = $this->findMapping($name, $type, $oldFormFieldsArray);
+                        $formField->setName($name);
+                        $formField->setFieldLabel($type);
                         $formField->setType($field['title']);
                         $formField->setOptions($field['fields']);
+                        $formField->setMapping($mapping);
                         $form->addFormField($formField);
                         break;
                 }
@@ -208,6 +221,39 @@ class FormAdminController extends FOSRestController
 
         return $form;
     }
+
+
+    /*
+     * alte felder in array speicher
+     * **/
+    public function oldFieldsToArray($oldFormFields){
+        $array = array();
+        foreach($oldFormFields as $oldField){
+            $array[] = array('name' => $oldField->getName(), 'type' => $oldField->getType(), 'mapping' => $oldField->getMapping());
+        }
+        $array[] = array('name' => 'phil', 'type' => 'type', 'mapping' => 'mapping');
+        return $array;
+    }
+
+
+
+    /*
+     * ermittelt, ob  zu diesem feld bereits ein mapping gespeichert wurde
+     * */
+    public function findMapping($name, $type, $oldFormFieldsArray){
+        $mapping = '';
+        foreach($oldFormFieldsArray as $oldField){
+
+          if($oldField['name'] == $name and $oldField['type'] == $type){
+              $mapping = $oldField['mapping'];
+          }
+        }
+        //$mapping = print_r($oldFormFieldsArray, true);
+
+        return $mapping;
+
+    }
+
 
     /**
      * @Route(requirements={"_format"="json|xml"}, defaults={"_format": "json"})
@@ -490,7 +536,27 @@ class FormAdminController extends FOSRestController
         $param['mappingArray'] = $mappingArray;
         $param['address'] = $address;
         $param['addressArray'] = $this->transformAdressObjectToArray($address);
-        return $this->render('NetworkingFormGeneratorBundle:Admin:addressShowMatchFields.html.twig',$param);
+
+
+        return $this->renderWithExtraParams(
+            '@NetworkingFormGenerator/Admin/addressShowMatchFields.html.twig',
+            [
+                'action' => 'mapping',
+                'admin' => $this->admin,
+                'dataArray' => $dataArray,
+                'id' => $id,
+                'rowid' => $rowid,
+                'mappingArray' => $mappingArray,
+                'address' => $address,
+                'addressArray' =>  $this->transformAdressObjectToArray($address)
+
+
+
+
+            ]
+        );
+
+        //return $this->render('NetworkingFormGeneratorBundle:Admin:addressShowMatchFields.html.twig',$param);
     }
 
 
@@ -807,6 +873,32 @@ class FormAdminController extends FOSRestController
         return $this->renderWithExtraParams(
             'NetworkingFormGeneratorBundle:Admin:addressConfig.html.twig',$param
         );
+    }
+
+
+    /**
+     * @param Request $request
+     * @param $id
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    public function statusAction(Request $request, $id)
+    {
+
+        //update status
+        $repo = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:Form');
+        $em = $this->getDoctrine()->getManager();
+        /** @var Form $form */
+        $form = $repo->find($id);
+        if($form->getStatus() == 'online'){
+            $form->setStatus('offline');
+        }else{
+            $form->setStatus('online');
+        }
+        $em->persist($form);
+        $em->flush();
+
+        return $this->redirect($this->admin->generateUrl('list'));
     }
 
 

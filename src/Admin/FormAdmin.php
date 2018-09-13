@@ -14,6 +14,8 @@ use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class FormAdmin extends BaseAdmin
 {
@@ -26,6 +28,10 @@ class FormAdmin extends BaseAdmin
      * @var string
      */
     protected $baseRouteName = 'admin_networking_forms';
+
+
+
+
 
     /**
      * @return string
@@ -66,6 +72,11 @@ class FormAdmin extends BaseAdmin
                 'copy/{id}',
                 ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:copy'])
             ->add(
+                'status',
+                'status/{id}',
+                ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:status'])
+
+            ->add(
                 'addressConfig',
                 'address_config/{id}' ,
                 ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:addressConfig'])
@@ -78,12 +89,47 @@ class FormAdmin extends BaseAdmin
     protected function configureFormFields(FormMapper $form)
     {
         $form->add('name');
+
     }
+
+
+
+    public function getFilterParameters()
+    {
+        $this->datagridValues['status']['value'] = 'online';
+
+        return parent::getFilterParameters();
+    }
+
+
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
+    {
+        parent::configureDatagridFilters($datagridMapper);
+
+
+        $datagridMapper->add('status',
+            'doctrine_orm_string',
+            array(),
+            ChoiceType::class,
+            array('choices' => array('online' => 'online', 'offline' => 'offline')
+
+            )
+        );
+    }
+
+
+
 
     protected function configureListFields(ListMapper $listMapper)
     {
         parent::configureListFields($listMapper);
+
         $listMapper->add('pages', 'string', ['template' => '@NetworkingFormGenerator/Admin/pages.html.twig']);
+        $listMapper->add('status', 'string', ['template' => '@NetworkingFormGenerator/Admin/status.html.twig']);
         $listMapper->add(
             '_action',
             'actions',

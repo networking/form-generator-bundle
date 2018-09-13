@@ -5,9 +5,12 @@ list:
     label_name: Form Name
     label_pages: Pages
     label_address: Address-DB
+    label_status: Status
 
 filter:
     label_name: Form Name
+    label_status: Status
+
 form_created: The form was successfully created
 form_updated: The form was successfully updated
 link_action_export: Export

@@ -68,6 +68,7 @@
                     </tr>
 
                     {% for row in dataArray %}
+                        {% if row.mapping != '' %}
                         <tr>
                             <td>{{ row.label }}</td>
                             <td><input type="radio" name="{{ row.mapping }}" value="{{ row.value }}"></td>
@@ -77,6 +78,7 @@
 
 
                         </tr>
+                        {% endif %}
                     {% endfor %}
 
 
