@@ -1,3 +1,5 @@
+{% if form.status == 'online' %}
+    
 <a name="formAnswer"></a>
 {% if formComplete %}
     {{ form.thankYouText|raw }}
@@ -12,4 +14,6 @@
         </div>
     </fieldset>
     {{ form_end(formView) }}
+{% endif %}
+
 {% endif %}
