@@ -100,7 +100,7 @@ class FormAdminController extends FOSRestController
         try {
             /** @var FormAdmin $admin */
             $form = $this->admin->getNewInstance();
-            $oldFormFields = $this->oldFieldsToArray($form->getFormFields());
+            $oldFormFields = array(); //$this->oldFieldsToArray($form->getFormFields());
             $form = $this->setFields($request, $form, $oldFormFields);
 
             $this->admin->create($form);
@@ -209,8 +209,8 @@ class FormAdminController extends FOSRestController
                         $type = $field['title'];
                         $mapping = $this->findMapping($name, $type, $oldFormFieldsArray);
                         $formField->setName($name);
-                        $formField->setFieldLabel($type);
-                        $formField->setType($field['title']);
+                        $formField->setFieldLabel($field['fields']['label']['value']);
+                        $formField->setType($type);
                         $formField->setOptions($field['fields']);
                         $formField->setMapping($mapping);
                         $form->addFormField($formField);
