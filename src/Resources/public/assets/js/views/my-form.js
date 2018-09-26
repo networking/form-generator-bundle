@@ -127,18 +127,16 @@ define([
             this.build = document.getElementById("collection");
             this.buildBCR = this.build.getBoundingClientRect();
             $(".target").removeClass("target");
-            if (mouseEvent.pageX >= this.buildBCR.left &&
-                mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) &&
-                mouseEvent.pageY >= this.buildBCR.top &&
-                mouseEvent.pageY < (this.$build.height() + this.buildBCR.top)) {
+            if (mouseEvent.pageX >= this.buildBCR.left && mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) &&  mouseEvent.pageY >= this.buildBCR.top ) {
+                console.log('message 1');
                 $(".targetbefore").removeClass("targetbefore");
                 $(this.getBottomAbove(mouseEvent.pageY)).addClass("target");
-            } else if (mouseEvent.pageX >= this.buildBCR.left &&
-                mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) &&
-                mouseEvent.pageY <= this.buildBCR.top) {
+            } else if (mouseEvent.pageX >= this.buildBCR.left && mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) && mouseEvent.pageY <= this.buildBCR.top) {
+                console.log('message 2');
                 $(this.getBottomAbove(mouseEvent.pageY)).addClass("targetbefore");
                 $(".target").removeClass("target");
             } else {
+                console.log('message 3');
                 $(".targetbefore").removeClass("targetbefore");
                 $(".target").removeClass("target");
             }
@@ -146,16 +144,12 @@ define([
             var target = $(".target");
             var targetBefore = $(".targetbefore");
 
-            if (mouseEvent.pageX >= this.buildBCR.left &&
-                mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) &&
-                mouseEvent.pageY >= this.buildBCR.top &&
-                mouseEvent.pageY < (this.$build.height() + this.buildBCR.top)) {
+            if (mouseEvent.pageX >= this.buildBCR.left && mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) && mouseEvent.pageY >= this.buildBCR.top ) {
                 this.collection.add(model, {at: target.index() + 1});
-            } else if (mouseEvent.pageX >= this.buildBCR.left &&
-                mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) &&
-                mouseEvent.pageY <= this.buildBCR.top) {
+            } else if (mouseEvent.pageX >= this.buildBCR.left && mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) &&  mouseEvent.pageY <= this.buildBCR.top) {
                 this.collection.add(model, {at: targetBefore.index()});
             }
+
             target.removeClass("target");
             targetBefore.removeClass("targetbefore");
             this.confirm = true;
