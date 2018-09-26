@@ -1,5 +1,5 @@
 define(function(require) {
-    var legend               = require('text!templates/snippet/legend.html')
+    var legend                     = require('text!templates/snippet/legend.html')
         , prependedtext            = require('text!templates/snippet/prependedtext.html')
         , prependedicon            = require('text!templates/snippet/prependedicon.html')
         , search                   = require('text!templates/snippet/searchinput.html')
@@ -24,7 +24,7 @@ define(function(require) {
         , infotext                 = require('text!templates/snippet/infotext.html')
 
     return {
-        legend                   : legend
+        legend                     : legend
         , prependedtext            : prependedtext
         , prependedicon            : prependedicon
         , search                   : search
