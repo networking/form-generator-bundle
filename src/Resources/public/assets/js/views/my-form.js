@@ -128,15 +128,12 @@ define([
             this.buildBCR = this.build.getBoundingClientRect();
             $(".target").removeClass("target");
             if (mouseEvent.pageX >= this.buildBCR.left && mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) &&  mouseEvent.pageY >= this.buildBCR.top ) {
-                console.log('message 1');
                 $(".targetbefore").removeClass("targetbefore");
                 $(this.getBottomAbove(mouseEvent.pageY)).addClass("target");
             } else if (mouseEvent.pageX >= this.buildBCR.left && mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) && mouseEvent.pageY <= this.buildBCR.top) {
-                console.log('message 2');
                 $(this.getBottomAbove(mouseEvent.pageY)).addClass("targetbefore");
                 $(".target").removeClass("target");
             } else {
-                console.log('message 3');
                 $(".targetbefore").removeClass("targetbefore");
                 $(".target").removeClass("target");
             }
