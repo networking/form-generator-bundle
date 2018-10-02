@@ -436,11 +436,17 @@ class FormAdminController extends FOSRestController
         //populate mapping array
         foreach ($dataArray as $row)
         {
-            $mappingArray[$row['mapping']] = $row['value'];
+           if(isset( $row['value'])){
+               $mappingArray[$row['mapping']] = $row['value'];
+           }
+
         }
 
         $repoAddress = $this->getDoctrine()->getRepository(Address::class);
         $address = $repoAddress->find($addressid);
+
+        $repoAddressCategory = $this->getDoctrine()->getRepository(AddressCategory::class);
+        $addressCategoryList = $repoAddressCategory->findBy(array(), array('name' => 'asc'));
 
         if(isset($_POST['Submit']))
         {
@@ -516,7 +522,8 @@ class FormAdminController extends FOSRestController
                 {   $address->setUrl($_POST['url']);
                 }
 
-                    //daten speichern
+
+                //daten speichern
                 $em->persist($address);
                 $em->flush();
             }
@@ -524,6 +531,28 @@ class FormAdminController extends FOSRestController
             {   //Formular Daten überschreiben die bestehenden Daten
                 $address = $this->updateAddressDataValue($address, $dataArray);
             }
+
+
+            //kategorien anpassen
+            foreach ($addressCategoryList as $item)
+            {
+                if(isset($_POST['cat'][$item->getId()]) and $_POST['cat'][$item->getId()] != '' ){
+                    //kategorie wurde ausgewaehlt
+                    //echo "is set<br >";
+                    if(!$address->getCategory()->contains($item)){
+                        $address->addCategory($item);
+                        //echo "add item<br />";
+                    }
+                }else{
+                    //kategorie entfernen
+                    if($address->getCategory()->contains($item)){
+                        $address->removeCategory($item);
+                        //echo "remove item<br />";
+                    }
+                }
+            }
+            $em->persist($address);
+            $em->flush();
 
             $this->setAddressIdToFormData($rowid, $addressid);
             return $this->redirectToRoute('admin_networking_forms_show', ['id' => $id]);
@@ -535,6 +564,7 @@ class FormAdminController extends FOSRestController
         $param['rowid'] = $rowid;
         $param['mappingArray'] = $mappingArray;
         $param['address'] = $address;
+        $param['addressCategoryList'] = $addressCategoryList;
         $param['addressArray'] = $this->transformAdressObjectToArray($address);
 
 
@@ -548,6 +578,7 @@ class FormAdminController extends FOSRestController
                 'rowid' => $rowid,
                 'mappingArray' => $mappingArray,
                 'address' => $address,
+                'addressCategoryList' => $addressCategoryList,
                 'addressArray' =>  $this->transformAdressObjectToArray($address)
 
 
@@ -764,7 +795,10 @@ class FormAdminController extends FOSRestController
         //populate mapping array
         foreach ($dataArray as $row)
         {
-            $mappingArray[$row['mapping']] = $row['value'];
+            if(isset( $row['value'])){
+                $mappingArray[$row['mapping']] = $row['value'];
+            }
+
         }
 
         //find possible matches

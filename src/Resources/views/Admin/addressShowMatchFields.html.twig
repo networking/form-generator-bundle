@@ -68,7 +68,7 @@
                     </tr>
 
                     {% for row in dataArray %}
-                        {% if row.mapping != '' %}
+                        {% if row.mapping != '' and row.value is defined %}
                         <tr>
                             <td>{{ row.label }}</td>
                             <td><input type="radio" name="{{ row.mapping }}" value="{{ row.value }}"></td>
@@ -83,6 +83,34 @@
 
 
                 </table>
+
+
+                <h2>Kategorie</h2>
+
+
+                {% if addressCategoryList is defined %}
+
+                    {% for kategorie in addressCategoryList %}
+
+                        <input type="checkbox" name="cat[{{ kategorie.id }}]" id="cat[{{ kategorie.id }}]"
+                               {% for addressCat in address.getCategory()  %}
+
+                                   {% if addressCat.getId() == kategorie.id %}
+
+                                       checked="checked"
+
+                                   {% endif %}
+
+                               {% endfor %}
+                               value="{{ kategorie.id }}">
+                        <label for="cat[{{ kategorie.id }}]">{{ kategorie.name }}
+
+                        {% if kategorie.parent != '' %}({{ kategorie.parent }}){% endif %}</label> <br />
+
+                    {% endfor %}
+
+
+                {% endif %}
 
 
                 <div class="cleaner">&nbsp;</div>
