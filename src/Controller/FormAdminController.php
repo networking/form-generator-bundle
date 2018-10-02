@@ -436,7 +436,7 @@ class FormAdminController extends FOSRestController
         //populate mapping array
         foreach ($dataArray as $row)
         {
-           if(isset( $row['value'])){
+           if(isset( $row['value']) and isset($row['mapping'])){
                $mappingArray[$row['mapping']] = $row['value'];
            }
 
@@ -795,7 +795,7 @@ class FormAdminController extends FOSRestController
         //populate mapping array
         foreach ($dataArray as $row)
         {
-            if(isset( $row['value'])){
+            if(isset( $row['value']) and isset($row['mapping'])){
                 $mappingArray[$row['mapping']] = $row['value'];
             }
 
