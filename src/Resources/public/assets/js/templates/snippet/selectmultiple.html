@@ -2,7 +2,7 @@
 <div class="form-group">
     <label class="col-md-4 control-label" for="<%= id %>"><%= polyglot.t(label, { _: label}) %></label>
     <div class=<% if ( inputsize.length <= 0){ %>  "col-md-4" <%}else { %> "<%= inputsize %>"<%}%>>
-    <select id="<%= id %>" name="<%= id %>" class="form-control" multiple="multiple"><% _.each(options, function(option,i) { %>
+    <select name="<%= id %>" class="form-control" multiple="multiple"><% _.each(options, function(option,i) { %>
         <option value="<%= values[i] %>"><%= polyglot.t(option, { _: option}) %></option><% }); %>
     </select>
 </div>
