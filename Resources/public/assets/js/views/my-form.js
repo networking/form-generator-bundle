@@ -57,8 +57,14 @@ define([
 
             this.$el.appendTo("#build");
             this.delegateEvents();
+
+
+
+            CKEDITOR.config.customConfig = '../networkingformgenerator/assets/js/lib/ckeditor_config.js';
+
             CKEDITOR.replace( 'infoText',{width:'100%'} );
             CKEDITOR.replace( 'thankYouText',{width:'100%'});
+
 
             var module = this;
             for (var i in CKEDITOR.instances) {
@@ -121,35 +127,29 @@ define([
             this.build = document.getElementById("collection");
             this.buildBCR = this.build.getBoundingClientRect();
             $(".target").removeClass("target");
-            if (mouseEvent.pageX >= this.buildBCR.left &&
-                mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) &&
-                mouseEvent.pageY >= this.buildBCR.top &&
-                mouseEvent.pageY < (this.$build.height() + this.buildBCR.top)) {
+            if (mouseEvent.pageX >= this.buildBCR.left && mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) &&  mouseEvent.pageY >= this.buildBCR.top ) {
+                console.log('message 1');
                 $(".targetbefore").removeClass("targetbefore");
                 $(this.getBottomAbove(mouseEvent.pageY)).addClass("target");
-            } else if (mouseEvent.pageX >= this.buildBCR.left &&
-                mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) &&
-                mouseEvent.pageY <= this.buildBCR.top) {
+            } else if (mouseEvent.pageX >= this.buildBCR.left && mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) && mouseEvent.pageY <= this.buildBCR.top) {
+                console.log('message 2');
                 $(this.getBottomAbove(mouseEvent.pageY)).addClass("targetbefore");
                 $(".target").removeClass("target");
             } else {
+                console.log('message 3');
                 $(".targetbefore").removeClass("targetbefore");
                 $(".target").removeClass("target");
             }
-        }, handleTempDrop: function (mouseEvent, model, index) {
+        }, handleTempDrop: function (mouseEvent, model) {
             var target = $(".target");
             var targetBefore = $(".targetbefore");
 
-            if (mouseEvent.pageX >= this.buildBCR.left &&
-                mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) &&
-                mouseEvent.pageY >= this.buildBCR.top &&
-                mouseEvent.pageY < (this.$build.height() + this.buildBCR.top)) {
+            if (mouseEvent.pageX >= this.buildBCR.left && mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) && mouseEvent.pageY >= this.buildBCR.top ) {
                 this.collection.add(model, {at: target.index() + 1});
-            } else if (mouseEvent.pageX >= this.buildBCR.left &&
-                mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) &&
-                mouseEvent.pageY <= this.buildBCR.top) {
+            } else if (mouseEvent.pageX >= this.buildBCR.left && mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) &&  mouseEvent.pageY <= this.buildBCR.top) {
                 this.collection.add(model, {at: targetBefore.index()});
             }
+
             target.removeClass("target");
             targetBefore.removeClass("targetbefore");
             this.confirm = true;
@@ -161,9 +161,12 @@ define([
             var module = this;
             this.model.save(this.getModelViewAttr(), {
                 success: function (model, xhr) {
-                    that.createMessageBox('success', 'Yay!',xhr.message);
+                    that.createMessageBox('success', polyglot.t('success'),xhr.message);
                     btn.button('reset');
                     module.confirm = false;
+                    $('html, body').animate({
+                        scrollTop: $(".initcms").offset().top
+                    }, 2000);
                 },
                 error: function (model, xhr) {
                     var errors = [];
