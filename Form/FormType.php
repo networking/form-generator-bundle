@@ -160,8 +160,8 @@ class FormType extends AbstractType
                     $fieldOptions['widget_type'] = 'inline';
                 }
                 reset($fieldOptions['choices']);
-                $fieldOptions['data'] = key($fieldOptions['choices']);
-                $fieldOptions['constraints'] = new NotBlank();
+                //$fieldOptions['data'] = key($fieldOptions['choices']);
+                //$fieldOptions['constraints'] = new NotBlank();
                 break;
             case 'Select Basic':
                 $fieldOptions['choices'] = $field->getValueMap();
