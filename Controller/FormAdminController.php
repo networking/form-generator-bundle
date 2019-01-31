@@ -316,8 +316,9 @@ class FormAdminController extends FOSRestController
                 $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row,$value);
                 $col++;
             }
-            $row++;
+
             $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row, $rowData->getCreatedAt());
+            $row++;
 
         }
 
