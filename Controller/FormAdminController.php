@@ -295,19 +295,30 @@ class FormAdminController extends FOSRestController
         }
         $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row,'Date');
 
+        $row = '2';
         //Daten ausgeben
         foreach ($formData as $rowData) {
             $col = 'A';
-            $row++;
-            $formFields =  $rowData->getFormFields();
-            foreach($formFields as $field)
+
+            foreach($formFields as $key => $field)
             {
-                $value = $field->getValue();
-                if(is_array($value)){ $value = implode(" ",$value); }
-                $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row, $value);
+                //daten ermitteln
+                $value = '-';
+                $rowDataFormFields =  $rowData->getFormFields();
+                foreach($rowDataFormFields as $rowfield)
+                {
+                    if($rowfield->getLabel() == $field->getFieldLabel()){
+                        $value = $rowfield->getValue();
+                        if(is_array($value)){ $value = implode(" ",$value); }
+                    }
+                }
+
+                $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row,$value);
                 $col++;
             }
+            $row++;
             $phpExcelObject->setActiveSheetIndex(0)->setCellValue($col.$row, $rowData->getCreatedAt());
+
         }
 
         $phpExcelObject->getActiveSheet()->setTitle('export');
