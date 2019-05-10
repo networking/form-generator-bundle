@@ -509,6 +509,19 @@ class Form
     }
 
 
+    public function countNewEntries(){
+
+        $countNew = 0;
+        foreach($this->getFormData() as $row){
+
+            $addressId = $row->getAddressId();
+            if($addressId == NULL){
+                $countNew++;
+            }
+        }
+
+        return $countNew;
+    }
 
 
 }

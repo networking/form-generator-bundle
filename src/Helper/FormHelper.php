@@ -90,19 +90,27 @@ class FormHelper
             if ($key == '_token') {
                 continue;
             }
-            $formFieldData = new FormFieldData();
+
             if ($field = $form->getField($key)) {
-                $formFieldData->setLabel($field->getFieldLabel());
-                $formFieldData->setFormFieldValue($field, $val);
+
+                if($field->getName() != 'searchinput'){
+                    $formFieldData = new FormFieldData();
+                    $formFieldData->setLabel($field->getFieldLabel());
+                    $formFieldData->setFormFieldValue($field, $val);
+                    $formData->addFormField($formFieldData);
+                }
+
             } else {
                 if ($originalForm) {
+                    $formFieldData = new FormFieldData();
                     $field = $originalForm->get($key);
                     $label = $field->get('label');
                     $formFieldData->setLabel($label);
                     $formFieldData->setValue($val);
+                    $formData->addFormField($formFieldData);
                 }
             }
-            $formData->addFormField($formFieldData);
+
         }
 
         $em = $this->doctrine->getManager();

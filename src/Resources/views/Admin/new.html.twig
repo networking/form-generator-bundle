@@ -1,0 +1,34 @@
+{#
+
+This file is part of the Networking package.
+
+(c) net working AG <info@networking.ch>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+{% extends '@NetworkingInitCms/CRUD/base_list_field.html.twig' %}
+
+{% block field %}
+
+    {{ object.countNewEntries }}
+
+    {#{% if object.status  == 'online' %}#}
+
+        {#<a href="">#}
+        {#<span class="label label-success show-tooltip"#}
+              {#data-original-title="{{ object.status }}">#}
+                {#{{ object.status }}</span></a>#}
+
+        {#<a href="{{ admin.generateUrl('status', {'id': object.id}) }}" class="btn btn-success">{{ object.status }}</a>#}
+
+    {#{% else %}#}
+
+        {#<a href="{{ admin.generateUrl('status', {'id': object.id}) }}" class="btn btn-danger">{{ object.status }}</a>#}
+
+    {#{% endif %}#}
+{#{% for link in get_form_page_links(object.id) %}#}
+        {#<a href="{{ link.url }}" target="_blank" class="link-underlined"><i class="fa fa-search"></i> {{ link.title }}</a> <br>#}
+{#{% endfor %}#}
+{% endblock %}

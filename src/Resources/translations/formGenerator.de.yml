@@ -6,6 +6,7 @@ list:
     label_pages: Seiten
     label_address: Adress-DB
     label_status: Status
+    label_new: Neu
 filter:
     label_name: Formularname
     label_status: Status

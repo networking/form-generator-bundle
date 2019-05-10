@@ -1,6 +1,11 @@
 {% for field in form.formFields %}
+    {% if field.name != 'searchinput' %}
+
 {% if data[field.name|sonata_slugify] is defined %}
 {{ field.fieldLabel }}: {% if data[field.name|sonata_slugify] is iterable %}{{ data[field.name|sonata_slugify]|join(', ') }}{% else %}{{ data[field.name|sonata_slugify] }}{% endif %}
 
 {% endif %}
+
+{% endif %}
+
 {% endfor %}

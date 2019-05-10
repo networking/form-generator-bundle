@@ -6,6 +6,7 @@ list:
     label_pages: Pages
     label_address: Address-DB
     label_status: Status
+    label_new: New
 
 filter:
     label_name: Form Name
