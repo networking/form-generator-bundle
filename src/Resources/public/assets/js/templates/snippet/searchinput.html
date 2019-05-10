@@ -1,8 +1,10 @@
 <!-- Search input-->
 <div class="form-group">
-    <label class="col-md-4 control-label"  for="<%= id %>"><%= polyglot.t(label, { _: label}) %></label>
-    <div class=<% if ( inputsize.length <= 0){ %>  "col-md-4" <%}else { %> "<%= inputsize %>"<%}%> >
-    <input  name="<%= id %>" type="search" placeholder="<%= polyglot.t(placeholder, { _: placeholder}) %>" class="form-control input-md" <% if(required) {%> required <% } %> />
-    <% if (helptext.length > 0) { %><span class="help-block"><%= polyglot.t(helptext, { _: helptext}) %></span><% } %>
-</div>
+    <label class="col-md-4 control-label" for ="<%= id %>"><%= polyglot.t(label, { _: label}) %></label>
+    <div class="col-md-8" >
+        <textarea class="form-control" name="<%= id %>" ><%= polyglot.t(textarea, { _: textarea}) %></textarea>
+
+        <span class="help-block">Kein Feld.<br >Möglichkeit etwas Text zwischen dem Formular zu platzieren.<br />HTML kann verwendet werden</span>
+    </div>
+
 </div>

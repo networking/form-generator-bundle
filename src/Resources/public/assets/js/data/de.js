@@ -31,6 +31,7 @@ var polyglot_phrases = {
     'Append': 'Text',
     'append': 'Text',
     'Text Area': 'Textbereich',
+    'Text Block': 'Text Block',
     'ID': 'Eindeutige ID',
     'Legend': 'Legende',
     'legend': 'Legende',

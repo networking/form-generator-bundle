@@ -112,7 +112,10 @@ class FormType extends AbstractType
                 $fieldOptions['attr']['placeholder'] = $options['placeholder']['value'];
                 break;
             case 'Search Input':
-                $fieldOptions['attr']['placeholder'] = $options['placeholder']['value'];
+                //search input wird als Text Info Feld "missbraucht"
+//                echo "123";
+//                print_r($options);die;
+                $fieldOptions['attr']['value'] = $options['textarea']['value'];
                 break;
             case 'Text Input':
                 $fieldOptions['attr']['placeholder'] = $options['placeholder']['value'];

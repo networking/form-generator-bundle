@@ -8,7 +8,37 @@
     {{ form.infoText|raw }}
     {{ form_start(formView, {'attr': {'class': 'content_form form-horizontal', 'novalidate': 'novalidate' }}) }}
     <fieldset>
-        {{ form(formView) }}
+
+
+        {#{{ dump(formView) }}#}
+        {% for child in formView.children %}
+
+
+            {% if child.vars.name == 'searchinput' %}
+
+                <div  class="form-group">
+                    <label for="generated_form_textinput" class="control-label col-sm-3 optional">
+                    {{ child.vars.label }}
+
+
+                    </label>
+                    <div class="col-sm-9">
+                        {{ child.vars.attr.value | raw | nl2br  }}
+                    </div>
+                </div>
+                {#feld verstecken#}
+                <div id="divCheckbox" style="display: none;"> {{ form_row(child) }}</div>
+            {% else %}
+
+
+            {{ form_row(child) }}
+
+            {% endif %}
+
+        {% endfor %}
+
+
+        {#{{ form(formView) }}#}
         <div class="button_div">
             <input type="submit" name="submit" id="submit" value="Weiter" class="btn btn-primary">
         </div>
