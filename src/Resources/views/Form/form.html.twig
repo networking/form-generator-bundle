@@ -14,7 +14,10 @@
         {% for child in formView.children %}
 
 
-            {% if child.vars.name == 'searchinput' %}
+
+
+            {% if child.vars.attr.formType is defined and child.vars.attr.formType == 'Search Input'  %}
+                
 
                 <div  class="form-group">
                     <label for="generated_form_textinput" class="control-label col-sm-3 optional">
