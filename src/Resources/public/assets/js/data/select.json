@@ -29,6 +29,11 @@
                     "2"
                 ]
             },
+            "required": {
+                "label": "Required",
+                "type": "checkbox",
+                "value": false
+            },
             "inputsize": {
                 "label": "Input Size",
                 "type": "select",
@@ -95,6 +100,11 @@
                     "1",
                     "2"
                 ]
+            },
+            "required": {
+                "label": "Required",
+                "type": "checkbox",
+                "value": false
             },
             "inputsize": {
                 "label": "Input Size",

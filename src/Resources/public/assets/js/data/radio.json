@@ -12,6 +12,11 @@
                 "type": "input",
                 "value": "Multiple Radios"
             },
+            "required": {
+                "label": "Required",
+                "type": "checkbox",
+                "value": false
+            },
             "radios": {
                 "label": "Radios",
                 "type": "textarea-split",
@@ -37,6 +42,11 @@
                 "label": "Group Name",
                 "type": "input",
                 "value": "radios"
+            },
+            "required": {
+                "label": "Required",
+                "type": "checkbox",
+                "value": false
             },
             "label": {
                 "label": "Label Text",
@@ -73,6 +83,11 @@
                 "type": "input",
                 "value": "checkboxes"
             },
+            "required": {
+                "label": "Required",
+                "type": "checkbox",
+                "value": false
+            },
             "label": {
                 "label": "Label Text",
                 "type": "input",
@@ -103,6 +118,11 @@
                 "label": "Group Name",
                 "type": "input",
                 "value": "checkboxes"
+            },
+            "required": {
+                "label": "Required",
+                "type": "checkbox",
+                "value": false
             },
             "label": {
                 "label": "Label Text",
