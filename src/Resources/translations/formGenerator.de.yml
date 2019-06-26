@@ -24,3 +24,7 @@ button:
 
 message.copy_saved: Eine Kopie des Formulars wurde erfolgreich erstellt
 link_action_create: Neues Formular erstellen
+
+date: Datum
+field: Feld
+value: Wert

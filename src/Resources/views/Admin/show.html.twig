@@ -17,40 +17,93 @@
         {% endblock formactionstop %}
 
 
-        {% for formData in object.formData %}
-            <p>Form Submitted at {{ formData.createdAt|date('d.M.Y H:i') }}</p>
-            <table class="table table-hover table-compact">
-                <thead>
-                <tr class="sonata-ba-list-field-header ">
-                    <th>Field</th>
-                    <th>Value</th>
-                    <th>
-                        <a  href="{{ admin.generateUrl('deleteFormEntry', {'id': object.id, 'rowid': formData.id}) }}" onClick="temp=window.confirm('{{ 'confirm_deletion'|trans({}, 'formGenerator') }}');return temp;" >
-                            <i class="glyphicon glyphicon-remove"></i>
-                            {{ 'link_action_delete'|trans({}, 'formGenerator') }}</a>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for fieldData in formData.formFields %}
-                    <tr class="sonata-ba-view-container">
-                        <td>{{ fieldData.label }}</td>
-                        <td colspan="2">
-                            {% if fieldData.value is iterable %}
-                                {{ fieldData.value|join(', ') }}
-                            {% else %}
-                                {{ fieldData.value}}
+        <table class="table table-hover table-compact">
+            {% set columnNum = 5 %}
+            {% for formData in object.formData %}
+
+                {% if loop.first %}
+                    {#Kopfzeile ausgeben#}
+                    <thead>
+                    <tr class="sonata-ba-list-field-header ">
+
+
+                        {% for fieldData in formData.formFields %}
+
+                            {% if loop.index0 < columnNum %}
+                                <th>{{ fieldData.label }}</th>
                             {% endif %}
+                        {% endfor %}
+
+                        <th>{{ 'date'|trans({}, 'formGenerator') }}</th>
+                        <th>&nbsp;</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                    </thead>
+                {% endif %}
+
+                {#daten ausgeben#}
+                <tr>
+
+
+                    {% for fieldData in formData.formFields %}
+
+                        {% if loop.index0 < columnNum %}
+                            <td>{% if fieldData.value is iterable %}
+                                    {{ fieldData.value|join(', ') }}
+                                {% else %}
+                                    {{ fieldData.value}}
+                                {% endif %}</td>
+                        {% endif %}
+                    {% endfor %}
+                    <td>{{ formData.createdAt|date('d.m.Y H:i') }}</td>
+                    <td>{% if formData.formFields | length > columnNum  %}
+                            <a class="" role="button" data-toggle="collapse" href="#collapseExampleNote{{ formData.id }}" aria-expanded="false" aria-controls="collapseExample"> <i class="glyphicon glyphicon-plus"></i></a>
+
+                        {% endif %}</td>
+                    <td>
+                        <a  href="{{ admin.generateUrl('deleteFormEntry', {'id': object.id, 'rowid': formData.id}) }}" onClick="temp=window.confirm('{{ 'confirm_deletion'|trans({}, 'formGenerator') }}');return temp;" >
+                            <i class="glyphicon glyphicon-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+
+
+                {#falls es mehr spalten hat als in {{ columnNum }}, restliche daten in neuer tabelle ausgeben#}
+                {% if formData.formFields | length > columnNum  %}
+                    <tr bgcolor="#f5f5f5" >
+                        <td colspan="{{ columnNum + 3 }}" >
+                            <div class="collapse" id="collapseExampleNote{{ formData.id }}">
+
+                                <table class="table table-hover table-compact">
+                                    <thead>
+                                    <tr class="sonata-ba-list-field-header ">
+                                        <th>{{ 'field'|trans({}, 'formGenerator') }}</th>
+                                        <th>{{ 'value'|trans({}, 'formGenerator') }}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for fieldData in formData.formFields %}
+                                        <tr class="sonata-ba-view-container">
+                                            <td>{{ fieldData.label }}</td>
+                                            <td >
+                                                {% if fieldData.value is iterable %}
+                                                    {{ fieldData.value|join(', ') }}
+                                                {% else %}
+                                                    {{ fieldData.value}}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </td>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
 
+                {% endif %}
+            {% endfor %}
+        </table>
 
-
-            <hr/>
-        {% endfor %}
 
         {% block formactions %}
             <div class="well form-actions">

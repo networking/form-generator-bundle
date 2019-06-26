@@ -23,3 +23,7 @@ button:
     duplicate_form: Copy form
 
 message.copy_saved: A copy of the form was successfully created.
+
+date: Date
+field: Field
+value: Value
