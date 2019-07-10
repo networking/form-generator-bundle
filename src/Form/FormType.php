@@ -180,6 +180,18 @@ class FormType extends AbstractType
             $fieldOptions['required'] = $options['required']['value'];
             if ($fieldOptions['required']) {
                 $fieldOptions['constraints'] = new NotBlank();
+            }else{
+
+                //bei radio buttons die "none" option ausblenden
+                if($field->getType() == 'Multiple Radios' or $field->getType() == 'Multiple Radios Inline')
+                {
+                    $fieldOptions['required'] = false;
+                    $fieldOptions['data'] = '';
+                    $fieldOptions['placeholder'] = false;
+                    unset($fieldOptions['constraints'] ); ///= false;
+
+                }
+
             }
         } elseif (!array_key_exists('required', $fieldOptions)) {
             $fieldOptions['required'] = false;
