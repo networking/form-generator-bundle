@@ -171,6 +171,9 @@ class FormAdminController extends FOSRestController
         $form->setAction($request->get('action'));
         $form->setRedirect($request->get('redirect'));
 
+
+        $form->setEmailField($request->get('emailField'));
+
         $collection = $request->get('collection');
 
         foreach ($collection as $field) {
@@ -330,7 +333,9 @@ class FormAdminController extends FOSRestController
         $row = '1';
         //Titel-Zeile ausgeben
         foreach ($formFields as $key => $field) {
-            $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, $field->getFieldLabel());
+            if($field->getType() != 'Search Input'){
+                $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, $field->getFieldLabel());
+            }
             ++$col;
         }
         $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, 'Date');
@@ -339,13 +344,16 @@ class FormAdminController extends FOSRestController
         foreach ($formData as $rowData) {
             $col = 'A';
             ++$row;
-            $formFields = $rowData->getFormFields();
-            foreach ($formFields as $field) {
-                $value = $field->getValue();
-                if (is_array($value)) {
-                    $value = implode(' ', $value);
+            $formFields2 = $rowData->getFormFields();
+            foreach ($formFields2 as $key =>  $field) {
+                if($formFields[$key]->getType() != 'Search Input') {
+
+                    $value = $field->getValue();
+                    if (is_array($value)) {
+                        $value = implode(' ', $value);
+                    }
+                    $spreadsheet->setActiveSheetIndex(0)->setCellValue($col . $row, $value);
                 }
-                $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, $value);
                 ++$col;
             }
             $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, $rowData->getCreatedAt());

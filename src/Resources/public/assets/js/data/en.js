@@ -32,6 +32,8 @@ var polyglot_phrases = {
     'append': 'append',
     'Text Area': 'Text Area',
     'Text Block': 'Text Block',
+    'sendConfirmationMail': 'send email confirmation',
+    'emailField': 'For email confirmation: ID / name of email field',
     'ID': 'Unique ID',
     'Legend': 'Legend',
     'legend': 'Legend',

@@ -18,18 +18,23 @@
 
 
         <table class="table table-hover table-compact">
+
+
+
         {% for formData in object.formData %}
 
             {% if loop.first %}
                 {#Kopfzeile ausgeben#}
+
                 <thead>
                     <tr class="sonata-ba-list-field-header ">
                         {% if formData.formFields | length > 4  %}
                             {#nur die ersten 4 Form Felder ausgeben , rest muss man sich anzeigen lassen#}
-                            <th>{{ formData.formFields.0.label }}</th>
-                            <th>{{ formData.formFields.1.label }}</th>
-                            <th>{{ formData.formFields.2.label }}</th>
-                            <th>{{ formData.formFields.3.label }}</th>
+
+                            {% if object.formFields.0.type != 'Search Input' %}<th>{{ formData.formFields.0.label }}</th>{% endif %}
+                            {% if object.formFields.1.type != 'Search Input' %}<th>{{ formData.formFields.1.label }}</th>{% endif %}
+                            {% if object.formFields.2.type != 'Search Input' %}<th>{{ formData.formFields.2.label }}</th>{% endif %}
+                            {% if object.formFields.3.type != 'Search Input' %}<th>{{ formData.formFields.3.label }}</th>{% endif %}
                             <th>&nbsp;</th>
 
                         {% else %}
@@ -51,6 +56,7 @@
                 {% if formData.formFields | length > 4  %}
                     {#nur die ersten 4 Form Felder ausgeben , rest muss man sich anzeigen lassen#}
 
+                    {% if object.formFields.0.type != 'Search Input' %}
                     <td>
                         {% if formData.formFields.0.value is iterable %}
                             {{ formData.formFields.0.value|join(', ') }}
@@ -59,39 +65,54 @@
                         {% endif %}
                     </td>
 
-                    <td>
-                        {% if formData.formFields.1.value is iterable %}
-                            {{ formData.formFields.1.value|join(', ') }}
-                        {% else %}
-                            {{ formData.formFields.1.value}}
-                        {% endif %}
-                    </td>
+                    {% endif %}
 
-                    <td>
-                        {% if formData.formFields.2.value is iterable %}
-                            {{ formData.formFields.2.value|join(', ') }}
-                        {% else %}
-                            {{ formData.formFields.2.value}}
-                        {% endif %}
-                    </td>
 
-                    <td>
-                        {% if formData.formFields.3.value is iterable %}
-                            {{ formData.formFields.3.value|join(', ') }}
-                        {% else %}
-                            {{ formData.formFields.3.value}}
-                        {% endif %}
-                    </td>
+                    {% if object.formFields.1.type != 'Search Input' %}
+                        <td>
+                            {% if formData.formFields.1.value is iterable %}
+                                {{ formData.formFields.1.value|join(', ') }}
+                            {% else %}
+                                {{ formData.formFields.1.value}}
+                            {% endif %}
+                        </td>
+                    {% endif %}
+
+                    {% if object.formFields.2.type != 'Search Input' %}
+                        <td>
+                            {% if formData.formFields.2.value is iterable %}
+                                {{ formData.formFields.2.value|join(', ') }}
+                            {% else %}
+                                {{ formData.formFields.2.value}}
+                            {% endif %}
+                        </td>
+                    {% endif %}
+
+                    {% if object.formFields.3.type != 'Search Input' %}
+                        <td>
+                            {% if formData.formFields.3.value is iterable %}
+                                {{ formData.formFields.3.value|join(', ') }}
+                            {% else %}
+                                {{ formData.formFields.3.value}}
+                            {% endif %}
+                        </td>
+                    {% endif %}
+
+
 
                     <td>
                         <a class="" role="button" data-toggle="collapse" href="#collapseExampleNote{{ formData.id }}" aria-expanded="false" aria-controls="collapseExample"> <i class="glyphicon glyphicon-plus"></i> alles anzeigen</a>
                         <div class="collapse" id="collapseExampleNote{{ formData.id }}">
-                            {% for fieldData in formData.formFields %}
-                                {{ fieldData.label }}: {% if fieldData.value is iterable %}
-                                {{ fieldData.value|join(', ') }}
-                            {% else %}
-                                {{ fieldData.value}}
-                            {% endif %}<br />
+                            {% for key, fieldData in formData.formFields %}
+
+                                {% if object.formFields[key].type != 'Search Input'  %}
+                                        {{ fieldData.label }}: {% if fieldData.value is iterable %}
+                                        {{ fieldData.value|join(', ') }}
+                                    {% else %}
+                                        {{ fieldData.value}}
+                                    {% endif %}<br />
+                                {% endif %}
+
                             {% endfor %}
                         </div>
                     </td>

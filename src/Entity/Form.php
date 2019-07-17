@@ -120,6 +120,20 @@ class Form
 
 
     /**
+     * @ORM\Column(name="send_confirmation_mail", type="boolean", nullable=true)
+     */
+    private $sendConfirmationMail = false;
+
+
+    /**
+     * @var
+     * @ORM\Column(name="email_field", type="string", length=255, nullable=true)
+     */
+    private $emailField;
+
+
+
+    /**
      * @var
      * @ORM\Column(name="redirect", type="string", length=255, nullable=true)
      */
@@ -522,6 +536,30 @@ class Form
 
         return $countNew;
     }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getEmailField()
+    {
+        return $this->emailField;
+    }
+
+    /**
+     * @param mixed $emailField
+     */
+    public function setEmailField($emailField)
+    {
+        $this->emailField = $emailField;
+    }
+
+
+
+
+
+
 
 
 }

@@ -109,7 +109,26 @@
                 </div>
             </div>
 
+
+            <div class="form-group emailField">
+                <label for="formName" class="col-md-3  "><%=polyglot.t('emailField') %></label>
+
+                <div class="col-md-9">
+
+                    <input id="emailField" name="emailField" class="form-control input-xlarge" value="<%= model.email_field %>"/>
+
+                    <div class="help-inline"></div>
+                </div>
+            </div>
+
+
         </fieldset>
+
+
+
+
+
+
         <div class="well form-actions">
             <button type="button"
             <% if (!model.name) {%>disabled=disabled<% } %> id="saveForm" data-loading-text="<%= polyglot.t('Loading...') %>" class="btn
