@@ -119,12 +119,15 @@
 
 
                 {% else %}
-                    {% for fieldData in formData.formFields %}
+                    {% for key, fieldData in formData.formFields %}
+
+                        {% if object.formFields[key].type != 'Search Input'  %}
                         <td>{% if fieldData.value is iterable %}
                                 {{ fieldData.value|join(', ') }}
                             {% else %}
                                 {{ fieldData.value}}
                             {% endif %}</td>
+                        {% endif %}
                     {% endfor %}
 
                 {% endif %}
