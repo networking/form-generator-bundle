@@ -11,6 +11,7 @@ var polyglot_phrases = {
     'Save': 'Speichern',
     'sendConfirmationMail': 'E-Mail bestätigung verschicken',
     'emailField': 'Für E-Mail Bestätigung: ID / Name des E-Mail Feld angeben.',
+    'doubleOptIn': 'Anmeldung Newsletter, Double-Opt-In Mail verschicken',
     'Back To List': 'Zurück zur Liste',
     'Drag & Drop components': 'Drag & Drop-Komponenten',
     'Drag items here': 'Ziehen Sie Elemente hierher',

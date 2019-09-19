@@ -197,6 +197,10 @@ define([
             var target = $(event.target);
             this.model.set({email_field: target.val()});
             this.confirm = true;
+        }, updateDoubleOptIn: function (event) {
+            var target = $(event.target);
+            this.model.set({doubleOptIn: target.val()});
+            this.confirm = true;
         }, updateEmail: function (event) {
             var target = $(event.target);
             this.model.set({email: target.val()});
@@ -230,6 +234,7 @@ define([
                 action: this.$('select#action').val(),
                 redirect: this.$('input#redirect').val(),
                 emailField: this.$('input#emailField').val(),
+                doubleOptIn: this.$('input#doubleOptIn').val(),
                 collection: this.collection
             };
         }, createMessageBox: function (level, title, message) {

@@ -34,6 +34,7 @@ var polyglot_phrases = {
     'Text Block': 'Text Block',
     'sendConfirmationMail': 'send email confirmation',
     'emailField': 'For email confirmation: ID / name of email field',
+    'doubleOptIn': 'Newsletter? send Double-Opt-In Mail',
     'ID': 'Unique ID',
     'Legend': 'Legend',
     'legend': 'Legend',

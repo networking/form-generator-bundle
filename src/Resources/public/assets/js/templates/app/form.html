@@ -122,6 +122,22 @@
             </div>
 
 
+
+            <div class="form-group doubleOptIn">
+                <label for="action" class="col-md-3  "><%=polyglot.t('doubleOptIn') %></label>
+
+                <div class="col-md-9">
+                    <select id="doubleOptIn" name="doubleOptIn" class="form-control input-xlarge">
+                        <option value="yes"
+                        <% if(model.action == 'yes'){%> selected="selected"<%}%>>Ja</option>
+                        <option value="no"
+                        <% if(model.action == 'no'){%> selected="selected"<%}%>>Nein</option>
+
+                    </select>
+
+                </div>
+            </div>
+
         </fieldset>
 
 
