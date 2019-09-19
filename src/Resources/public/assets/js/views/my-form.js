@@ -11,7 +11,8 @@ define([
             'change input#email': 'updateEmail',
             'change select#action': 'updateAction',
             'change input#redirect': 'updateRedirect',
-            'change input#emailField': 'updateEmailField'
+            'change input#emailField': 'updateEmailField',
+            'change input#doubleOptIn': 'updateDoubleOptIn'
         }, initialize: function (options) {
             this.collection.on("add", this.render, this);
             this.collection.on("remove", this.render, this);
