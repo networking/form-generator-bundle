@@ -200,7 +200,7 @@ define([
             this.confirm = true;
         }, updateDoubleOptIn: function (event) {
             var target = $(event.target);
-            this.model.set({doubleOptIn: target.val()});
+            this.model.set({douple_opt_in: target.val()});
             this.confirm = true;
         }, updateEmail: function (event) {
             var target = $(event.target);
