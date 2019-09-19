@@ -111,7 +111,7 @@
 
 
             <div class="form-group emailField">
-                <label for="formName" class="col-md-3  "><%=polyglot.t('emailField') %></label>
+                <label for="emailField" class="col-md-3  "><%=polyglot.t('emailField') %></label>
 
                 <div class="col-md-9">
 
@@ -124,14 +124,14 @@
 
 
             <div class="form-group doubleOptIn">
-                <label for="action" class="col-md-3  "><%=polyglot.t('doubleOptIn') %></label>
+                <label for="doubleOptIn" class="col-md-3  "><%=polyglot.t('doubleOptIn') %></label>
 
                 <div class="col-md-9">
                     <select id="doubleOptIn" name="doubleOptIn" class="form-control input-xlarge">
                         <option value="yes"
-                        <% if(model.action == 'yes'){%> selected="selected"<%}%>>Ja</option>
+                        <% if(model.doubleOptIn == 'yes'){%> selected="selected"<%}%>>Ja</option>
                         <option value="no"
-                        <% if(model.action == 'no'){%> selected="selected"<%}%>>Nein</option>
+                        <% if(model.doubleOptIn == 'no'){%> selected="selected"<%}%>>Nein</option>
 
                     </select>
 
