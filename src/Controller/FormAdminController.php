@@ -954,15 +954,15 @@ class FormAdminController extends FOSRestController
     public function doubleOptInAction(Request $request, $id)
     {
 
-        //update status
+        //update double opt in
         $repo = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:Form');
         $em = $this->getDoctrine()->getManager();
         /** @var Form $form */
         $form = $repo->find($id);
         if($form->getDoubleOptIn() == 'yes'){
-            $form->setStatus('no');
+            $form->setDoubleOptIn('no');
         }else{
-            $form->setStatus('yes');
+            $form->setDoubleOptIn('yes');
         }
         $em->persist($form);
         $em->flush();

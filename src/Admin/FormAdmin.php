@@ -77,6 +77,12 @@ class FormAdmin extends BaseAdmin
                 ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:status'])
 
             ->add(
+                'doubleOptIn',
+                'doubleOptIn/{id}',
+                ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:doubleOptIn'])
+
+
+            ->add(
                 'addressConfig',
                 'address_config/{id}' ,
                 ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:addressConfig'])
