@@ -130,6 +130,7 @@ class FormAdmin extends BaseAdmin
 
         $listMapper->add('pages', 'string', ['template' => '@NetworkingFormGenerator/Admin/pages.html.twig']);
         $listMapper->add('status', 'string', ['template' => '@NetworkingFormGenerator/Admin/status.html.twig']);
+        $listMapper->add('doubleOptIn', 'string', ['template' => '@NetworkingFormGenerator/Admin/doubleOptIn.html.twig']);
         $listMapper->add('new', 'string', ['template' => '@NetworkingFormGenerator/Admin/new.html.twig']);
         $listMapper->add(
             '_action',

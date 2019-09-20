@@ -944,6 +944,34 @@ class FormAdminController extends FOSRestController
     }
 
 
+
+    /**
+     * @param Request $request
+     * @param $id
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    public function doubleOptInAction(Request $request, $id)
+    {
+
+        //update status
+        $repo = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:Form');
+        $em = $this->getDoctrine()->getManager();
+        /** @var Form $form */
+        $form = $repo->find($id);
+        if($form->getDoubleOptIn() == 'yes'){
+            $form->setStatus('no');
+        }else{
+            $form->setStatus('yes');
+        }
+        $em->persist($form);
+        $em->flush();
+
+        return $this->redirect($this->admin->generateUrl('list'));
+    }
+
+
+
     /**
      * @param Request $request
      * @param $id
