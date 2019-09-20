@@ -126,14 +126,6 @@ class Form
 
 
 
-    /**
-     * @var
-     * @ORM\Column(name="newsletter_anmeldung", type="string", length=255, nullable=true)
-     */
-    private $newsletterAnmeldung;
-
-
-
 
     /**
      * @var
@@ -580,25 +572,6 @@ class Form
     {
         $this->sendConfirmationMail = $sendConfirmationMail;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getNewsletterAnmeldung()
-    {
-        return $this->newsletterAnmeldung;
-    }
-
-    /**
-     * @param mixed $newsletterAnmeldung
-     */
-    public function setNewsletterAnmeldung($newsletterAnmeldung): void
-    {
-        $this->newsletterAnmeldung = $newsletterAnmeldung;
-    }
-
-
-
 
 
 
