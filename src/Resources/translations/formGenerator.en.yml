@@ -7,6 +7,7 @@ list:
     label_address: Address-DB
     label_status: Status
     label_new: New
+    label_double_opt_in: Double Opt In
 
 filter:
     label_name: Form Name
