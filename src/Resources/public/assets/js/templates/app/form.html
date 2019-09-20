@@ -122,21 +122,19 @@
             </div>
 
 
-
-            <div class="form-group doubleOptIn">
-                <label for="doubleOptIn" class="col-md-3  "><%=polyglot.t('doubleOptIn') %></label>
+            <div class="form-group newsletterAnmeldung">
+                <label for="emailField" class="col-md-3  "><%=polyglot.t('newsletterAnmeldung') %></label>
 
                 <div class="col-md-9">
-                    <select id="doubleOptIn" name="doubleOptIn" class="form-control input-xlarge">
-                        <option value="yes"
-                        <% if(model.doubleOptIn == 'yes'){%> selected="selected"<%}%>>Ja</option>
-                        <option value="no"
-                        <% if(model.doubleOptIn == 'no'){%> selected="selected"<%}%>>Nein</option>
 
-                    </select>
+                    <input id="newsletterAnmeldung" name="newsletterAnmeldung" class="form-control input-xlarge" value="<%= model.newsletter_anmeldung %>"/>
 
+                    <div class="help-inline"></div>
                 </div>
             </div>
+
+
+
 
         </fieldset>
 

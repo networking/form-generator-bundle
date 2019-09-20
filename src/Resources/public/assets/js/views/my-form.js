@@ -12,7 +12,7 @@ define([
             'change select#action': 'updateAction',
             'change input#redirect': 'updateRedirect',
             'change input#emailField': 'updateEmailField',
-            'change input#doubleOptIn': 'updateDoubleOptIn'
+            'change input#newsletterAnmeldung': 'updateNewsletterAnmeldung'
         }, initialize: function (options) {
             this.collection.on("add", this.render, this);
             this.collection.on("remove", this.render, this);
@@ -198,9 +198,9 @@ define([
             var target = $(event.target);
             this.model.set({email_field: target.val()});
             this.confirm = true;
-        }, updateDoubleOptIn: function (event) {
+        }, updatenNwsletterAnmeldung: function (event) {
             var target = $(event.target);
-            this.model.set({double_opt_in: target.val()});
+            this.model.set({newsletter_anmeldung: target.val()});
             this.confirm = true;
         }, updateEmail: function (event) {
             var target = $(event.target);
@@ -235,7 +235,7 @@ define([
                 action: this.$('select#action').val(),
                 redirect: this.$('input#redirect').val(),
                 emailField: this.$('input#emailField').val(),
-                doubleOptIn: this.$('input#doubleOptIn').val(),
+                newsletterAnmeldung: this.$('input#newsletterAnmeldung').val(),
                 collection: this.collection
             };
         }, createMessageBox: function (level, title, message) {

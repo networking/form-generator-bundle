@@ -173,7 +173,7 @@ class FormAdminController extends FOSRestController
 
 
         $form->setEmailField($request->get('emailField'));
-        $form->setDoubleOptIn($request->get('doubleOptIn'));
+        $form->setNewsletterAnmeldung($request->get('newsletterAnmeldung'));
 
         $collection = $request->get('collection');
 

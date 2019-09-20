@@ -125,6 +125,16 @@ class Form
     private $sendConfirmationMail = false;
 
 
+
+    /**
+     * @var
+     * @ORM\Column(name="newsletter_anmeldung", type="string", length=255, nullable=true)
+     */
+    private $newsletterAnmeldung;
+
+
+
+
     /**
      * @var
      * @ORM\Column(name="email_field", type="string", length=255, nullable=true)
@@ -554,6 +564,39 @@ class Form
     {
         $this->emailField = $emailField;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSendConfirmationMail()
+    {
+        return $this->sendConfirmationMail;
+    }
+
+    /**
+     * @param mixed $sendConfirmationMail
+     */
+    public function setSendConfirmationMail($sendConfirmationMail): void
+    {
+        $this->sendConfirmationMail = $sendConfirmationMail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNewsletterAnmeldung()
+    {
+        return $this->newsletterAnmeldung;
+    }
+
+    /**
+     * @param mixed $newsletterAnmeldung
+     */
+    public function setNewsletterAnmeldung($newsletterAnmeldung): void
+    {
+        $this->newsletterAnmeldung = $newsletterAnmeldung;
+    }
+
 
 
 
