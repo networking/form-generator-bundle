@@ -1,5 +1,15 @@
 [
     {
+        "title": "Infotext",
+        "fields": {
+            "label": {
+                "label": "Infotext",
+                "type": "textarea",
+                "value": "add text here"
+            }
+        }
+    },
+    {
         "title": "Legend",
         "fields": {
             "id": {

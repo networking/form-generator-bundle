@@ -19,6 +19,8 @@ var polyglot_phrases = {
     'Select': 'Auswahl Felder',
     'form legend': 'Form Legende',
     'Form Legend': 'Form Legende',
+    'Infotext': 'Info Textblock',
+    'add text here': 'Fügen Sie hier Ihren Text hinzu',
     'Text Input': 'Text Feld',
     'help': 'Hilfe Text',
     'Password Input': 'Passwort Feld',

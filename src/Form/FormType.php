@@ -12,6 +12,7 @@ namespace Networking\FormGeneratorBundle\Form;
 
 use Networking\FormGeneratorBundle\Entity\Form;
 use Networking\FormGeneratorBundle\Entity\FormField;
+use Networking\FormGeneratorBundle\Form\Type\InfotextType;
 use Networking\FormGeneratorBundle\Form\Type\LegendType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -32,9 +33,14 @@ class FormType extends AbstractType
         $form = $options['form'];
 
         if (!is_null($form)) {
-            foreach ($form->getFormFields() as $field) {
+            foreach ($form->getFormFields() as $key =>  $field) {
+                if(!$name = $field->getName()){
+                    $name = $field->getType().$key;
+                }
+                $id = self::slugify($name);
+
                 $builder->add(
-                    self::slugify($field->getName()),
+                    $id,
                     $this->getFieldType($field->getType()),
                     $this->extractFieldOptions($field, $options)
                 );
@@ -67,6 +73,9 @@ class FormType extends AbstractType
         switch ($type) {
             case 'Legend':
                 $type = LegendType::class;
+                break;
+            case 'Infotext':
+                $type = InfotextType::class;
                 break;
             case 'Password Input':
                 $type = PasswordType::class;
@@ -107,6 +116,7 @@ class FormType extends AbstractType
 
         switch ($field->getType()) {
             case 'Legend':
+            case 'Infotext':
                 break;
             case 'Password Input':
                 $fieldOptions['attr']['placeholder'] = $options['placeholder']['value'];

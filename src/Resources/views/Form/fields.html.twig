@@ -3,3 +3,8 @@
         <legend>{{ legend }}</legend>
     {% endspaceless %}
 {% endblock %}
+{% block infotext_widget %}
+    {% spaceless %}
+        {{ text|raw }}
+    {% endspaceless %}
+{% endblock %}

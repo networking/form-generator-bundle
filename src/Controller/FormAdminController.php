@@ -157,7 +157,7 @@ class FormAdminController extends FOSRestController
 
         $collection = $request->get('collection');
 
-        foreach ($collection as $field) {
+        foreach ($collection as $key =>  $field) {
             if (is_array($field)) {
                 switch ($field['title']) {
                     case 'Multiple Radios':
@@ -175,6 +175,14 @@ class FormAdminController extends FOSRestController
                         $formField = new FormField();
                         $formField->setName($field['fields']['id']['value']);
                         $formField->setFieldLabel($field['fields']['name']['value']);
+                        $formField->setType($field['title']);
+                        $formField->setOptions($field['fields']);
+                        $form->addFormField($formField);
+                        break;
+                    case 'Infotext':
+                        $formField = new FormField();
+                        $formField->setName('info_text'.$key);
+                        $formField->setFieldLabel($field['fields']['label']['value']);
                         $formField->setType($field['title']);
                         $formField->setOptions($field['fields']);
                         $form->addFormField($formField);
