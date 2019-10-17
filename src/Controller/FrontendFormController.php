@@ -19,6 +19,7 @@ use Networking\FormGeneratorBundle\Entity\Form;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Networking\FormGeneratorBundle\Helper\FormHelper;
+use Application\Networking\InitCmsBundle\Utils\SendAwayRestApi;
 
 class FrontendFormController extends Controller
 {
@@ -93,14 +94,32 @@ class FrontendFormController extends Controller
 
                 //check if confirmation email needs to be send.
                 $emailField = strtolower($form->getEmailField());
-                $newsLetterAnmeldung = strtolower($form->getNewsletterAnmeldung());
+                $newsLetterAnmeldung = strtolower($form->getDoubleOptIn());
 
-                if($emailField != '' and $newsLetterAnmeldung != 'yes'){
-                    if(isset($data[$emailField]) and  filter_var($data[$emailField], FILTER_VALIDATE_EMAIL) ) {
-                        $this->sendConfirmationEmail($data[$emailField], $this->container->getParameter('form_generator_from_email'), $form->getName(), $form->getThankYouText());
-                    }
-                }elseif($emailField != '' and $newsLetterAnmeldung == 'yes'){
+
+                if ($emailField != ''  and filter_var($data[$emailField], FILTER_VALIDATE_EMAIL)) {
+
+                    if($newsLetterAnmeldung != 'yes'){
+
+                        if(isset($data[$emailField]) and  filter_var($data[$emailField], FILTER_VALIDATE_EMAIL) ) {
+                            $this->sendConfirmationEmail($data[$emailField], $this->container->getParameter('form_generator_from_email'), $form->getName(), $form->getThankYouText());
+                        }
+                    }elseif($newsLetterAnmeldung == 'yes'){
+
                         //todo: double opt in ausloesen
+                        $sendaway_rest_client_id =  $this->getParameter('sendaway_rest_client_id'); //$this->getContainer()->getParameter('sendaway_rest_client_id');
+                        $sendaway_rest_client_secret = $this->getParameter('sendaway_rest_client_secret'); // $this->getContainer()->getParameter('sendaway_rest_client_secret');
+                        $sendaway_form_id =  $this->getParameter('sendaway_form_id'); //$this->getContainer()->getParameter('sendaway_form_id');
+                        $sendaway_list_id =  $this->getParameter('sendaway_list_id'); //$this->getContainer()->getParameter('sendaway_list_id');
+
+
+                        $this->sendAwayRestApi = new SendAwayRestApi($sendaway_rest_client_id,  $sendaway_rest_client_secret);
+                        //user erstellen
+                        $result = $this->sendAwayRestApi->createSubscriber($data[$emailField], $sendaway_list_id);
+                        //double opt in mail verschicken
+                        $result = $this->sendAwayRestApi->triggerDoubleOptInEmail($data[$emailField], $sendaway_form_id);
+
+                    }
 
                 }
 
