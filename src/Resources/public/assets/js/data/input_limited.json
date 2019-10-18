@@ -1,15 +1,5 @@
 [
     {
-        "title": "Infotext",
-        "fields": {
-            "label": {
-                "label": "Infotext",
-                "type": "textarea",
-                "value": "add text here"
-            }
-        }
-    },
-    {
         "title": "Legend",
         "fields": {
             "id": {
@@ -21,6 +11,16 @@
                 "label": "Form Legend",
                 "type": "input",
                 "value": "form legend"
+            }
+        }
+    },
+    {
+        "title": "Infotext",
+        "fields": {
+            "label": {
+                "label": "Infotext",
+                "type": "ckeditor",
+                "value": "add text here"
             }
         }
     },

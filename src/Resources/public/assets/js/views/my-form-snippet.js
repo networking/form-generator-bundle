@@ -1,10 +1,10 @@
 
 define([
-    "jquery", "underscore", "backbone",
+    "jquery", "underscore", "backbone","ckeditor",
     "views/snippet", "views/temp-snippet",
     "helper/pubsub"
 ], function(
-    $, _, Backbone,
+    $, _, Backbone,CKEDITOR,
     SnippetView, TempSnippetView,
     PubSub
     ){
@@ -40,6 +40,18 @@ define([
         , preventPropagation: function(e) {
             e.stopPropagation();
             e.preventDefault();
+
+            $.each(this.model.get('fields'), function (i, element) {
+                if (element.type === 'ckeditor') {
+                    var fieldName = 'ckeditor_'+element.name
+                    CKEDITOR.replace(fieldName, {
+                        "toolbar": [["Bold", "Italic", "Underline", "-", "NumberedList", "BulletedList","-",'TextColor', 'BGColor','Styles', 'Format', 'Font', 'FontSize']],
+                        "language": "de","width": '100%'
+                    });
+
+
+                }
+            })
         }
 
         , mouseUpHandler : function(mouseUpEvent) {
@@ -50,11 +62,17 @@ define([
             return function(mouseEvent) {
                 mouseEvent.preventDefault();
                 var fields = $(".popover .field");
+
+                for(var instance in CKEDITOR.instances){
+                    var ckeditorInstance = CKEDITOR.instances[instance];
+                    var data = ckeditorInstance.getData();
+                    $('#' + ckeditorInstance.name).val($.trim(data.replace(/[\t\n]+/g, ' ')));
+                    CKEDITOR.instances[instance].destroy();
+                }
                 _.each(fields, function(e){
                     var $e = $(e)
                         , type = $e.attr("data-type")
                         , name = $e.attr("id");
-
                     switch(type) {
                         case "checkbox":
                             boundContext.model.setField(name, $e.is(":checked"));
@@ -63,6 +81,10 @@ define([
                             boundContext.model.setField(name, $e.val());
                             break;
                         case "textarea":
+                            boundContext.model.setField(name, $e.val());
+                            break;
+                        case "ckeditor":
+                            name = name.replace('ckeditor_','');
                             boundContext.model.setField(name, $e.val());
                             break;
                         case "textarea-split":
@@ -91,6 +113,10 @@ define([
                 mouseEvent.preventDefault();
                 $(".popover").remove();
                 boundContext.model.trigger("change");
+
+                for(var instance in CKEDITOR.instances){
+                    CKEDITOR.instances[instance].destroy();
+                }
             }
         }
 

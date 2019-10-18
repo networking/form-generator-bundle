@@ -1,4 +1,3 @@
-
 define([
     "jquery", "underscore", "backbone"
     , "text!templates/popover/popover-main.html"
@@ -7,9 +6,10 @@ define([
     , "text!templates/popover/popover-textarea.html"
     , "text!templates/popover/popover-textarea-split.html"
     , "text!templates/popover/popover-checkbox.html"
+    , "text!templates/popover/popover-ckeditor.html"
     , "templates/snippet/snippet-templates"
     , "bootstrap"
-], function(
+], function (
     $, _, Backbone
     , _PopoverMain
     , _PopoverInput
@@ -17,37 +17,42 @@ define([
     , _PopoverTextArea
     , _PopoverTextAreaSplit
     , _PopoverCheckbox
+    , _PopoverCkeditor
     , _snippetTemplates
-    ){
+) {
     return Backbone.View.extend({
         tagName: "div"
         , className: "component"
-        , initialize: function(){
+        , initialize: function () {
             this.template = _.template(_snippetTemplates[this.model.idFriendlyTitle()]);
             this.popoverTemplates = {
-                "input" : _.template(_PopoverInput)
-                , "select" : _.template(_PopoverSelect)
-                , "textarea" : _.template(_PopoverTextArea)
-                , "textarea-split" : _.template(_PopoverTextAreaSplit)
-                , "checkbox" : _.template(_PopoverCheckbox)
+                "input": _.template(_PopoverInput)
+                , "select": _.template(_PopoverSelect)
+                , "textarea": _.template(_PopoverTextArea)
+                , "textarea-split": _.template(_PopoverTextAreaSplit)
+                , "checkbox": _.template(_PopoverCheckbox)
+                , "ckeditor": _.template(_PopoverCkeditor)
             }
         }
-        , render: function(withAttributes){
+        , render: function (withAttributes) {
             var that = this;
+
             var content = _.template(_PopoverMain)({
                 "title": polyglot.t(that.model.get("title"), {_: that.model.get("title")}),
-                "items" : that.model.get("fields"),
+                "items": that.model.get("fields"),
                 "popoverTemplates": that.popoverTemplates
             });
+
+
             if (withAttributes) {
                 return this.$el.html(
                     that.template(that.model.getValues())
                 ).attr({
-                        "data-content"     : content
-                        , "data-title"     : polyglot.t(that.model.get("title"), {_: that.model.get("title")})
-                        , "data-trigger"   : "manual"
-                        , "data-html"      : true
-                    });
+                    "data-content": content
+                    , "data-title": polyglot.t(that.model.get("title"), {_: that.model.get("title")})
+                    , "data-trigger": "manual"
+                    , "data-html": true
+                });
             } else {
                 return this.$el.html(
                     that.template(that.model.getValues())

@@ -1,7 +1,7 @@
 define([
     "jquery", "ckeditor", "underscore", "backbone", "collections/snippets", "views/temp-snippet", "helper/pubsub", "text!templates/app/renderform.html", "text!templates/app/form.html", "text!templates/app/message.html"
     , "views/tab", "text!data/input_limited.json", "text!data/radio.json", "text!data/select.json", "text!data/buttons.json", "text!templates/app/render.html"
-], function ($, CKEDITOR,  _, Backbone, SnippetsCollection, TempSnippetView, PubSub, _renderForm, _form, __message, TabView, inputJSON, radioJSON, selectJSON, buttonsJSON, renderTab) {
+], function ($, CKEDITOR, _, Backbone, SnippetsCollection, TempSnippetView, PubSub, _renderForm, _form, __message, TabView, inputJSON, radioJSON, selectJSON, buttonsJSON, renderTab) {
     return Backbone.View.extend({
         template: _form, events: {
             'click button#saveForm': 'saveForm',
@@ -42,7 +42,6 @@ define([
             this.model.collection = this.collection;
 
 
-
         }, render: function () {
 
             //Render Snippet Views
@@ -59,24 +58,24 @@ define([
             this.delegateEvents();
 
 
-
             CKEDITOR.config.customConfig = '../networkingformgenerator/assets/js/lib/ckeditor_config.js';
 
-            CKEDITOR.replace( 'infoText',{width:'100%'} );
-            CKEDITOR.replace( 'thankYouText',{width:'100%'});
+            CKEDITOR.replace('infoText', {width: '100%'});
+            CKEDITOR.replace('thankYouText', {width: '100%'});
 
 
             var module = this;
             for (var i in CKEDITOR.instances) {
 
-                CKEDITOR.instances[i].on('change', function(e) {
+                CKEDITOR.instances[i].on('change', function (e) {
                     module.updateInfoText(e);
                     module.updateThankYouText(e);
                 });
 
             }
 
-            $(window).on('beforeunload', function(event) {
+
+            $(window).on('beforeunload', function (event) {
                 var e = event || window.event, message = window.SONATA_TRANSLATIONS.CONFIRM_EXIT;
                 if (module.confirm) {
                     // For old IE and Firefox
@@ -127,7 +126,7 @@ define([
             this.build = document.getElementById("collection");
             this.buildBCR = this.build.getBoundingClientRect();
             $(".target").removeClass("target");
-            if (mouseEvent.pageX >= this.buildBCR.left && mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) &&  mouseEvent.pageY >= this.buildBCR.top ) {
+            if (mouseEvent.pageX >= this.buildBCR.left && mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) && mouseEvent.pageY >= this.buildBCR.top) {
                 $(".targetbefore").removeClass("targetbefore");
                 $(this.getBottomAbove(mouseEvent.pageY)).addClass("target");
             } else if (mouseEvent.pageX >= this.buildBCR.left && mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) && mouseEvent.pageY <= this.buildBCR.top) {
@@ -141,9 +140,9 @@ define([
             var target = $(".target");
             var targetBefore = $(".targetbefore");
 
-            if (mouseEvent.pageX >= this.buildBCR.left && mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) && mouseEvent.pageY >= this.buildBCR.top ) {
+            if (mouseEvent.pageX >= this.buildBCR.left && mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) && mouseEvent.pageY >= this.buildBCR.top) {
                 this.collection.add(model, {at: target.index() + 1});
-            } else if (mouseEvent.pageX >= this.buildBCR.left && mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) &&  mouseEvent.pageY <= this.buildBCR.top) {
+            } else if (mouseEvent.pageX >= this.buildBCR.left && mouseEvent.pageX < (this.$build.width() + this.buildBCR.left) && mouseEvent.pageY <= this.buildBCR.top) {
                 this.collection.add(model, {at: targetBefore.index()});
             }
 
@@ -156,29 +155,37 @@ define([
             var that = this;
             $('#messageBox').html('');
             var module = this;
+            for(var instance in CKEDITOR.instances){
+                var ckeditorInstance = CKEDITOR.instances[instance];
+                var data = ckeditorInstance.getData();
+                $('#' + ckeditorInstance.name).val($.trim(data.replace(/[\t\n]+/g, ' ')));
+            }
+
             this.model.save(this.getModelViewAttr(), {
-                success: function (model, xhr) {
-                    that.createMessageBox('success', polyglot.t('success'),xhr.message);
-                    btn.button('reset');
-                    module.confirm = false;
-                    $('html, body').animate({
-                        scrollTop: $(".initcms").offset().top
-                    }, 2000);
-                },
-                error: function (model, xhr) {
-                    var errors = [];
-                    if (_.isObject(xhr) && xhr.responseText) {
-                        errors = $.parseJSON(xhr.responseText);
-                        that.createMessageBox('danger', 'Oh no!','an error has occured, please check your form details');
-                    } else {
-                        errors = xhr;
-                    }
-
-                    that.showErrors(errors);
-
-                    btn.button('reset');
+            success: function (model, xhr) {
+                that.createMessageBox('success', polyglot.t('success'), xhr.message);
+                btn.button('reset');
+                module.confirm = false;
+                $('html, body').animate({
+                    scrollTop: $(".initcms").offset().top
+                }, 2000);
+            }
+        ,
+            error: function (model, xhr) {
+                var errors = [];
+                if (_.isObject(xhr) && xhr.responseText) {
+                    errors = $.parseJSON(xhr.responseText);
+                    that.createMessageBox('danger', 'Oh no!', 'an error has occured, please check your form details');
+                } else {
+                    errors = xhr;
                 }
-            });
+
+                that.showErrors(errors);
+
+                btn.button('reset');
+            }
+        })
+            ;
         }, updateName: function (event) {
             var target = $(event.target);
             this.model.set({name: target.val()});
@@ -200,7 +207,7 @@ define([
             var target = $(event.target);
             this.model.set({action: target.val()});
             this.confirm = true;
-        },  updateRedirect: function (event) {
+        }, updateRedirect: function (event) {
             var target = $(event.target);
             this.model.set({redirect: target.val()});
             this.confirm = true;
@@ -217,7 +224,7 @@ define([
         }, isModelInvalid: function () {
             return this.model.validate(this.getModelViewAttr());
         }, getModelViewAttr: function () {
-            return  {
+            return {
                 name: this.$('input#formName').val(),
                 infoText: CKEDITOR.instances.infoText.getData(),
                 thankYouText: CKEDITOR.instances.thankYouText.getData(),
