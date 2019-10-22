@@ -2,6 +2,6 @@
 <div class="form-group">
     <label class="col-md-4 control-label" for ="<%= id %>"><%= polyglot.t(label, { _: label}) %></label>
     <div class="col-md-8" >
-        <textarea class="form-control" name="<%= id %>" ><%= polyglot.t(textarea, { _: textarea}) %></textarea>
+        <textarea class="form-control" name="<%= id %>" ><% if (textarea){ %><%= polyglot.t(textarea, { _: textarea}) %> <%}%></textarea>
     </div>
 </div>

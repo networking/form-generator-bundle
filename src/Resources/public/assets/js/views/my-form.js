@@ -74,19 +74,6 @@ define([
 
             }
 
-
-            $(window).on('beforeunload', function (event) {
-                var e = event || window.event, message = window.SONATA_TRANSLATIONS.CONFIRM_EXIT;
-                if (module.confirm) {
-                    // For old IE and Firefox
-                    if (e) {
-
-                        e.returnValue = message;
-                    }
-                    return message;
-                }
-            });
-
             //Bootstrap tabs from json.
             new TabView({
                 title: "Input", collection: new SnippetsCollection(JSON.parse(inputJSON))
@@ -100,14 +87,14 @@ define([
             //new TabView({
             //    title: "Buttons", collection: new SnippetsCollection(JSON.parse(buttonsJSON))
             //});
-            new TabView({
-                title: "Rendered", content: renderTab
-            });
-            $("#render").val(that.renderForm({
-                text: _.map(this.collection.renderAllClean(), function (e) {
-                    return e.html()
-                }).join("\n")
-            }));
+            // new TabView({
+            //     title: "Rendered", content: renderTab
+            // });
+            // $("#render").val(that.renderForm({
+            //     text: _.map(this.collection.renderAllClean(), function (e) {
+            //         return e.html()
+            //     }).join("\n")
+            // }));
             $("#components .tab-pane").first().addClass("active");
             $("#formtabs li").first().addClass("active");
 

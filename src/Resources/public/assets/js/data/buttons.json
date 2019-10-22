@@ -4,7 +4,7 @@
         "fields": {
             "id": {
                 "label": "ID / Name",
-                "type": "input",
+                "type": "hidden",
                 "value": "filebutton"
             },
             "label": {
@@ -19,7 +19,7 @@
         "fields": {
             "id": {
                 "label": "ID / Name",
-                "type": "input",
+                "type": "hidden",
                 "value": "singlebutton"
             },
             "label": {
@@ -80,7 +80,7 @@
         "fields": {
             "id": {
                 "label": "Button 1 ID / Name",
-                "type": "input",
+                "type": "hidden",
                 "value": "button1id"
             },
             "label": {
@@ -136,7 +136,7 @@
             },
             "id2": {
                 "label": "Button 2 ID / Name",
-                "type": "input",
+                "type": "hidden",
                 "value": "button2id"
             },
             "button2label": {

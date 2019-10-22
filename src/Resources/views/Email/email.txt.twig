@@ -1,5 +1,6 @@
 {% for field in form.formFields %}
-{% if data[field.name|sonata_slugify] is defined %}
+
+{% if data[field.name|sonata_slugify] is defined and field.type is not same as('Infotext') %}
 {{ field.fieldLabel }}: {% if data[field.name|sonata_slugify] is iterable %}{{ data[field.name|sonata_slugify]|join(', ') }}{% else %}{{ data[field.name|sonata_slugify] }}{% endif %}
 
 {% endif %}

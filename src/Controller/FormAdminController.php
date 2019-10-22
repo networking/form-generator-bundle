@@ -157,13 +157,16 @@ class FormAdminController extends FOSRestController
 
         $collection = $request->get('collection');
 
+
         foreach ($collection as $key =>  $field) {
             if (is_array($field)) {
+
                 switch ($field['title']) {
                     case 'Multiple Radios':
                     case 'Multiple Checkboxes':
                     case 'Multiple Checkboxes Inline':
                     case 'Multiple Radios Inline':
+                        $field['fields']['name']['value'] = $field['fields']['name']['value']?:uniqid(substr($field['fields']['label']['value'], 0,3));
                         $formField = new FormField();
                         $formField->setFieldLabel($field['fields']['label']['value']);
                         $formField->setName($field['fields']['name']['value']);
@@ -172,6 +175,7 @@ class FormAdminController extends FOSRestController
                         $form->addFormField($formField);
                         break;
                     case 'Legend':
+                        $field['fields']['id']['value'] = $field['fields']['id']['value']?:uniqid(substr($field['fields']['name']['value'], 0,3));
                         $formField = new FormField();
                         $formField->setName($field['fields']['id']['value']);
                         $formField->setFieldLabel($field['fields']['name']['value']);
@@ -181,13 +185,14 @@ class FormAdminController extends FOSRestController
                         break;
                     case 'Infotext':
                         $formField = new FormField();
-                        $formField->setName('info_text'.$key);
+                        $formField->setName(uniqid('info_text'));
                         $formField->setFieldLabel($field['fields']['label']['value']);
                         $formField->setType($field['title']);
                         $formField->setOptions($field['fields']);
                         $form->addFormField($formField);
                         break;
                     default:
+                        $field['fields']['id']['value'] = $field['fields']['id']['value']?:uniqid(substr($field['fields']['label']['value'], 0,3));
                         $formField = new FormField();
                         $formField->setName($field['fields']['id']['value']);
                         $formField->setFieldLabel($field['fields']['label']['value']);

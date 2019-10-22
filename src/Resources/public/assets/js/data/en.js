@@ -63,7 +63,7 @@ var polyglot_phrases = {
     'Cancel': 'Cancel',
     'Option one': 'Option one',
     'Option two': 'Option two',
-    'default text': 'Text',
+    'default text': '',
     'Starting Text': 'Starting Text',
     'Rendered': 'Rendered',
     'success': 'Succesfully saved',

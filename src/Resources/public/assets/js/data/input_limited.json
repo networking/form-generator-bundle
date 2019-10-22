@@ -4,7 +4,7 @@
         "fields": {
             "id": {
                 "label": "ID ",
-                "type": "input",
+                "type": "hidden",
                 "value": "legend"
             },
             "name": {
@@ -29,7 +29,7 @@
         "fields": {
             "id": {
                 "label": "ID / Name",
-                "type": "input",
+                "type": "hidden",
                 "value": "textinput"
             },
             "label": {
@@ -95,7 +95,7 @@
         "fields": {
             "id": {
                 "label": "ID / Name",
-                "type": "input",
+                "type": "hidden",
                 "value": "passwordinput"
             },
             "label": {
@@ -161,7 +161,7 @@
         "fields": {
             "id": {
                 "label": "ID / Name",
-                "type": "input",
+                "type": "hidden",
                 "value": "searchinput"
             },
             "label": {
@@ -227,7 +227,7 @@
         "fields": {
             "id": {
                 "label": "ID / Name",
-                "type": "input",
+                "type": "hidden",
                 "value": "prependedtext"
             },
             "label": {
@@ -298,7 +298,7 @@
         "fields": {
             "id": {
                 "label": "ID / Name",
-                "type": "input",
+                "type": "hidden",
                 "value": "prependedicon"
             },
             "label": {
@@ -369,7 +369,7 @@
         "fields": {
             "id": {
                 "label": "ID / Name",
-                "type": "input",
+                "type": "hidden",
                 "value": "appendedtext"
             },
             "label": {
@@ -440,7 +440,7 @@
         "fields": {
             "id": {
                 "label": "ID / Name",
-                "type": "input",
+                "type": "hidden",
                 "value": "appendedicon"
             },
             "label": {
@@ -511,7 +511,7 @@
         "fields": {
             "id": {
                 "label": "ID / Name",
-                "type": "input",
+                "type": "hidden",
                 "value": "textarea"
             },
             "label": {
@@ -522,7 +522,7 @@
             "textarea": {
                 "label": "Starting Text",
                 "type": "textarea",
-                "value": "default text"
+                "value": ""
             }
         }
     }

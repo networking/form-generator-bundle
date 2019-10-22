@@ -65,7 +65,7 @@ var polyglot_phrases = {
     'Cancel': 'Abbrechen',
     'Option one': 'Option Eins',
     'Option two': 'Option zwei',
-    'default text': 'Text',
+    'default text': '',
     'Starting Text': 'Voreingefüllter Text',
     'Rendered': 'Generierter HTML',
     'success': 'Erfolgreich gespeichert'

@@ -4,12 +4,14 @@ namespace Networking\FormGeneratorBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * FormField.
  *
  * @ORM\Table(name="form_field")
  * @ORM\Entity
+ * @UniqueEntity(fields={"form", "name"}, message="Duplicate Id Field")
  */
 class FormField
 {
@@ -19,6 +21,7 @@ class FormField
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
      */
     private $id;
 
