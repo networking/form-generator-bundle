@@ -13,8 +13,8 @@
     ],
     "require": {
         "php": ">=7.1",
-        "networking/init-cms-bundle": "3.4.*",
-        "friendsofsymfony/rest-bundle": "2.3.*",
+        "networking/init-cms-bundle": "dev-master",
+        "friendsofsymfony/rest-bundle": "^2.6",
         "phpoffice/phpspreadsheet": "^1.4"
     },
     "autoload": {
@@ -23,7 +23,7 @@
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-            "dev-master": "3.x-dev"
+            "dev-master": "upgrade_4.x"
         }
     }
 }
