@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=7.1",
-        "networking/init-cms-bundle": "dev-4.x",
+        "networking/init-cms-bundle": "4.x-dev",
         "friendsofsymfony/rest-bundle": "^2.6",
         "phpoffice/phpspreadsheet": "^1.4"
     },
