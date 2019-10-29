@@ -11,6 +11,7 @@
 namespace Networking\FormGeneratorBundle\Controller;
 
 use Networking\FormGeneratorBundle\Form\FormType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -20,7 +21,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Networking\FormGeneratorBundle\Helper\FormHelper;
 
-class FrontendFormController extends Controller
+class FrontendFormController extends AbstractController
 {
     const FORM_DATA = 'application_networking_form_generator_form_data';
     const FORM_COMPLETE = 'application_networking_form_generator_form_complete';
@@ -35,27 +36,21 @@ class FrontendFormController extends Controller
      */
     protected $formHelper;
 
+    protected $emailAddress;
+
     /**
      * FrontendFormController constructor.
-     *
-     * @param FormHelper       $formHelper
+     * @param FormHelper $formHelper
      * @param SessionInterface $session
+     * @param $emailAddress
      */
-    public function __construct(FormHelper $formHelper, SessionInterface $session)
+    public function __construct(FormHelper $formHelper, SessionInterface $session, $emailAddress)
     {
         $this->formHelper = $formHelper;
         $this->session = $session;
+        $this->emailAddress = $emailAddress;
     }
 
-    /**
-     * Sets the Container associated with this Controller.
-     *
-     * @param ContainerInterface $container A ContainerInterface instance
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
 
     /**
      * @param Request $request
@@ -84,7 +79,7 @@ class FrontendFormController extends Controller
                 $this->setFormComplete(true);
 
                 if ($form->isEmailAction()) {
-                    $this->formHelper->sendEmail($form, $data, $this->container->getParameter('form_generator_from_email'));
+                    $this->formHelper->sendEmail($form, $data, $this->emailAddress);
                 }
 
                 if ($form->isDbAction()) {

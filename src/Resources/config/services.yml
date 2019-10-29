@@ -39,6 +39,8 @@ services:
     Networking\FormGeneratorBundle\Controller\FrontendFormController:
           autowire: true
           public: true
+          arguments:
+              $emailAddress: '%form_generator_from_email%'
           tags:
               - { name: 'controller.service_arguments'}
 

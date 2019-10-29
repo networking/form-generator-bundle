@@ -2,7 +2,7 @@
 
 namespace Networking\FormGeneratorBundle\Controller;
 
-use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Networking\FormGeneratorBundle\Entity\FormField;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 /**
  * @RouteResource("Form")
  */
-class FormAdminController extends FOSRestController
+class FormAdminController extends AbstractFOSRestController
 {
     /**
      * @var AdminInterface

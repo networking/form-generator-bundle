@@ -40,19 +40,19 @@ class FormAdmin extends BaseAdmin
         $collection->add(
             'excelExport',
             'form-excel-export/{id}',
-            ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:excelExport'])
+            ['_controller' => 'Networking\FormGeneratorBundle\Controller\FormAdminController::excelExportAction'])
             ->add(
                 'deleteFormEntry',
                 'delete-form-entry/{id}/entry/{rowid}',
-                ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:deleteFormEntry'])
+                ['_controller' => 'Networking\FormGeneratorBundle\Controller\FormAdminController::deleteFormEntryAction'])
             ->add(
                 'deleteAllFormEntry',
                 'delete-all-form-entry/{id}',
-                ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:deleteAllFormEntry'])
+                ['_controller' => 'Networking\FormGeneratorBundle\Controller\FormAdminController::deleteAllFormEntryAction'])
             ->add(
                 'copy',
                 'copy/{id}',
-                ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:copy'])
+                ['_controller' => 'Networking\FormGeneratorBundle\Controller\FormAdminController::copyAction'])
         ;
     }
 
