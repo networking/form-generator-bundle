@@ -14,7 +14,7 @@ use Networking\FormGeneratorBundle\Entity\Form;
 use Networking\FormGeneratorBundle\Entity\FormData;
 use Networking\FormGeneratorBundle\Entity\FormFieldData;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
 
 class FormHelper
 {
@@ -29,7 +29,7 @@ class FormHelper
     protected $doctrine;
 
     /**
-     * @var EngineInterface
+     * @var Environment
      */
     protected $twig;
 
@@ -38,9 +38,9 @@ class FormHelper
      *
      * @param \Swift_Mailer   $mailer
      * @param ManagerRegistry $doctrine
-     * @param EngineInterface $twig
+     * @param Environment $twig
      */
-    public function __construct(\Swift_Mailer $mailer, ManagerRegistry $doctrine, EngineInterface $twig)
+    public function __construct(\Swift_Mailer $mailer, ManagerRegistry $doctrine, Environment $twig)
     {
         $this->mailer = $mailer;
         $this->doctrine = $doctrine;
