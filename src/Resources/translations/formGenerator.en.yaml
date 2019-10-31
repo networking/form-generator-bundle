@@ -9,7 +9,6 @@ filter:
 form_created: The form was successfully created
 form_updated: The form was successfully updated
 link_action_export: Export
-date: Date
 link_action_delete: delete
 confirm_deletion: Do you wish to delete this entry?
 
