@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @RouteResource("Form")
@@ -28,13 +29,19 @@ class FormAdminController extends AbstractFOSRestController
     protected $admin;
 
     /**
-     * FormAdminController constructor.
-     *
-     * @param FormAdmin $formAdmin
+     * @var TranslatorInterface
      */
-    public function __construct(FormAdmin $formAdmin)
+    protected $translator;
+
+    /**
+     * FormAdminController constructor.
+     * @param FormAdmin $formAdmin
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(FormAdmin $formAdmin, TranslatorInterface $translator)
     {
         $this->admin = $formAdmin;
+        $this->translator = $translator;
     }
 
     /**
@@ -88,7 +95,7 @@ class FormAdminController extends AbstractFOSRestController
             $form = $this->setFields($request, $form);
 
             $this->admin->create($form);
-            $view->setData(['id' => $form->getId(), 'message' => $this->get('translator')->trans('form_created',
+            $view->setData(['id' => $form->getId(), 'message' => $this->translator->trans('form_created',
                 [], 'formGenerator')]);
         } catch (\Exception $e) {
             $view = $this->view(['message' => $e->getMessage()], 500);
