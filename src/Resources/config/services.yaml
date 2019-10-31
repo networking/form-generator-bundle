@@ -49,7 +49,7 @@ services:
         arguments: [null, Networking\FormGeneratorBundle\Entity\Form, NetworkingInitCmsBundle:CRUD]
         calls:
             - [setTranslationDomain, ['formGenerator']]
-            - [setSonataAnnotationReader, ['@ibrows_sonataadmin.annotation.reader']]
+            - [setSonataAnnotationReader, ['@networking_init_cms.annotation.reader']]
             - [setLanguages, ["%networking_init_cms.page.languages%"]]
             - [setTemplates, [{'edit': '@@NetworkingFormGenerator/Admin/edit.html.twig', 'show': '@@NetworkingFormGenerator/Admin/show.html.twig'}]]
         tags:

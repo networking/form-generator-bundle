@@ -13,7 +13,7 @@ namespace Networking\FormGeneratorBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Networking\InitCmsBundle\Form\Type\AutocompleteType;
 use Networking\InitCmsBundle\Model\ContentInterface;
-use Ibrows\Bundle\SonataAdminAnnotationBundle\Annotation as Sonata;
+use Networking\InitCmsBundle\Annotation as Sonata;
 use Symfony\Component\Form\FormBuilder;
 
 /**

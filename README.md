@@ -38,10 +38,10 @@ Update your AppKernel.php with NetworkingFormGeneratorBundle, the FOSRestBundle 
 
 
     
-In your routing.yml file, and the routing for the search action
+In your routing.yaml file, and the routing for the search action
 
     networking_form_generator:
-        resource: "@NetworkingFormGeneratorBundle/Resources/config/routing.yml"
+        resource: "@NetworkingFormGeneratorBundle/Resources/config/routing.yaml"
         prefix:   /
     
 Add the form page content to the init cms content type configuration

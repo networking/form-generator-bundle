@@ -5,7 +5,7 @@ namespace Networking\FormGeneratorBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Sluggable\Util\Urlizer;
-use Ibrows\Bundle\SonataAdminAnnotationBundle\Annotation as Sonata;
+use Networking\InitCmsBundle\Annotation as Sonata;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 

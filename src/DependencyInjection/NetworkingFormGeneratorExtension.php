@@ -24,6 +24,6 @@ class NetworkingFormGeneratorExtension extends Extension
         $container->setParameter('form_generator_from_email', $config['from_email']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.yml');
+        $loader->load('services.yaml');
     }
 }
