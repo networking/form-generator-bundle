@@ -94,8 +94,10 @@ class FrontendFormController extends Controller
 
                 //check if confirmation email needs to be send.
                 $emailField = strtolower($form->getEmailField());
+                $emailField = str_replace('_', '-', $emailField);
                 $newsLetterAnmeldung = strtolower($form->getDoubleOptIn());
 
+                //print_r($data);
 
                 if ($emailField != ''  and filter_var($data[$emailField], FILTER_VALIDATE_EMAIL)) {
 
