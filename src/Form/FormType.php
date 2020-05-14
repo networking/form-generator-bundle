@@ -162,8 +162,6 @@ class FormType extends AbstractType
                 $fieldOptions['choices'] = $field->getValueMap();
                 $fieldOptions['expanded'] = false;
                 $fieldOptions['multiple'] = false;
-                $fieldOptions['required'] = true;
-                $fieldOptions['constraints'] = new NotBlank();
                 break;
             case 'Select Multiple':
                 $fieldOptions['choices'] = $field->getValueMap();
