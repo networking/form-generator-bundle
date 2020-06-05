@@ -5,7 +5,7 @@
             "id": {
                 "label": "ID ",
                 "type": "hidden",
-                "value": "legend"
+                "value": ""
             },
             "name": {
                 "label": "Form Legend",
@@ -30,7 +30,7 @@
             "id": {
                 "label": "ID / Name",
                 "type": "hidden",
-                "value": "textinput"
+                "value": ""
             },
             "label": {
                 "label": "Label Text",
@@ -96,7 +96,7 @@
             "id": {
                 "label": "ID / Name",
                 "type": "hidden",
-                "value": "passwordinput"
+                "value": ""
             },
             "label": {
                 "label": "Label Text",
@@ -162,7 +162,7 @@
             "id": {
                 "label": "ID / Name",
                 "type": "hidden",
-                "value": "searchinput"
+                "value": ""
             },
             "label": {
                 "label": "Label Text",
@@ -228,7 +228,7 @@
             "id": {
                 "label": "ID / Name",
                 "type": "hidden",
-                "value": "prependedtext"
+                "value": ""
             },
             "label": {
                 "label": "Label Text",
@@ -299,7 +299,7 @@
             "id": {
                 "label": "ID / Name",
                 "type": "hidden",
-                "value": "prependedicon"
+                "value": ""
             },
             "label": {
                 "label": "Label Text",
@@ -370,7 +370,7 @@
             "id": {
                 "label": "ID / Name",
                 "type": "hidden",
-                "value": "appendedtext"
+                "value": ""
             },
             "label": {
                 "label": "Label Text",
@@ -441,7 +441,7 @@
             "id": {
                 "label": "ID / Name",
                 "type": "hidden",
-                "value": "appendedicon"
+                "value": ""
             },
             "label": {
                 "label": "Label Text",
@@ -512,7 +512,7 @@
             "id": {
                 "label": "ID / Name",
                 "type": "hidden",
-                "value": "textarea"
+                "value": ""
             },
             "label": {
                 "label": "Label Text",
