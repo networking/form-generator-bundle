@@ -6,7 +6,7 @@
             "id": {
                 "label": "ID / Name",
                 "type": "hidden",
-                "value": "selectbasic"
+                "value": ""
             },
             "label": {
                 "label": "Label Text",
@@ -73,7 +73,7 @@
             "id": {
                 "label": "ID / Name",
                 "type": "hidden",
-                "value": "selectmultiple"
+                "value": ""
             },
             "label": {
                 "label": "Label Text",
