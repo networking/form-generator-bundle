@@ -362,6 +362,10 @@ class Form
             return Urlizer::urlize($field->getName()) == $key;
         });
 
+        $fields = $this->formFields->filter(function ($field) use ($key) {
+            return Urlizer::urlize($field->getFieldLabel()) == $key;
+        });
+
         if ($fields->count() > 0) {
             return $fields->first();
         }

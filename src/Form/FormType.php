@@ -34,7 +34,7 @@ class FormType extends AbstractType
 
         if (!is_null($form)) {
             foreach ($form->getFormFields() as $key =>  $field) {
-                if(!$name = $field->getName()){
+                if(!$name = $field->getFieldLabel()){
                     $name = $field->getType().$key;
                 }
                 $id = self::slugify($name);
