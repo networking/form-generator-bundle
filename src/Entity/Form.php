@@ -51,6 +51,17 @@ class Form
     private $thankYouText;
 
     /**
+     * @ORM\Column(name="send_confirmation_mail", type="boolean", nullable=true)
+     */
+    private $sendConfirmationMail = false;
+
+    /**
+     * @var
+     * @ORM\Column(name="email_field", type="string", length=255, nullable=true)
+     */
+    private $emailField;
+
+    /**
      * @var ArrayCollection;
      * @ORM\OneToMany(targetEntity="Networking\FormGeneratorBundle\Entity\FormField",cascade={"persist", "remove"}, mappedBy="form", orphanRemoval=true)
      */
@@ -372,4 +383,38 @@ class Form
 
         return false;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSendConfirmationMail()
+    {
+        return $this->sendConfirmationMail;
+    }
+
+    /**
+     * @param mixed $sendConfirmationMail
+     */
+    public function setSendConfirmationMail($sendConfirmationMail): void
+    {
+        $this->sendConfirmationMail = $sendConfirmationMail;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getEmailField()
+    {
+        return $this->emailField;
+    }
+
+    /**
+     * @param mixed $emailField
+     */
+    public function setEmailField($emailField)
+    {
+        $this->emailField = $emailField;
+    }
+
 }

@@ -91,6 +91,18 @@ class FrontendFormController extends Controller
                     $this->formHelper->saveToDb($form, $data);
                 }
 
+
+
+                //check if confirmation email needs to be send.
+                $emailField = strtolower($form->getEmailField());
+                if ($emailField != ''  and filter_var($data[$emailField], FILTER_VALIDATE_EMAIL)) {
+                    if(isset($data[$emailField]) and  filter_var($data[$emailField], FILTER_VALIDATE_EMAIL) ) {
+                        $this->sendConfirmationEmail($data[$emailField], $this->container->getParameter('form_generator_from_email'), $form->getName(), $form->getThankYouText());
+                        //echo "email wird verschickt";
+                    }
+
+                }
+
                 if ($form->getRedirect()) {
                     $this->session->getFlashBag()->add('form_notice', $form->getThankYouText());
                     $redirect = $form->getRedirect();
@@ -175,5 +187,23 @@ class FrontendFormController extends Controller
     protected function getSubmittedFormData()
     {
         return $this->session->get(self::FORM_DATA, []);
+    }
+
+    /*
+    * send confirmation email
+    * **/
+    public function sendConfirmationEmail($to, $from, $subject, $text )
+    {
+        $plaineText =  preg_replace( "/\n\s+/", "\n", rtrim(html_entity_decode(strip_tags($text))) );
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->addTo($to)
+            ->setFrom($from)
+            ->setBody($plaineText)
+            ->addPart($text, 'text/html');
+
+
+        return $this->get('mailer')->send($message);
     }
 }

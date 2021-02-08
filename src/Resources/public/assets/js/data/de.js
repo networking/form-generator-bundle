@@ -9,6 +9,8 @@ var polyglot_phrases = {
     'Info Text': 'Info Text',
     'Thank you Text': 'Danke Text',
     'Save': 'Speichern',
+    'sendConfirmationMail': 'E-Mail bestätigung verschicken',
+    'emailField': 'Für E-Mail bestätigung: Feldbeschriftung des E-Mail Feld angeben.',
     'Back To List': 'Zurück zur Liste',
     'Drag & Drop components': 'Drag & Drop-Komponenten',
     'Drag items here': 'Ziehen Sie Elemente hierher',

@@ -186,6 +186,10 @@ define([
             var target = $(event.target);
             this.model.set({thank_you_text: CKEDITOR.instances.thankYouText.getData()});
             this.confirm = true;
+        }, updateEmailField: function (event) {
+            var target = $(event.target);
+            this.model.set({email_field: target.val()});
+            this.confirm = true;
         }, updateEmail: function (event) {
             var target = $(event.target);
             this.model.set({email: target.val()});
@@ -218,6 +222,7 @@ define([
                 email: this.$('input#email').val(),
                 action: this.$('select#action').val(),
                 redirect: this.$('input#redirect').val(),
+                emailField: this.$('input#emailField').val(),
                 collection: this.collection
             };
         }, createMessageBox: function (level, title, message) {
