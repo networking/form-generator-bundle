@@ -46,7 +46,7 @@ var polyglot_phrases = {
     'Xlarge': 'XGross',
     'Xxlarge': 'XXGross',
     'ID / Name': 'ID / Name',
-    'Label Text': 'Feldbeschriftung',
+    'Label Text': 'Feldbeschriftung *',
     'Help Text': 'Hilfe Text',
     'Search Input': 'Sucheingabe',
     'Multiple Radios': 'Mehrfach-Radios',
