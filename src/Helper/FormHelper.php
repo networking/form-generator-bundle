@@ -87,28 +87,33 @@ class FormHelper
         $formData->setForm($form);
 
         foreach ($data as $key => $val) {
+
+            //echo "key ".$key."<br>";
+
             if ($key == '_token') {
                 continue;
             }
             $formFieldData = false;
             if ($field = $form->getField($key)) {
-                if($field->getType() === 'Infotext'){
-                    continue;
+
+                //echo "if <br>";
+                if($field->getType() != 'Infotext'){
+                    $formFieldData = new FormFieldData();
+                    $formFieldData->setLabel($field->getFieldLabel());
+                    $formFieldData->setFormFieldValue($field, $val);
+                    $formData->addFormField($formFieldData);
                 }
-                $formFieldData = new FormFieldData();
-                $formFieldData->setLabel($field->getFieldLabel());
-                $formFieldData->setFormFieldValue($field, $val);
+
             } else {
+                //echo "else <br>";
                 if ($originalForm) {
                     $formFieldData = new FormFieldData();
                     $field = $originalForm->get($key);
                     $label = $field->get('label');
                     $formFieldData->setLabel($label);
                     $formFieldData->setValue($val);
+                    $formData->addFormField($formFieldData);
                 }
-            }
-            if($formFieldData){
-                $formData->addFormField($formFieldData);
             }
         }
         $em = $this->doctrine->getManager();

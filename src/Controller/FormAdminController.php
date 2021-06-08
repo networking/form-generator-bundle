@@ -166,20 +166,22 @@ class FormAdminController extends FOSRestController
                     case 'Multiple Checkboxes':
                     case 'Multiple Checkboxes Inline':
                     case 'Multiple Radios Inline':
-                        $field['fields']['name']['value'] = $field['fields']['name']['value']?:uniqid(substr($field['fields']['label']['value'], 0,3));
                         $formField = new FormField();
+                        $name = $field['fields']['label']['value'];
+                        $type = $field['title'];
                         $formField->setFieldLabel($field['fields']['label']['value']);
-                        $formField->setName($field['fields']['name']['value']);
-                        $formField->setType($field['title']);
+                        $formField->setName($name);
+                        $formField->setType($type);
                         $formField->setOptions($field['fields']);
                         $form->addFormField($formField);
                         break;
                     case 'Legend':
-                        $field['fields']['id']['value'] = $field['fields']['id']['value']?:uniqid(substr($field['fields']['name']['value'], 0,3));
                         $formField = new FormField();
-                        $formField->setName($field['fields']['id']['value']);
+                        $name = $field['fields']['id']['value'];
+                        $type = $field['title'];
+                        $formField->setName($name);
                         $formField->setFieldLabel($field['fields']['name']['value']);
-                        $formField->setType($field['title']);
+                        $formField->setType($type);
                         $formField->setOptions($field['fields']);
                         $form->addFormField($formField);
                         break;
@@ -192,11 +194,12 @@ class FormAdminController extends FOSRestController
                         $form->addFormField($formField);
                         break;
                     default:
-                        $field['fields']['id']['value'] = $field['fields']['id']['value']?:uniqid(substr($field['fields']['label']['value'], 0,3));
                         $formField = new FormField();
-                        $formField->setName($field['fields']['id']['value']);
+                        $name = $field['fields']['label']['value'];
+                        $type = $field['title'];
+                        $formField->setName($name);
                         $formField->setFieldLabel($field['fields']['label']['value']);
-                        $formField->setType($field['title']);
+                        $formField->setType($type);
                         $formField->setOptions($field['fields']);
                         $form->addFormField($formField);
                         break;
@@ -477,5 +480,35 @@ class FormAdminController extends FOSRestController
         $response->setContent($content);
 
         return $response;
+    }
+
+
+    /**
+     * @param $text
+     *
+     * @return string
+     */
+    public static function slugify($text)
+    {
+        // replace non letter or digits by -
+        $text = preg_replace('~[^\\pL\d]+~u', '-', $text);
+
+        // trim
+        $text = trim($text, '-');
+
+        // transliterate
+        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+
+        // lowercase
+        $text = strtolower($text);
+
+        // remove unwanted characters
+        $text = preg_replace('~[^-\w]+~', '', $text);
+
+        if (empty($text)) {
+            return 'n-a';
+        }
+
+        return $text;
     }
 }
