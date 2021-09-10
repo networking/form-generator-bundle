@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -34,14 +35,20 @@ class FormAdminController extends AbstractFOSRestController
     protected $translator;
 
     /**
-     * FormAdminController constructor.
+     * @var ValidatorInterface
+     */
+    protected $validator;
+
+    /**
      * @param FormAdmin $formAdmin
      * @param TranslatorInterface $translator
+     * @param ValidatorInterface $validator
      */
-    public function __construct(FormAdmin $formAdmin, TranslatorInterface $translator)
+    public function __construct(FormAdmin $formAdmin, TranslatorInterface $translator, ValidatorInterface $validator)
     {
         $this->admin = $formAdmin;
         $this->translator = $translator;
+        $this->validator = $validator;
     }
 
     /**
@@ -94,9 +101,16 @@ class FormAdminController extends AbstractFOSRestController
             $form = $this->admin->getNewInstance();
             $form = $this->setFields($request, $form);
 
-            $this->admin->create($form);
-            $view->setData(['id' => $form->getId(), 'message' => $this->translator->trans('form_created',
-                [], 'formGenerator')]);
+            $errors = $this->validator->validate($form);
+
+            if (count($errors) > 0) {
+                $view = $this->view($errors, 500);
+            }else{
+                $this->admin->create($form);
+                $view->setData(['id' => $form->getId(), 'message' => $this->translator->trans('form_created',
+                    [], 'formGenerator')]);
+            }
+
         } catch (\Exception $e) {
             $view = $this->view(['message' => $e->getMessage()], 500);
         }
@@ -127,8 +141,7 @@ class FormAdminController extends AbstractFOSRestController
                 $form->removeFields();
                 $form = $this->setFields($request, $form);
 
-                $validator = $this->get('validator');
-                $errors = $validator->validate($form);
+                $errors = $this->validator->validate($form);
 
                 if (count($errors) > 0) {
                     $view = $this->view($errors, 500);
@@ -429,17 +442,17 @@ class FormAdminController extends AbstractFOSRestController
         return $this->admin->getTemplate('layout');
     }
 
-	/**
-	 * @param $view
-	 * @param array $parameters
-	 * @param Response|null $response
-	 *
-	 * @return Response
-	 * @throws \Twig\Error\Error
-	 * @throws \Twig_Error_Loader
-	 * @throws \Twig_Error_Runtime
-	 * @throws \Twig_Error_Syntax
-	 */
+    /**
+     * @param $view
+     * @param array $parameters
+     * @param Response|null $response
+     *
+     * @return Response
+     * @throws \Twig\Error\Error
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
     public function renderWithExtraParams($view, array $parameters = [], Response $response = null)
     {
         $parameters['admin'] = isset($parameters['admin']) ?

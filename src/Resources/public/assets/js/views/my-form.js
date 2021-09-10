@@ -61,9 +61,8 @@ define([
 
 
             CKEDITOR.config.customConfig = '../networkingformgenerator/assets/js/lib/ckeditor_config.js';
-            //
-            // CKEDITOR.replace( 'infoText',{width:'100%'} );
-            // CKEDITOR.replace( 'thankYouText',{width:'100%'});
+            CKEDITOR.replace( 'infoText',{width:'100%'} );
+            CKEDITOR.replace( 'thankYouText',{width:'100%'});
 
 
             var module = this;
