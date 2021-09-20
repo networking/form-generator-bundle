@@ -58,15 +58,24 @@ class FormHelper
      */
     public function sendEmail(Form $form, array $data, $emailFrom = '')
     {
-        $message = \Swift_Message::newInstance()
-            ->setSubject($form->getName())
-            ->setFrom($emailFrom)
-            ->setBody(
-                $this->renderView(
-                    'NetworkingFormGeneratorBundle:Email:email.txt.twig',
-                    ['data' => $data, 'form' => $form]
-                )
-            );
+        //https://stackoverflow.com/questions/45447972/attempted-to-call-an-undefined-method-named-newinstance-of-class-swift-messag
+
+        $message = (new \Swift_Message($form->getName()));
+        $message->setFrom($emailFrom);
+        $message->setBody( $this->renderView(
+            'NetworkingFormGeneratorBundle:Email:email.txt.twig',
+            ['data' => $data, 'form' => $form]
+        ));
+
+//        $message = \Swift_Message::newInstance()
+//            ->setSubject($form->getName())
+//            ->setFrom($emailFrom)
+//            ->setBody(
+//                $this->renderView(
+//                    'NetworkingFormGeneratorBundle:Email:email.txt.twig',
+//                    ['data' => $data, 'form' => $form]
+//                )
+//            );
         foreach (explode(',', $form->getEmail()) as $email) {
             $message->addTo(trim($email));
         }
