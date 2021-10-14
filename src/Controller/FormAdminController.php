@@ -294,15 +294,34 @@ class FormAdminController extends FOSRestController
         foreach ($formData as $rowData) {
             $col = 'A';
             ++$row;
-            $formFields = $rowData->getFormFields();
-            foreach ($formFields as $field) {
-                $value = $field->getValue();
-                if (is_array($value)) {
-                    $value = implode(' ', $value);
+
+            //fix phil: leere eintraege sollen leere spalte ausgeben
+            $formDataFields = $rowData->getFormFields();
+            foreach ($formFields as $key => $field) {
+                $value = "";
+                foreach ($formDataFields as $key => $dataField) {
+                    if($dataField->getLabel() == $field->getFieldLabel()){
+                        $value = $dataField->getValue();
+                        if (is_array($value)) {
+                            $value = implode(' ', $value);
+                        }
+                    }
                 }
                 $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, $value);
                 ++$col;
+
             }
+
+
+//            $formFields = $rowData->getFormFields();
+//            foreach ($formFields as $field) {
+//                $value = $field->getValue();
+//                if (is_array($value)) {
+//                    $value = implode(' ', $value);
+//                }
+//                $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, $value);
+//                ++$col;
+//            }
             $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, $rowData->getCreatedAt());
         }
 
