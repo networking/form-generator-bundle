@@ -83,6 +83,13 @@ class Form
     private $redirect;
 
     /**
+     * @var boolean
+     * @Sonata\DatagridMapper(fieldOptions={"translation_domain"="formGenerator"})
+     * @ORM\Column(name="online", type="boolean", nullable=true)
+     */
+    private $online = true;
+
+    /**
      * @var array
      */
     private $collection = [];
@@ -341,6 +348,22 @@ class Form
         $this->name = $name;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOnline(): bool
+    {
+        return $this->online??true;
+    }
+
+    /**
+     * @param bool $online
+     */
+    public function setOnline(?bool $online): void
+    {
+        $this->online = $online;
     }
 
     /**

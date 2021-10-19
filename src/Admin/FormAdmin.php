@@ -27,6 +27,7 @@ class FormAdmin extends BaseAdmin
      */
     protected $baseRouteName = 'admin_networking_forms';
 
+
     /**
      * @return string
      */
@@ -61,13 +62,15 @@ class FormAdmin extends BaseAdmin
      */
     protected function configureFormFields(FormMapper $form)
     {
-        $form->add('name');
+        $form
+            ->add('name');
     }
 
     protected function configureListFields(ListMapper $listMapper)
     {
         parent::configureListFields($listMapper);
         $listMapper->add('pages', 'string', ['template' => '@NetworkingFormGenerator/Admin/pages.html.twig']);
+        $listMapper->add('online', 'boolean', ['editable' => true]);
         $listMapper->add(
             '_action',
             'actions',
@@ -83,5 +86,14 @@ class FormAdmin extends BaseAdmin
                 ],
             ]
         );
+    }
+
+    /**
+     * Returns a list of default filters.
+     */
+    protected function configureDefaultFilterValues(array &$filterValues)
+    {
+
+        $filterValues['online'] = ['value' => 1];
     }
 }

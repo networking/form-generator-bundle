@@ -4,8 +4,11 @@ form.label.form: Formular
 list:
     label_name: Formurlarname
     label_pages: Seiten
+    label_online: Online
+
 filter:
     label_name: Formularname
+    label_online: Online
 form_created: Formular wurde erfolgreich erstellt
 form_updated: Formular wurde erfolgreich aktualisiert
 link_action_export: Export Daten

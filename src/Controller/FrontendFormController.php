@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Networking\FormGeneratorBundle\Entity\Form;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Networking\FormGeneratorBundle\Helper\FormHelper;
@@ -67,7 +68,7 @@ class FrontendFormController extends Controller
     {
         /** @var Form $form */
         $form = $this->getDoctrine()->getRepository(Form::class)->find($id);
-        if (!$form) {
+        if (!$form || !$form->isOnline()) {
             throw new NotFoundHttpException(sprintf('Form with id %s could not be found', $id));
         }
 
@@ -115,6 +116,10 @@ class FrontendFormController extends Controller
      */
     public function renderFormAction($form, $actionUrl = null, $template = '@NetworkingFormGenerator/Form/form.html.twig', $options = [])
     {
+
+        if(!$form->isOnline()){
+            return new Response();
+        }
         if (is_null($actionUrl)) {
             $actionUrl = $this->generateUrl('networking_form_view', ['id' => $form->getId()]);
 

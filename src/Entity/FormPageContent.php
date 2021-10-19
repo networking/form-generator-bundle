@@ -10,6 +10,7 @@
 
 namespace Networking\FormGeneratorBundle\Entity;
 
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Networking\InitCmsBundle\Form\Type\AutocompleteType;
 use Networking\InitCmsBundle\Model\ContentInterface;
@@ -63,6 +64,9 @@ class FormPageContent implements ContentInterface
                    'class' => Form::class,
                    'attr' => ['style' => 'width: 220px;'],
                    'layout' => 'horizontal',
+                   'query_builder' => function(EntityRepository $repository){
+                        return $repository->createQueryBuilder('f')->where('f.online = 1');
+                   }
                ]
         );
     }
