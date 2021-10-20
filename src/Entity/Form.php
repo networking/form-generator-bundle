@@ -33,7 +33,6 @@ class Form
     /**
      * @var string
      * @Sonata\ListMapper(identifier=true)
-     * @Sonata\DatagridMapper(fieldOptions={"translation_domain"="formGenerator"})
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
@@ -84,7 +83,6 @@ class Form
 
     /**
      * @var boolean
-     * @Sonata\DatagridMapper(fieldOptions={"translation_domain"="formGenerator"})
      * @ORM\Column(name="online", type="boolean", nullable=true)
      */
     private $online = true;

@@ -11,9 +11,14 @@
 namespace Networking\FormGeneratorBundle\Admin;
 
 use Networking\InitCmsBundle\Admin\BaseAdmin;
+use Networking\InitCmsBundle\Model\PageInterface;
+use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
+use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class FormAdmin extends BaseAdmin
 {
@@ -41,20 +46,53 @@ class FormAdmin extends BaseAdmin
         $collection->add(
             'excelExport',
             'form-excel-export/{id}',
-            ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:excelExport'])
+            ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:excelExport']
+        )
             ->add(
                 'deleteFormEntry',
                 'delete-form-entry/{id}/entry/{rowid}',
-                ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:deleteFormEntry'])
+                ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:deleteFormEntry']
+            )
             ->add(
                 'deleteAllFormEntry',
                 'delete-all-form-entry/{id}',
-                ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:deleteAllFormEntry'])
+                ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:deleteAllFormEntry']
+            )
             ->add(
                 'copy',
                 'copy/{id}',
-                ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:copy'])
-        ;
+                ['_controller' => 'NetworkingFormGeneratorBundle:FormAdmin:copy']
+            );
+    }
+
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
+    {
+        $datagridMapper
+            ->add(
+                'name',
+                null,
+                [],
+                null,
+                ['translation_domain' => 'formGenerator']
+            )->add(
+                'online',
+                CallbackFilter::class,
+                [
+                    'callback' => [
+                        $this,
+                        'getAllOnline',
+                    ],
+                ],
+                ChoiceType::class,
+                [
+                    'placeholder' => 'filter.choice.all',
+                    'choices' => [
+                        'filter.choice.online'=> 1,
+                        'filter.choice.offline' => 0,
+                    ],
+                    'translation_domain' => 'formGenerator'
+                ]
+            );
     }
 
     /**
@@ -95,5 +133,33 @@ class FormAdmin extends BaseAdmin
     {
 
         $filterValues['online'] = ['value' => 1];
+    }
+
+    /**
+     * @param ProxyQuery $ProxyQuery
+     * @param $alias
+     * @param $field
+     * @param $data
+     *
+     * @return bool
+     */
+    public function getAllOnline(ProxyQuery $ProxyQuery, $alias, $field, $data)
+    {
+        $active = true;
+        $value = $data['value'];
+
+        $qb = $ProxyQuery->getQueryBuilder();
+
+        if ($value === 1) {
+            $qb->andWhere(sprintf('%s.%s IS NULL', $alias, $field));
+            $qb->orWhere(sprintf('%s.%s = 1', $alias, $field));
+        }
+
+        if($value === 0){
+            $qb->andWhere(sprintf('%s.%s = 0', $alias, $field));
+        }
+
+
+        return $active;
     }
 }

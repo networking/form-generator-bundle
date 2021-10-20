@@ -7,7 +7,11 @@ list:
     label_online: Online
 filter:
     label_name: Form Name
-    label_online: Online
+    label_online: Online Status
+    choice:
+        all: Show all
+        online: Online
+        offline: Offline
 form_created: The form was successfully created
 form_updated: The form was successfully updated
 link_action_export: Export
