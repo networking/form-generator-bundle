@@ -374,6 +374,8 @@ class Form
 
     public function urlizeV2($string){
 
+        $string = str_replace("'", '-', $string);
+
         $string = str_replace('ä', 'a', $string);
         $string = str_replace('ö', 'o', $string);
         $string = str_replace('ü', 'u', $string);
