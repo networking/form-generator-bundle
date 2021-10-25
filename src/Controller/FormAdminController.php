@@ -107,8 +107,10 @@ class FormAdminController extends AbstractFOSRestController
                 $view = $this->view($errors, 500);
             }else{
                 $this->admin->create($form);
-                $view->setData(['id' => $form->getId(), 'message' => $this->translator->trans('form_created',
-                    [], 'formGenerator')]);
+                $view->setData(['id' => $form->getId(), 'message' => $this->admin->trans(
+                    'form_created',
+                    [], 'formGenerator'
+                )]);
             }
 
         } catch (\Exception $e) {
@@ -147,7 +149,8 @@ class FormAdminController extends AbstractFOSRestController
                     $view = $this->view($errors, 500);
                 } else {
                     $this->admin->update($form);
-                    $view->setData(['id' => $form->getId(), 'message' => $this->get('translator')->trans('form_updated',
+                    $view->setData(['id' => $form->getId(), 'message' => $this->admin->trans(
+                        'form_updated',
                         [], 'formGenerator')]);
                 }
             }
@@ -463,7 +466,7 @@ class FormAdminController extends AbstractFOSRestController
             $parameters['base_template'] :
             $this->getBaseTemplate();
 
-        $parameters['admin_pool'] = $this->get('sonata.admin.pool');
+        $parameters['admin_pool'] = ''; //$this->get('sonata.admin.pool');
 
         return $this->renderTemplate($view, $parameters, $response);
     }
