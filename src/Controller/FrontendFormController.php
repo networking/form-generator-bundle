@@ -62,7 +62,7 @@ class FrontendFormController extends AbstractController
     {
         /** @var Form $form */
         $form = $this->getDoctrine()->getRepository(Form::class)->find($id);
-        if (!$form) {
+        if (!$form || !$form->isOnline()) {
             throw new NotFoundHttpException(sprintf('Form with id %s could not be found', $id));
         }
 
@@ -110,6 +110,10 @@ class FrontendFormController extends AbstractController
      */
     public function renderFormAction($form, $actionUrl = null, $template = '@NetworkingFormGenerator/Form/form.html.twig', $options = [])
     {
+
+        if(!$form->isOnline()){
+            return new Response();
+        }
         if (is_null($actionUrl)) {
             $actionUrl = $this->generateUrl('networking_form_view', ['id' => $form->getId()]);
 

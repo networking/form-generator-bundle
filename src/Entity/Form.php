@@ -5,7 +5,6 @@ namespace Networking\FormGeneratorBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Sluggable\Util\Urlizer;
-use Networking\InitCmsBundle\Annotation as Sonata;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -32,8 +31,6 @@ class Form
 
     /**
      * @var string
-     * @Sonata\ListMapper(identifier=true)
-     * @Sonata\DatagridMapper(fieldOptions={"translation_domain"="formGenerator"})
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
@@ -81,6 +78,12 @@ class Form
      * @ORM\Column(name="redirect", type="string", length=255, nullable=true)
      */
     private $redirect;
+
+    /**
+     * @var boolean
+     * @ORM\Column(name="online", type="boolean", nullable=true)
+     */
+    private $online = true;
 
     /**
      * @var array
@@ -341,6 +344,22 @@ class Form
         $this->name = $name;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOnline(): bool
+    {
+        return $this->online??true;
+    }
+
+    /**
+     * @param bool $online
+     */
+    public function setOnline(?bool $online): void
+    {
+        $this->online = $online;
     }
 
     /**
