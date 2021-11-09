@@ -65,7 +65,9 @@ class FormPageContent implements ContentInterface
                    'attr' => ['style' => 'width: 220px;'],
                    'layout' => 'horizontal',
                    'query_builder' => function(EntityRepository $repository){
-                        return $repository->createQueryBuilder('f')->where('f.online = 1');
+                        $qb = $repository->createQueryBuilder('f');
+                        $qb->where('f.online = 1 OR f.online IS NULL');
+                        return $qb;
                    }
                ]
         );
