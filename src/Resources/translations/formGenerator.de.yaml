@@ -4,11 +4,18 @@ form.label.form: Formular
 list:
     label_name: Formurlarname
     label_pages: Seiten
+    label_online: Online
 filter:
     label_name: Formularname
+    label_online: Online Status
+    choice:
+        all: Alle anzeigen
+        online: Online
+        offline: Offline
 form_created: Formular wurde erfolgreich erstellt
 form_updated: Formular wurde erfolgreich aktualisiert
 link_action_export: Export Daten
+date: Datum
 link_action_delete: Löschen
 confirm_deletion: Soll dieser Datensatz gelöscht werden?
 
