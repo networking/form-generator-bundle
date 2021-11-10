@@ -402,9 +402,10 @@ class Form
             return $this->urlizeV2($field->getName()) == $key;
         });
 
-//        $fields = $this->formFields->filter(function ($field) use ($key) {
-//            return $field->getName() == $key;
-//        });
+        if ($fields->count() > 0) {
+            return $fields->first();
+        }
+        
         
         $fields = $this->formFields->filter(function ($field) use ($key) {
             return $this->urlizeV2($field->getFieldLabel()) == $key;
