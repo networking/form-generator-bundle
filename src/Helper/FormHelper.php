@@ -58,14 +58,14 @@ class FormHelper
      */
     public function sendEmail(Form $form, array $data, $emailFrom = '')
     {
-        $message = \Swift_Message::newInstance()
-            ->setSubject($form->getName())
+        $message = (new \Swift_Message($form->getName()));
+        $message->setSubject($form->getName())
             ->setFrom($emailFrom)
             ->setBody(
-                $this->renderView(
+                trim($this->renderView(
                     'NetworkingFormGeneratorBundle:Email:email.txt.twig',
                     ['data' => $data, 'form' => $form]
-                )
+                ))
             );
         foreach (explode(',', $form->getEmail()) as $email) {
             $message->addTo(trim($email));
