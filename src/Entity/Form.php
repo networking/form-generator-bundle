@@ -61,6 +61,14 @@ class Form
      */
     private $emailField;
 
+
+    /**
+     * @var
+     * @ORM\Column(name="sender_field", type="string", length=255, nullable=true)
+     */
+    private $senderField;
+
+
     /**
      * @var ArrayCollection;
      * @ORM\OneToMany(targetEntity="Networking\FormGeneratorBundle\Entity\FormField",cascade={"persist", "remove"}, mappedBy="form", orphanRemoval=true)
@@ -416,5 +424,24 @@ class Form
     {
         $this->emailField = $emailField;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSenderField()
+    {
+        return $this->senderField;
+    }
+
+    /**
+     * @param mixed $senderField
+     */
+    public function setSenderField($senderField)
+    {
+        $this->senderField = $senderField;
+    }
+
+
+
 
 }

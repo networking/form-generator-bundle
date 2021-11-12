@@ -155,6 +155,7 @@ class FormAdminController extends FOSRestController
         $form->setAction($request->get('action'));
         $form->setRedirect($request->get('redirect'));
         $form->setEmailField($request->get('emailField'));
+        $form->setSenderField($request->get('senderField'));
 
         $collection = $request->get('collection');
 

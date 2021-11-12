@@ -190,7 +190,11 @@ define([
             var target = $(event.target);
             this.model.set({email_field: target.val()});
             this.confirm = true;
-        }, updateEmail: function (event) {
+        }, updateSenderField: function (event) {
+            var target = $(event.target);
+            this.model.set({sender_field: target.val()});
+            this.confirm = true;
+        },    updateEmail: function (event) {
             var target = $(event.target);
             this.model.set({email: target.val()});
             this.confirm = true;
@@ -223,6 +227,7 @@ define([
                 action: this.$('select#action').val(),
                 redirect: this.$('input#redirect').val(),
                 emailField: this.$('input#emailField').val(),
+                senderField: this.$('input#senderField').val(),
                 collection: this.collection
             };
         }, createMessageBox: function (level, title, message) {
