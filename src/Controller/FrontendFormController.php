@@ -97,7 +97,12 @@ class FrontendFormController extends Controller
                 $emailField = strtolower($form->getEmailField());
                 if ($emailField != ''  and filter_var($data[$emailField], FILTER_VALIDATE_EMAIL)) {
                     if(isset($data[$emailField]) and  filter_var($data[$emailField], FILTER_VALIDATE_EMAIL) ) {
-                        $this->sendConfirmationEmail($data[$emailField], $this->container->getParameter('form_generator_from_email'), $form->getName(), $form->getThankYouText());
+                        if($form->getSenderField() != ''){
+                            $sender = $form->getSenderField();
+                        }else{
+                            $sender = $this->container->getParameter('form_generator_from_email');
+                        }
+                        $this->sendConfirmationEmail($data[$emailField], $sender, $form->getName(), $form->getThankYouText());
                         //echo "email wird verschickt";
                     }
 
