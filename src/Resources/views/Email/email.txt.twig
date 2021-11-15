@@ -9,7 +9,9 @@
 
 
 {% for key, val in data %}{% set field = form.getField(key) %}
-{% if field is defined and field.type is not same as('Infotext') %}
-{{ field.fieldLabel }}: {% if val is iterable %}{{ val|join(', ') }}{% else %}{{ val }}{% endif %}
-{% endif %}
+
+    {% if field is defined and field.type is not same as('Infotext') %}
+    {{ field.fieldLabel }}: {% if val is iterable %}{{ val|join(', ') }}{% else %}{{ val }}{% endif %}
+    
+    {% endif %}
 {% endfor %}
