@@ -6,6 +6,13 @@
 {% else %}
     {% form_theme formView '@MopaBootstrap/Form/fields.html.twig' %}
     {{ form.infoText|raw }}
+
+    {% if formError == 'email-wrong' %}
+        <p> <strong>{{ 'errorEmail'|trans({}, 'formGenerator') | raw }}</strong></p>
+    {% elseif formError != '' %}
+        <p><strong> {{ 'errorForm'|trans({}, 'formGenerator') | raw }}</strong></p>
+    {% endif %}
+
     {{ form_start(formView, {'attr': {'class': 'content_form form-horizontal', 'novalidate': 'novalidate' }}) }}
     <fieldset>
 

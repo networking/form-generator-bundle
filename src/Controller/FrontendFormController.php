@@ -25,6 +25,7 @@ class FrontendFormController extends Controller
 {
     const FORM_DATA = 'application_networking_form_generator_form_data';
     const FORM_COMPLETE = 'application_networking_form_generator_form_complete';
+    const FORM_ERROR = '';
 
     /**
      * @var SessionInterface
@@ -82,53 +83,64 @@ class FrontendFormController extends Controller
         if ($formType->isSubmitted()) {
             if ($formType->isValid()) {
                 $data = $request->get($formType->getName());
-                $this->setFormComplete(true);
-
-                if ($form->isEmailAction()) {
-                    $this->formHelper->sendEmail($form, $data, $this->container->getParameter('form_generator_from_email'));
-                }
-
-                if ($form->isDbAction()) {
-                    $this->formHelper->saveToDb($form, $data);
-                }
 
                 //check if confirmation email needs to be send.
                 $emailField = strtolower($form->getEmailField());
                 $emailField = str_replace('_', '-', $emailField);
                 $newsLetterAnmeldung = strtolower($form->getDoubleOptIn());
 
-                //print_r($data);
+                if ($emailField != ''  and !filter_var($data[$emailField], FILTER_VALIDATE_EMAIL)) {
+                    //formular wurde nicht korret ausgefüllt
+                    $this->setFormComplete(false);
+                    $this->setFormError('email-wrong');
+                    $this->setSubmittedFormData($request->request->get($formType->getName()));
 
-                if ($emailField != ''  and filter_var($data[$emailField], FILTER_VALIDATE_EMAIL)) {
+                }else{
 
-                    if($newsLetterAnmeldung != 'yes'){
+                    $this->setFormComplete(true);
+                    if ($form->isEmailAction()) {
+                        $this->formHelper->sendEmail($form, $data, $this->container->getParameter('form_generator_from_email'));
+                    }
 
-                        if(isset($data[$emailField]) and  filter_var($data[$emailField], FILTER_VALIDATE_EMAIL) ) {
-                            $this->sendConfirmationEmail($data[$emailField], $this->container->getParameter('form_generator_from_email'), $form->getName(), $form->getThankYouText());
+                    if ($form->isDbAction()) {
+                        $this->formHelper->saveToDb($form, $data);
+                    }
+                    //print_r($data);
+
+                    if ($emailField != ''  and filter_var($data[$emailField], FILTER_VALIDATE_EMAIL)) {
+
+                        if($newsLetterAnmeldung != 'yes'){
+
+                            if(isset($data[$emailField]) and  filter_var($data[$emailField], FILTER_VALIDATE_EMAIL) ) {
+                                $this->sendConfirmationEmail($data[$emailField], $this->container->getParameter('form_generator_from_email'), $form->getName(), $form->getThankYouText());
+                            }
+                        }elseif($newsLetterAnmeldung == 'yes'){
+
+                            //todo: double opt in ausloesen
+                            $sendaway_rest_client_id =  $this->getParameter('sendaway_rest_client_id'); //$this->getContainer()->getParameter('sendaway_rest_client_id');
+                            $sendaway_rest_client_secret = $this->getParameter('sendaway_rest_client_secret'); // $this->getContainer()->getParameter('sendaway_rest_client_secret');
+                            $sendaway_form_id =  $this->getParameter('sendaway_form_id'); //$this->getContainer()->getParameter('sendaway_form_id');
+                            $sendaway_list_id =  $this->getParameter('sendaway_list_id'); //$this->getContainer()->getParameter('sendaway_list_id');
+
+
+                            $this->sendAwayRestApi = new SendAwayRestApi($sendaway_rest_client_id,  $sendaway_rest_client_secret);
+                            //user erstellen
+                            $result = $this->sendAwayRestApi->createSubscriber($data[$emailField], $sendaway_list_id);
+                            //double opt in mail verschicken
+                            $result = $this->sendAwayRestApi->triggerDoubleOptInEmail($data[$emailField], $sendaway_form_id);
+
                         }
-                    }elseif($newsLetterAnmeldung == 'yes'){
-
-                        //todo: double opt in ausloesen
-                        $sendaway_rest_client_id =  $this->getParameter('sendaway_rest_client_id'); //$this->getContainer()->getParameter('sendaway_rest_client_id');
-                        $sendaway_rest_client_secret = $this->getParameter('sendaway_rest_client_secret'); // $this->getContainer()->getParameter('sendaway_rest_client_secret');
-                        $sendaway_form_id =  $this->getParameter('sendaway_form_id'); //$this->getContainer()->getParameter('sendaway_form_id');
-                        $sendaway_list_id =  $this->getParameter('sendaway_list_id'); //$this->getContainer()->getParameter('sendaway_list_id');
-
-
-                        $this->sendAwayRestApi = new SendAwayRestApi($sendaway_rest_client_id,  $sendaway_rest_client_secret);
-                        //user erstellen
-                        $result = $this->sendAwayRestApi->createSubscriber($data[$emailField], $sendaway_list_id);
-                        //double opt in mail verschicken
-                        $result = $this->sendAwayRestApi->triggerDoubleOptInEmail($data[$emailField], $sendaway_form_id);
 
                     }
 
+                    if ($form->getRedirect()) {
+                        $this->session->getFlashBag()->add('form_notice', $form->getThankYouText());
+                        $redirect = $form->getRedirect();
+                    }
+
+
                 }
 
-                if ($form->getRedirect()) {
-                    $this->session->getFlashBag()->add('form_notice', $form->getThankYouText());
-                    $redirect = $form->getRedirect();
-                }
             } else {
                 $this->setSubmittedFormData($request->request->get($formType->getName()));
                 $this->setFormComplete(false);
@@ -156,6 +168,7 @@ class FrontendFormController extends Controller
 
         $formData = $this->getSubmittedFormData();
         $formComplete = $this->getFormComplete();
+        $formError = $this->getFormError();
 
         $this->clearSessionVariables();
 
@@ -166,6 +179,7 @@ class FrontendFormController extends Controller
         return $this->render($template,
             [
                 'formComplete' => $formComplete,
+                'formError' => $formError,
                 'formView' => $formType->createView(),
                 'form' => $form,
             ]);
@@ -175,7 +189,26 @@ class FrontendFormController extends Controller
     {
         $this->session->remove(self::FORM_DATA);
         $this->session->remove(self::FORM_COMPLETE);
+        $this->session->remove(self::FORM_ERROR);
     }
+
+
+    /**
+     * @param $complete
+     */
+    protected function setFormError($error)
+    {
+        $this->session->set(self::FORM_ERROR, $error);
+    }
+
+    /**
+     * @return bool
+     */
+    protected function getFormError()
+    {
+        return $this->session->get(self::FORM_ERROR, '');
+    }
+
 
     /**
      * @param $complete

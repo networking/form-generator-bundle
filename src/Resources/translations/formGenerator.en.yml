@@ -30,3 +30,6 @@ button:
     duplicate_form: Copy form
 
 message.copy_saved: A copy of the form was successfully created.
+
+errorEmail: Data was not saved. Please check E-Mail.
+errorForm: Unbekannter Error. Data was not saved.
