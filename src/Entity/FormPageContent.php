@@ -15,7 +15,7 @@ use Networking\InitCmsBundle\Form\Type\AutocompleteType;
 use Networking\InitCmsBundle\Model\ContentInterface;
 use Networking\InitCmsBundle\Annotation as Sonata;
 use Symfony\Component\Form\FormBuilder;
-
+use Doctrine\ORM\EntityRepository;
 /**
  * FormPageContent.
  *
