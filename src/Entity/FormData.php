@@ -12,7 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  */
-class FormData
+class FormData implements \ArrayAccess
 {
     /**
      * @var int
@@ -43,7 +43,7 @@ class FormData
      *
      * @ORM\OneToMany(targetEntity="Networking\FormGeneratorBundle\Entity\FormFieldData",cascade={"persist", "remove"}, mappedBy="formData", orphanRemoval=true)
      */
-    private $formFields;
+    private $formFields = [];
 
     /**
      * @ORM\PrePersist
@@ -114,7 +114,7 @@ class FormData
     /**
      * Get fields.
      *
-     * @return array
+     * @return FormFieldData[]
      */
     public function getFormFields()
     {
@@ -136,10 +136,57 @@ class FormData
     /**
      * @param FormFieldData $formField
      */
-    public function addFormField(FormFieldData $formField)
+    public function addFormField(FormFieldData $formField, $key)
     {
         $formField->setFormData($this);
-        $this->formFields[] = $formField;
+        $this->formFields[$key] = $formField;
+    }
+
+    public function __get($offset)
+    {
+        return $this->offsetGet($offset);
+    }
+
+    public function __set($offset, $value){
+     return $this->offsetSet($offset, $value);
+    }
+
+
+    public function offsetExists($offset): bool
+    {
+        return array_key_exists($offset, $this->formFields);
+    }
+
+
+    public function offsetGet($offset)
+    {
+        if(!array_key_exists($offset, $this->formFields)){
+            return null;
+        }
+
+        /** @var FormFieldData $field */
+        $field = $this->formFields[$offset];
+        return $field->getValue();
+    }
+
+
+    public function offsetSet($offset, $value): void
+    {
+        if(!array_key_exists($offset, $this->formFields)){
+            return;
+        }
+        /** @var FormFieldData $field */
+        $field = $this->formFields[$offset];
+
+        $field->setValue($value);
+    }
+
+
+    public function offsetUnset($offset): void{
+        if(!array_key_exists($offset, $this->formFields)){
+            return;
+        }
+        unset($this->formFields[$offset]);
     }
 
     /**
@@ -149,4 +196,6 @@ class FormData
     {
         return $this->getId();
     }
+
+
 }
