@@ -75,7 +75,7 @@ class FrontendFormController extends AbstractController
 
         if ($formType->isSubmitted()) {
             if ($formType->isValid()) {
-                $data = $request->get($formType->getName());
+                $data = $formType->getData();
                 $this->setFormComplete(true);
 
                 if ($form->isEmailAction()) {
@@ -108,7 +108,7 @@ class FrontendFormController extends AbstractController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function renderFormAction($form, $actionUrl = null, $template = '@NetworkingFormGenerator/Form/form.html.twig', $options = [])
+    public function renderFormAction(Form $form, $actionUrl = null, $template = '@NetworkingFormGenerator/Form/form.html.twig', $options = [])
     {
 
         if(!$form->isOnline()){

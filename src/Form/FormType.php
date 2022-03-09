@@ -10,11 +10,15 @@
 
 namespace Networking\FormGeneratorBundle\Form;
 
+use Gedmo\Sluggable\Util\Urlizer;
 use Networking\FormGeneratorBundle\Entity\Form;
+use Networking\FormGeneratorBundle\Entity\FormData;
 use Networking\FormGeneratorBundle\Entity\FormField;
+use Networking\FormGeneratorBundle\Entity\FormFieldData;
 use Networking\FormGeneratorBundle\Form\Type\InfotextType;
 use Networking\FormGeneratorBundle\Form\Type\LegendType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
@@ -26,18 +30,18 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FormType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        /** @var Form $form */
         $form = $options['form'];
 
-        if (!is_null($form)) {
+        if (!is_null($form )) {
             foreach ($form->getFormFields() as $key =>  $field) {
                 if(!$name = $field->getName()){
                     $name = $field->getType().$key;
                 }
-                $id = self::slugify($name);
+                $id = Urlizer::urlize($name);
 
                 $builder->add(
                     $id,
@@ -45,8 +49,12 @@ class FormType extends AbstractType
                     $this->extractFieldOptions($field, $options)
                 );
             }
+
+            $builder->addModelTransformer(new FormDataTransformer($form) );
         }
+
     }
+
 
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -60,6 +68,8 @@ class FormType extends AbstractType
             'error_bubbling' => true,
             'csrf_protection' => false,
             'error_type' => 'block',
+            'data_class' => FormData::class
+
 
         ]);
         $resolver->setDefined([
@@ -198,6 +208,10 @@ class FormType extends AbstractType
             $fieldOptions['layout'] = 'horizontal';
         }
 
+        if ($formOptions['label_attr']) {
+            $fieldOptions['label_attr'] = $formOptions['label_attr'];
+        }
+
         if (!$fieldOptions['label_render']) {
             $fieldOptions['horizontal_label_offset_class'] = ' ';
             $fieldOptions['horizontal_input_wrapper_class'] = 'col-md-12';
@@ -208,34 +222,6 @@ class FormType extends AbstractType
         return $fieldOptions;
     }
 
-    /**
-     * @param $text
-     *
-     * @return string
-     */
-    public static function slugify($text)
-    {
-        // replace non letter or digits by -
-        $text = preg_replace('~[^\\pL\d]+~u', '-', $text);
-
-        // trim
-        $text = trim($text, '-');
-
-        // transliterate
-        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
-
-        // lowercase
-        $text = strtolower($text);
-
-        // remove unwanted characters
-        $text = preg_replace('~[^-\w]+~', '', $text);
-
-        if (empty($text)) {
-            return 'n-a';
-        }
-
-        return $text;
-    }
 
     public function getBlockPrefix()
     {
