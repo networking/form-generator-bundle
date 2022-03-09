@@ -28,6 +28,9 @@ class FormDataTransformer implements DataTransformerInterface
 
         $value->setForm($this->form);
         foreach ($this->form->getFormFields() as $key =>  $field) {
+            if($field->getType() === 'Infotext'){
+                continue;
+            }
             if(!$name = $field->getName()){
                 $name = $field->getType().$key;
             }
