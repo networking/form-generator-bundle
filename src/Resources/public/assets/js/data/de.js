@@ -1,4 +1,5 @@
 var polyglot_phrases = {
+    '':'',
     'Loading...': 'Laden...',
     'Form configuration': 'Formular Konfiguration',
     'Title': 'Titel',
@@ -68,6 +69,7 @@ var polyglot_phrases = {
     'default text': '',
     'Starting Text': 'Voreingefüllter Text',
     'Rendered': 'Generierter HTML',
-    'success': 'Erfolgreich gespeichert'
+    'success': 'Erfolgreich gespeichert',
+    'Form must have a name': 'Bitte Form einen Titel geben'
 
 };

@@ -3,9 +3,9 @@
 namespace Networking\FormGeneratorBundle\Form;
 
 use Gedmo\Sluggable\Util\Urlizer;
-use Networking\FormGeneratorBundle\Entity\Form;
-use Networking\FormGeneratorBundle\Entity\FormData;
-use Networking\FormGeneratorBundle\Entity\FormFieldData;
+use Networking\FormGeneratorBundle\Model\Form;
+use Networking\FormGeneratorBundle\Model\FormData;
+use Networking\FormGeneratorBundle\Model\FormFieldData;
 use Symfony\Component\Form\DataTransformerInterface;
 
 class FormDataTransformer implements DataTransformerInterface

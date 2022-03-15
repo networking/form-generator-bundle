@@ -11,12 +11,13 @@
 namespace Networking\FormGeneratorBundle\Controller;
 
 use Networking\FormGeneratorBundle\Form\FormType;
+use Networking\FormGeneratorBundle\Model\BaseForm;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Networking\FormGeneratorBundle\Entity\Form;
+use Networking\FormGeneratorBundle\Model\Form;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Networking\FormGeneratorBundle\Helper\FormHelper;
@@ -108,7 +109,7 @@ class FrontendFormController extends AbstractController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function renderFormAction(Form $form, $actionUrl = null, $template = '@NetworkingFormGenerator/Form/form.html.twig', $options = [])
+    public function renderFormAction(BaseForm $form, $actionUrl = null, $template = '@NetworkingFormGenerator/Form/form.html.twig', $options = [])
     {
 
         if(!$form->isOnline()){

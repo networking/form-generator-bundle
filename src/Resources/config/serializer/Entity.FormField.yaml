@@ -1,4 +1,4 @@
-Networking\FormGeneratorBundle\Entity\FormField:
+Networking\FormGeneratorBundle\Model\FormField:
     properties:
         id:
             type: integer

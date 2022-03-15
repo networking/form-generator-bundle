@@ -40,12 +40,12 @@
             "placeholder": {
                 "label": "Placeholder",
                 "type": "input",
-                "value": "placeholder"
+                "value": ""
             },
             "helptext": {
                 "label": "Help Text",
                 "type": "input",
-                "value": "help"
+                "value": ""
             },
             "required": {
                 "label": "Required",
@@ -106,12 +106,12 @@
             "placeholder": {
                 "label": "Placeholder",
                 "type": "input",
-                "value": "placeholder"
+                "value": ""
             },
             "helptext": {
                 "label": "Help Text",
                 "type": "input",
-                "value": "help"
+                "value": ""
             },
             "required": {
                 "label": "Required",
@@ -172,12 +172,12 @@
             "placeholder": {
                 "label": "Placeholder",
                 "type": "input",
-                "value": "placeholder"
+                "value": ""
             },
             "helptext": {
                 "label": "Help Text",
                 "type": "input",
-                "value": "help"
+                "value": ""
             },
             "required": {
                 "label": "Required",
@@ -243,12 +243,12 @@
             "placeholder": {
                 "label": "Placeholder",
                 "type": "input",
-                "value": "placeholder"
+                "value": ""
             },
             "helptext": {
                 "label": "Help Text",
                 "type": "input",
-                "value": "help"
+                "value": ""
             },
             "required": {
                 "label": "Required",
@@ -314,12 +314,12 @@
             "placeholder": {
                 "label": "Placeholder",
                 "type": "input",
-                "value": "placeholder"
+                "value": ""
             },
             "helptext": {
                 "label": "Help Text",
                 "type": "input",
-                "value": "help"
+                "value": ""
             },
             "required": {
                 "label": "Required",
@@ -385,12 +385,12 @@
             "placeholder": {
                 "label": "Placeholder",
                 "type": "input",
-                "value": "placeholder"
+                "value": ""
             },
             "helptext": {
                 "label": "Help Text",
                 "type": "input",
-                "value": "help"
+                "value": ""
             },
             "required": {
                 "label": "Required",
@@ -456,12 +456,12 @@
             "placeholder": {
                 "label": "Placeholder",
                 "type": "input",
-                "value": "placeholder"
+                "value": ""
             },
             "helptext": {
                 "label": "Help Text",
                 "type": "input",
-                "value": "help"
+                "value": ""
             },
             "required": {
                 "label": "Required",
@@ -523,6 +523,11 @@
                 "label": "Starting Text",
                 "type": "textarea",
                 "value": ""
+            },
+            "required": {
+                "label": "Required",
+                "type": "checkbox",
+                "value": false
             }
         }
     }

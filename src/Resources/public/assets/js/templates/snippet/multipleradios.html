@@ -5,7 +5,7 @@
         <div class="radio">
             <label  for="<%= name+'-'+i %>">
                 <input type="radio" name="<%= name %>" value="<%= radiosValues[i] %>"  <% if (i < 1) { %> checked="checked" <% } %>>
-                <%= polyglot.t(radio, { _: radio}) %>
+                <%= radio %>
             </label>
         </div><% }); %>
     </div>

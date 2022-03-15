@@ -10,6 +10,7 @@
 
 namespace Networking\FormGeneratorBundle\Admin;
 
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -18,6 +19,7 @@ use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class FormAdmin extends BaseAdmin
 {
@@ -60,8 +62,7 @@ class FormAdmin extends BaseAdmin
                 'copy',
                 'copy/{id}',
                 ['_controller' => 'Networking\FormGeneratorBundle\Controller\FormAdminController::copyAction']
-            )
-        ;
+            );
     }
 
     /**
@@ -77,23 +78,23 @@ class FormAdmin extends BaseAdmin
                 null,
                 ['translation_domain' => 'formGenerator']
             )->add(
-            'online',
-            CallbackFilter::class,
-            [
-                'callback' => [
-                    $this,
-                    'getAllOnline',
+                'online',
+                CallbackFilter::class,
+                [
+                    'callback' => [
+                        $this,
+                        'getAllOnline',
+                    ],
                 ],
-            ],
-            ChoiceType::class,
-            [
-                'placeholder' => 'filter.choice.all',
-                'choices' => [
-                    'filter.choice.online'=> 1,
-                    'filter.choice.offline' => 0,
-                ],
-                'translation_domain' => 'formGenerator'
-            ]
+                ChoiceType::class,
+                [
+                    'placeholder' => 'filter.choice.all',
+                    'choices' => [
+                        'filter.choice.online' => 1,
+                        'filter.choice.offline' => 0,
+                    ],
+                    'translation_domain' => 'formGenerator',
+                ]
             );
     }
 
@@ -103,7 +104,37 @@ class FormAdmin extends BaseAdmin
     protected function configureFormFields(FormMapper $form)
     {
         $form
-            ->add('name');
+            ->add(
+                'name',
+                TextType::class,
+                ['layout' => 'horizontal', 'attr' => ['class' => 'input-xlarge']]
+            )
+            ->add(
+                'email',
+                TextType::class,
+                [
+                    'required' => false,
+                    'layout' => 'horizontal',
+                    'attr' => ['class' => 'input-xlarge'],
+                    'help_block' => 'form.help.comma_separated',
+                ]
+            )
+            ->add('action', ChoiceType::class, [
+                'layout' => 'horizontal',
+                'attr' => ['class' => 'input-xlarge'],
+                'choices' => [
+                    'Email' => 'email',
+                    'DB' => 'db',
+                    'Email & DB' => 'email_db',
+                ],
+            ])
+            ->add('redirect', TextType::class, [
+                'required' => false,
+                'layout' => 'horizontal',
+                'attr' => ['class' => 'input-xlarge'],
+            ])
+            ->add('infoText', CKEditorType::class, ['widget_form_group_attr' => ['class' => 'col-md-12']])
+            ->add('thankYouText', CKEditorType::class, ['widget_form_group_attr' => ['class' => 'col-md-12'], 'autoload' => false]);
     }
 
     protected function configureListFields(ListMapper $listMapper)
@@ -158,7 +189,7 @@ class FormAdmin extends BaseAdmin
             $qb->orWhere(sprintf('%s.%s = 1', $alias, $field));
         }
 
-        if($value === 0){
+        if ($value === 0) {
             $qb->andWhere(sprintf('%s.%s = 0', $alias, $field));
         }
 

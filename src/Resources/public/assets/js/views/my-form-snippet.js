@@ -67,7 +67,6 @@ define([
                     var ckeditorInstance = CKEDITOR.instances[instance];
                     var data = ckeditorInstance.getData();
                     $('#' + ckeditorInstance.name).val($.trim(data.replace(/[\t\n]+/g, ' ')));
-                    CKEDITOR.instances[instance].destroy();
                 }
                 _.each(fields, function(e){
                     var $e = $(e)
@@ -113,10 +112,6 @@ define([
                 mouseEvent.preventDefault();
                 $(".popover").remove();
                 boundContext.model.trigger("change");
-
-                for(var instance in CKEDITOR.instances){
-                    CKEDITOR.instances[instance].destroy();
-                }
             }
         }
 

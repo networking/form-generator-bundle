@@ -11,10 +11,10 @@
 namespace Networking\FormGeneratorBundle\Form;
 
 use Gedmo\Sluggable\Util\Urlizer;
-use Networking\FormGeneratorBundle\Entity\Form;
-use Networking\FormGeneratorBundle\Entity\FormData;
-use Networking\FormGeneratorBundle\Entity\FormField;
-use Networking\FormGeneratorBundle\Entity\FormFieldData;
+use Networking\FormGeneratorBundle\Model\Form;
+use Networking\FormGeneratorBundle\Model\FormData;
+use Networking\FormGeneratorBundle\Model\FormField;
+use Networking\FormGeneratorBundle\Model\FormFieldData;
 use Networking\FormGeneratorBundle\Form\Type\InfotextType;
 use Networking\FormGeneratorBundle\Form\Type\LegendType;
 use Symfony\Component\Form\AbstractType;

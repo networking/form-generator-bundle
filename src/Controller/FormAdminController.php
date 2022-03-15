@@ -3,14 +3,15 @@
 namespace Networking\FormGeneratorBundle\Controller;
 
 use FOS\RestBundle\Controller\AbstractFOSRestController;
-use Networking\FormGeneratorBundle\Entity\FormField;
+use Networking\FormGeneratorBundle\Model\BaseForm;
+use Networking\FormGeneratorBundle\Model\FormField;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\Route;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
-use Networking\FormGeneratorBundle\Entity\Form;
+use Networking\FormGeneratorBundle\Model\Form;
 use Networking\FormGeneratorBundle\Admin\FormAdmin;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -70,7 +71,7 @@ class FormAdminController extends AbstractFOSRestController
     public function getAction(Request $request, $id)
     {
         if ($id) {
-            $repo = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:Form');
+            $repo = $this->getDoctrine()->getRepository($this->getParameter('networking_form_generator.form_class'));
             /** @var Form $form */
             $form = $repo->find($id);
             if (!$form) {
@@ -169,7 +170,7 @@ class FormAdminController extends AbstractFOSRestController
      *
      * @return Form
      */
-    protected function setFields(Request $request, Form $form)
+    protected function setFields(Request $request, BaseForm $form)
     {
         $form->setName($request->get('name'));
         $form->setInfoText($request->get('infoText'));
@@ -180,8 +181,12 @@ class FormAdminController extends AbstractFOSRestController
 
         $collection = $request->get('collection');
 
+        $formFieldClass = $this->getParameter('networking_form_generator.form_field_class');
+
 
         foreach ($collection as $key =>  $field) {
+
+            $formField = new $formFieldClass;
             if (is_array($field)) {
 
                 switch ($field['title']) {
@@ -190,7 +195,6 @@ class FormAdminController extends AbstractFOSRestController
                     case 'Multiple Checkboxes Inline':
                     case 'Multiple Radios Inline':
                         $field['fields']['name']['value'] = $field['fields']['name']['value']?:uniqid(substr($field['fields']['label']['value'], 0,3));
-                        $formField = new FormField();
                         $formField->setFieldLabel($field['fields']['label']['value']);
                         $formField->setName($field['fields']['name']['value']);
                         $formField->setType($field['title']);
@@ -199,7 +203,6 @@ class FormAdminController extends AbstractFOSRestController
                         break;
                     case 'Legend':
                         $field['fields']['id']['value'] = $field['fields']['id']['value']?:uniqid(substr($field['fields']['name']['value'], 0,3));
-                        $formField = new FormField();
                         $formField->setName($field['fields']['id']['value']);
                         $formField->setFieldLabel($field['fields']['name']['value']);
                         $formField->setType($field['title']);
@@ -207,7 +210,6 @@ class FormAdminController extends AbstractFOSRestController
                         $form->addFormField($formField);
                         break;
                     case 'Infotext':
-                        $formField = new FormField();
                         $formField->setName(uniqid('info_text'));
                         $formField->setFieldLabel($field['fields']['label']['value']);
                         $formField->setType($field['title']);
@@ -216,7 +218,6 @@ class FormAdminController extends AbstractFOSRestController
                         break;
                     default:
                         $field['fields']['id']['value'] = $field['fields']['id']['value']?:uniqid(substr($field['fields']['label']['value'], 0,3));
-                        $formField = new FormField();
                         $formField->setName($field['fields']['id']['value']);
                         $formField->setFieldLabel($field['fields']['label']['value']);
                         $formField->setType($field['title']);
@@ -256,7 +257,7 @@ class FormAdminController extends AbstractFOSRestController
     public function deleteFormEntryAction(Request $request, $id, $rowid)
     {
         $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository('NetworkingFormGeneratorBundle:FormData');
+        $repo = $em->getRepository($this->getParameter('networking_form_generator.form_data_class'));
 
         $formData = $repo->find($rowid);
         $em->remove($formData);
@@ -268,7 +269,7 @@ class FormAdminController extends AbstractFOSRestController
     public function deleteAllFormEntryAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository('NetworkingFormGeneratorBundle:FormData');
+        $repo = $em->getRepository($this->getParameter('networking_form_generator.form_data_class'));
 
         $formData = $repo->findBy(['form' => $id]);
         foreach ($formData as $record) {
@@ -290,7 +291,7 @@ class FormAdminController extends AbstractFOSRestController
      */
     public function excelExportAction(Request $request, $id)
     {
-        $repo = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:Form');
+        $repo = $this->getDoctrine()->getRepository($this->getParameter('networking_form_generator.form_class'));
         /** @var Form $form */
         $form = $repo->find($id);
         $formFields = $form->getFormFields();

@@ -81,7 +81,7 @@ form .popover .control-label {
 }
 
 form .popover form {
-    width: 300px;
+    width: 244px;
 }
 
 .popover-content form .btn{
@@ -119,4 +119,7 @@ form .popover form {
 #target fieldset{
     width: 100%;
     overflow: hidden;
+}
+input.form-control, select.form-control{
+    width: 100%;
 }

@@ -730,6 +730,11 @@
                 "label": "Starting Text",
                 "type": "textarea",
                 "value": "default text"
+            },
+            "required": {
+                "label": "Required",
+                "type": "checkbox",
+                "value": false
             }
         }
     }

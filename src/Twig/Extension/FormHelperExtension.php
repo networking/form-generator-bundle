@@ -13,15 +13,15 @@ namespace Networking\FormGeneratorBundle\Twig\Extension;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Collections\ArrayCollection;
 use Networking\InitCmsBundle\Entity\LayoutBlock;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Sonata\AdminBundle\Admin\Pool;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Class NetworkingHelperExtension.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class FormHelperExtension extends \Twig_Extension implements ContainerAwareInterface
+class FormHelperExtension extends \Twig_Extension
 {
     /**
      * Container.
@@ -51,16 +51,32 @@ class FormHelperExtension extends \Twig_Extension implements ContainerAwareInter
     protected $formBlocks;
 
     /**
-     * Sets the Container.
-     *
-     * @param ContainerInterface|null $container A ContainerInterface instance or null
-     *
-     * @api
+     * @var Pool
      */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
+    protected $pool;
+
+    /**
+     * @var ManagerRegistry
+     */
+    protected $managerRegistry;
+
+    /**
+     * @var string
+     */
+    protected $pageClass;
+
+    /**
+     * @var string
+     */
+    protected $pageContentClass;
+
+    public function __construct(Pool $pool, ManagerRegistry $managerRegistry, $pageClass, $pageContentClass){
+        $this->pool = $pool;
+        $this->managerRegistry = $managerRegistry;
+        $this->pageClass = $pageClass;
+        $this->pageContentClass = $pageContentClass;
     }
+
 
     /**
      * Returns the name of the extension.
@@ -91,7 +107,7 @@ class FormHelperExtension extends \Twig_Extension implements ContainerAwareInter
      */
     public function getPageLinks($formId)
     {
-        $content = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:FormPageContent')->findBy(
+        $content = $this->managerRegistry->getRepository($this->pageContentClass)->findBy(
             ['form' => $formId]
         );
 
@@ -106,8 +122,7 @@ class FormHelperExtension extends \Twig_Extension implements ContainerAwareInter
         });
 
         $links = [];
-        $pageClass = $this->container->getParameter('networking_init_cms.admin.page.class');
-        $pageAdmin = $this->container->get('sonata.admin.pool')->getAdminByClass($pageClass);
+        $pageAdmin = $this->pool->getAdminByClass($this->pageClass);
 
         /** @var LayoutBlock $block */
         foreach ($filteredBlocks as $block) {
@@ -121,61 +136,13 @@ class FormHelperExtension extends \Twig_Extension implements ContainerAwareInter
     protected function getFormPageContentLayoutBlocks()
     {
         if (!$this->formBlocks) {
-            $blocks = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:LayoutBlock')->findBy(
-                ['classType' => 'Networking\\FormGeneratorBundle\\Entity\\FormPageContent']
+            $blocks = $this->managerRegistry->getRepository(LayoutBlock::class)->findBy(
+                ['classType' => $this->pageContentClass]
             );
 
             $this->formBlocks = new ArrayCollection($blocks);
         }
 
         return $this->formBlocks;
-    }
-
-    /**
-     * Shortcut to return the Doctrine Registry service.
-     *
-     * @return Registry
-     *
-     * @throws \LogicException If DoctrineBundle is not available
-     */
-    protected function getDoctrine()
-    {
-        $db_driver = $this->getParameter('networking_init_cms.db_driver');
-
-        switch ($db_driver) {
-            case 'orm':
-                return $this->getService('doctrine');
-                break;
-            case 'mongodb':
-                return $this->getService('doctrine_mongodb');
-                break;
-            default:
-                throw new \LogicException('cannot find doctrine for db_driver');
-                break;
-        }
-    }
-
-    /**
-     * Gets a service.
-     *
-     * @param string $id The service identifier
-     *
-     * @return object The associated service
-     */
-    public function getService($id)
-    {
-        return $this->container->get($id);
-    }
-
-    /**
-     * Get parameters from the service container.
-     *
-     * @param string $name
-     *
-     * @return mixed
-     */
-    public function getParameter($name)
-    {
-        return $this->container->getParameter($name);
     }
 }

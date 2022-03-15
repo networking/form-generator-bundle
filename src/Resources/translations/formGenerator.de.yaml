@@ -1,6 +1,16 @@
 breadcrumb.link_form_list: Formular Generator
 form.admin.menu_label: Formular Generator
-form.label.form: Formular
+form:
+    label:
+        form: Formular
+    label_name: Titel
+    label_email: Email-Adressen
+    label_action: Form Aktion
+    label_redirect: 'URL umleiten (Erfolg-Seite)'
+    label_info_text: Info Text
+    label_thank_you_text: Danke Text
+    help:
+        comma_separated: Durch Komma getrennte Liste von E-Mail-Adressen
 list:
     label_name: Formurlarname
     label_pages: Seiten

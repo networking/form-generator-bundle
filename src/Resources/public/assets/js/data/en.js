@@ -1,4 +1,5 @@
 var polyglot_phrases = {
+    '':'',
     'Loading...': 'Loading...',
     'Form configuration': 'Form configuration',
     'Title': 'Title',

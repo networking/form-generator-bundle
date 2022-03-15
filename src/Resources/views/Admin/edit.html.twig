@@ -5,32 +5,33 @@
     <link href="{{ asset('bundles/networkingformgenerator/assets/css/custom.css') }}" rel="stylesheet">
 {% endblock %}
 
-   {% block javascripts %}
-    <script type="text/javascript" src="{{ asset('bundles/networkinginitcms/js/jquery.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/networkinginitcms/js/bootstrap.js') }}"></script>
-    {% block meta_config %}
-        <meta data-sonata-admin='{{ {
-            config: {
-                CONFIRM_EXIT: sonata_admin.adminPool.getOption('confirm_exit'),
-                USE_SELECT2:sonata_admin.adminPool.getOption('use_select2'),
-                USE_ICHECK: false,
-                USE_STICKYFORMS: sonata_admin.adminPool.getOption('use_stickyforms'),
-            },
-            translations: {
-                CONFIRM_EXIT: 'confirm_exit'|trans({}, 'SonataAdminBundle'),
-            },
-        }|json_encode()|raw }}'
-        >
+{% block javascripts %}
+   <script type="text/javascript" src="{{ asset('bundles/networkinginitcms/js/jquery.js') }}"></script>
+   <script type="text/javascript" src="{{ asset('bundles/networkinginitcms/js/bootstrap.js') }}"></script>
+   {% block meta_config %}
+       <meta data-sonata-admin='{{ {
+           config: {
+               CONFIRM_EXIT: sonata_admin.adminPool.getOption('confirm_exit'),
+               USE_SELECT2:sonata_admin.adminPool.getOption('use_select2'),
+               USE_ICHECK: false,
+               USE_STICKYFORMS: sonata_admin.adminPool.getOption('use_stickyforms'),
+           },
+           translations: {
+               CONFIRM_EXIT: 'confirm_exit'|trans({}, 'SonataAdminBundle'),
+           },
+       }|json_encode()|raw }}'
+       >
+   {% endblock %}
+   <script>
+       // http://getbootstrap.com/getting-started/#support-ie10-width
+       if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+           var msViewportStyle = document.createElement('style');
+           msViewportStyle.appendChild(document.createTextNode('@-ms-viewport{width:auto!important}'));
+           document.querySelector('head').appendChild(msViewportStyle);
+       }
+   </script>
 {% endblock %}
-               <script>
-            // http://getbootstrap.com/getting-started/#support-ie10-width
-            if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
-                var msViewportStyle = document.createElement('style');
-                msViewportStyle.appendChild(document.createTextNode('@-ms-viewport{width:auto!important}'));
-                document.querySelector('head').appendChild(msViewportStyle);
-            }
-            </script>
-{% endblock %}
+
 {% block body %}
     {% block init_cms_top_nav %}
         {% include '@NetworkingInitCms/Navbar/admin_navbar.html.twig' %}
@@ -54,10 +55,10 @@
         </div>
         <div class="row-fluid clearfix">
             {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
-            <h1>{% if admin.id(object) is not null%}
-                        {{ "title_edit"|trans({'%name%': admin.toString(object),'%admin_label%': admin_label }, 'SonataAdminBundle') }}
+            <h1>{% if admin.id(object) is not null %}
+                    {{ "title_edit"|trans({'%name%': admin.toString(object),'%admin_label%': admin_label }, 'SonataAdminBundle') }}
                 {% else %}
-                    {% set title =  "title_create"|trans({'%admin_label%': admin_label}, admin.translationDomain)  %}
+                    {% set title =  "title_create"|trans({'%admin_label%': admin_label}, admin.translationDomain) %}
                     {% if title == 'title_create' %}
                         {{ "title_create"|trans({}, 'SonataAdminBundle') }}
                     {% else %}
@@ -66,8 +67,42 @@
                 {% endif %}</h1>
             <!-- Building Form. -->
 
-                    <div id="build">
-                    </div>
+            <div id="build" data-uniq-id="{{ admin.uniqId }}" class="sonata-ba-form">
+                {% embed '@NetworkingInitCms/CRUD/base_edit_form.html.twig' %}
+                    {% block sonata_form_action_url %}
+                        {{ admin.generateUrl(url, {'id': objectId|default(admin.id(object)), 'uniqid': admin.uniqid}) }}
+                    {% endblock %}
+                    {% block formactions %}
+                        {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
+                        <div class="{% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}modal-footer{% else %}well form-actions{% endif %}">
+                            {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
+                                <button class="btn btn-default" data-dismiss="modal"
+                                        aria-hidden="true">{{ 'button.cancel'|trans({'%admin_label%': admin_label}, 'PageAdmin') }}</button>
+                                {% if admin.id(object) %}
+                                    <button type="button" class="btn btn-primary" name="btn_update">
+                                        {{ 'btn_update_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}</button>
+                                {% else %}
+                                    <button type="button" class="btn btn-primary" name="btn_create">
+                                        {{ 'btn_update_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}</button>
+                                {% endif %}
+                            {% else %}
+                                <a class="btn btn-default"
+                                   href="{{ admin.generateUrl('list') }}">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
+                                {% if admin.id(object) %}
+                                    <button type="button" id="saveForm" class="btn btn-primary"
+                                            name="btn_update_and_edit">
+                                        {{ 'btn_update_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}</button>
+                                {% else %}
+                                    <button type="button" id="saveForm" class="btn btn-primary"
+                                            name="btn_create_and_edit">
+                                        {{ 'btn_update_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}</button>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    {% endblock formactions %}
+                {% endembed %}
+            </div>
+
             <!-- / Building Form. -->
         </div>
         {% block formactions %}
@@ -75,6 +110,7 @@
         {% endblock formactions %}
     </div>
     {% block before_body_end %}
+        {{ parent() }}
         <script src="{{ asset('bundles/networkingformgenerator/assets/js/lib/polyglot.js') }}"></script>
         <script src="{{ asset('/bundles/networkingformgenerator/assets/js/data/' ~app.request.locale|slice(0, 2)~'.js') }}"></script>
         <script data-main="{{ asset('bundles/networkingformgenerator/assets/js/main.js') }}"
@@ -84,7 +120,7 @@
             define('config', function () {
                 return {
                     backToListUri: '{{ admin.generateUrl('list') }}',
-                {% if admin.subject.id %}id: {{ admin.subject.id }},{% endif %}
+                    {% if admin.subject.id %}id: {{ admin.subject.id }},{% endif %}
                     url: '{{ url('get_forms') }}',
                     locale: '{{ app.request.locale|slice(0, 2) }}'
 

@@ -2,6 +2,6 @@
 <div class="form-group">
     <label class="col-md-12 control-label"> <%= polyglot.t(label, { _: label}) %> </label>
     <div class="col-md-10">
-        <textarea class="form-control field" data-type="<%= type %>" style='min-height: 200px' id='<%= name %>'><% if (value){ %><%= polyglot.t(value, { _: value}) %> <%}%></textarea>
+        <textarea class="form-control field" data-type="<%= type %>" style='min-height: 200px' id='<%= name %>'><% if (value){ %><%= value %> <%}%></textarea>
     </div>
 </div>

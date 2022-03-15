@@ -11,8 +11,8 @@
 namespace Networking\FormGeneratorBundle\Helper;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Networking\FormGeneratorBundle\Entity\Form;
-use Networking\FormGeneratorBundle\Entity\FormData;
+use Networking\FormGeneratorBundle\Model\Form;
+use Networking\FormGeneratorBundle\Model\FormData;
 use Twig\Environment;
 
 class FormHelper

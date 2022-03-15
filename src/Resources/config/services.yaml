@@ -12,7 +12,6 @@ services:
 
 
     Networking\FormGeneratorBundle\Form\Type\LegendType:
-        autowire: true
         public: true
         tags:
             - { name: 'form.type', alias: 'form_legend'}
@@ -21,7 +20,6 @@ services:
         public: true
         tags:
             - { name: 'form.type', alias: 'generated_form'}
-
 
     Networking\FormGeneratorBundle\Helper\FormHelper:
         autowire: true
@@ -37,16 +35,15 @@ services:
               - { name: 'controller.service_arguments'}
 
     Networking\FormGeneratorBundle\Controller\FrontendFormController:
-          autowire: true
           public: true
           arguments:
-              $emailAddress: '%form_generator_from_email%'
+              $emailAddress: '%networking_form_generator.from_email%'
           tags:
               - { name: 'controller.service_arguments'}
 
 
     Networking\FormGeneratorBundle\Admin\FormAdmin:
-        arguments: [null, Networking\FormGeneratorBundle\Entity\Form, NetworkingInitCmsBundle:CRUD]
+        arguments: [null, '%networking_form_generator.form_class%', NetworkingInitCmsBundle:CRUD]
         calls:
             - [setTranslationDomain, ['formGenerator']]
             - [setSonataAnnotationReader, ['@networking_init_cms.annotation.reader']]
@@ -55,9 +52,9 @@ services:
         tags:
             - { name: sonata.admin, manager_type: orm, label: 'form.admin.menu_label', label_translator_strategy: sonata.admin.label.strategy.underscore, persist_filters: true }
 
-    networking_form_generator.helper.twig:
-        class: Networking\FormGeneratorBundle\Twig\Extension\FormHelperExtension
-        calls:
-            - [setcontainer, ['@service_container']]
+    Networking\FormGeneratorBundle\Twig\Extension\FormHelperExtension:
+        arguments:
+            $pageClass: '%networking_init_cms.admin.page.class%'
+            $pageContentClass: '%networking_form_generator.page_content_class%'
         tags:
             - { name: twig.extension }
