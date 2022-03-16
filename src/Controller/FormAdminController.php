@@ -10,7 +10,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\Route;
-use FOS\RestBundle\Controller\Annotations\RouteResource;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use Networking\FormGeneratorBundle\Model\Form;
 use Networking\FormGeneratorBundle\Admin\FormAdmin;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,9 +20,6 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @RouteResource("Form")
- */
 class FormAdminController extends AbstractFOSRestController
 {
     /**
@@ -61,7 +58,8 @@ class FormAdminController extends AbstractFOSRestController
     }
 
     /**
-     * @Route(requirements={"_format"="json|xml"})
+     *
+     * @Rest\Get(path="/{id}", requirements={"_format"="json|xml"}, defaults={"id": "0"})
      *
      * @param Request $request
      * @param $id
@@ -88,7 +86,7 @@ class FormAdminController extends AbstractFOSRestController
     }
 
     /**
-     * @Route(requirements={"_format"="json|xml"})
+     * @Rest\Post(path="/{id}", requirements={"_format"="json|xml"})
      *
      * @param Request $request
      *
@@ -124,7 +122,7 @@ class FormAdminController extends AbstractFOSRestController
     }
 
     /**
-     * @Route(requirements={"_format"="json|xml"})
+     * @Rest\Put(path="/{id}", requirements={"_format"="json|xml"})
      *
      * @param Request $request
      * @param $id
@@ -136,7 +134,16 @@ class FormAdminController extends AbstractFOSRestController
         $view = $this->view([], 200);
         try {
             if ($id) {
+                /** @var BaseForm $form */
                 $form = $this->admin->getObject($id);
+                $request->setMethod('POST');
+                $this->admin->setUniqid($request->get('uniqid'));
+                $this->admin->setSubject($form);
+                $adminForm = $this->admin->getForm();
+                $adminForm->setData($form);
+                $adminForm->handleRequest($request);
+
+                $form = $adminForm->getData();
                 if (!$form) {
                     throw new NotFoundHttpException('Form not found');
                 }
@@ -232,7 +239,7 @@ class FormAdminController extends AbstractFOSRestController
     }
 
     /**
-     * @Route(requirements={"_format"="json|xml"}, defaults={"_format": "json"})
+     * @Rest\Delete(path="/{id}", requirements={"_format"="json|xml"}, defaults={"_format": "json"})
      *
      * @param Request $request
      */
