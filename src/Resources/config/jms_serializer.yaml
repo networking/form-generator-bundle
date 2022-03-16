@@ -1,0 +1,6 @@
+jms_serializer:
+    metadata:
+        directories:
+            NetworkingFormGeneratorBundle:
+                namespace_prefix: "Networking\\FormgeneratorBundle"
+                path: "@NetworkingFormGeneratorBundle/Resources/config/serializer"

@@ -1,0 +1,2 @@
+Networking\FormGeneratorBundle\Model\BaseFormFieldData:
+    exclusion_policy: all

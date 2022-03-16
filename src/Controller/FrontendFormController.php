@@ -37,6 +37,9 @@ class FrontendFormController extends AbstractController
      */
     protected $formHelper;
 
+    /**
+     * @var string
+     */
     protected $emailAddress;
 
     /**

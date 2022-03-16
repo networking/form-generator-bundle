@@ -1,0 +1,26 @@
+Networking\FormGeneratorBundle\Model\BaseForm:
+    properties:
+        id:
+            type: integer
+        form:
+            exclude: true
+        name:
+            type: string
+        infoText:
+            type: string
+        thankYouText:
+            type: string
+        email:
+            type: string
+        action:
+            type: string
+        redirect:
+            type: string
+        online:
+            type: boolean
+        formFields:
+            type: ArrayCollection<Networking\InitCmsBundle\Model\BaseFormField>
+        formData:
+            exclude: true
+        collection:
+            type: array

@@ -1,0 +1,28 @@
+Networking\FormGeneratorBundle\Model\BaseFormField:
+    properties:
+        id:
+            type: integer
+        form:
+            exclude: true
+        name:
+            type: string
+        fieldLabel:
+            type: string
+        type:
+            type: string
+        placeholder:
+            type: string
+        mandatory:
+            type: boolean
+        invalidMessage:
+            type: string
+        emptyMessage:
+            type: string
+        validationType:
+            type: string
+        options:
+            type: array
+        position:
+            type: int
+        mappable:
+            exclude: true
