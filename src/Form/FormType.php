@@ -11,6 +11,7 @@
 namespace Networking\FormGeneratorBundle\Form;
 
 use Gedmo\Sluggable\Util\Urlizer;
+use Networking\FormGeneratorBundle\Model\BaseFormField;
 use Networking\FormGeneratorBundle\Model\Form;
 use Networking\FormGeneratorBundle\Model\FormData;
 use Networking\FormGeneratorBundle\Model\FormField;
@@ -50,7 +51,7 @@ class FormType extends AbstractType
                 );
             }
 
-            $builder->addModelTransformer(new FormDataTransformer($form) );
+            $builder->addModelTransformer(new FormDataTransformer($form, $options['data_class'], $options['form_field_data_class']) );
         }
 
     }
@@ -68,7 +69,8 @@ class FormType extends AbstractType
             'error_bubbling' => true,
             'csrf_protection' => false,
             'error_type' => 'block',
-            'data_class' => FormData::class
+            'data_class' => FormData::class,
+            'form_field_data_class' => FormFieldData::class
 
 
         ]);
@@ -112,7 +114,7 @@ class FormType extends AbstractType
         return $type;
     }
 
-    protected function extractFieldOptions(FormField $field, array $formOptions)
+    protected function extractFieldOptions(BaseFormField $field, array $formOptions)
     {
         $options = $field->getOptions();
 

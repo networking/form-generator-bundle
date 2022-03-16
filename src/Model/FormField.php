@@ -33,4 +33,10 @@ class FormField extends BaseFormField
      * @ORM\JoinColumn(name="form_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $form;
+
+
+    public function __clone()
+    {
+        $this->id = null;
+    }
 }

@@ -17,12 +17,6 @@ trait FormFieldTrait
      */
     protected $form;
 
-
-    public function __clone()
-    {
-        $this->id = null;
-    }
-
     /**
      * Get id.
      *

@@ -22,4 +22,10 @@ class Form extends BaseForm
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    public function __clone()
+    {
+        $this->id = null;
+        parent::__clone();
+    }
 }

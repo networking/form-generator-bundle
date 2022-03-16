@@ -38,10 +38,4 @@ trait FormTrait
     {
         return $this->id;
     }
-
-    public function __clone()
-    {
-        $this->id = null;
-        parent::__clone();
-    }
 }

@@ -11,6 +11,8 @@
 namespace Networking\FormGeneratorBundle\Helper;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Networking\FormGeneratorBundle\Model\BaseForm;
+use Networking\FormGeneratorBundle\Model\BaseFormData;
 use Networking\FormGeneratorBundle\Model\Form;
 use Networking\FormGeneratorBundle\Model\FormData;
 use Twig\Environment;
@@ -50,12 +52,12 @@ class FormHelper
      * Send an plain text email of the data.
      *
      * @param Form $form
-     * @param array $formData
+     * @param BaseFormData $formData
      * @param string $emailFrom
      *
      * @return int
      */
-    public function sendEmail(Form $form, FormData $formData, $emailFrom = '')
+    public function sendEmail(BaseForm $form, BaseFormData $formData, $emailFrom = '')
     {
         //https://stackoverflow.com/questions/45447972/attempted-to-call-an-undefined-method-named-newinstance-of-class-swift-messag
 
@@ -82,7 +84,7 @@ class FormHelper
      * @param array $data
      * @param \Symfony\Component\Form\Form|null $originalForm
      */
-    public function saveToDb(Form $form, FormData $formData, \Symfony\Component\Form\Form $originalForm = null)
+    public function saveToDb(BaseForm $form, BaseFormData $formData)
     {
 
         $em = $this->doctrine->getManager();

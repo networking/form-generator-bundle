@@ -31,11 +31,11 @@ abstract class BaseFormFieldData
     /**
      * Set formData.
      *
-     * @param FormData $formData
+     * @param BaseFormData $formData
      *
      * @return FormFieldData
      */
-    public function setFormData(FormData $formData)
+    public function setFormData(BaseFormData $formData)
     {
         $this->formData = $formData;
 

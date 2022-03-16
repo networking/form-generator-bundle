@@ -3,6 +3,7 @@
 namespace Networking\FormGeneratorBundle\Form;
 
 use Gedmo\Sluggable\Util\Urlizer;
+use Networking\FormGeneratorBundle\Model\BaseForm;
 use Networking\FormGeneratorBundle\Model\Form;
 use Networking\FormGeneratorBundle\Model\FormData;
 use Networking\FormGeneratorBundle\Model\FormFieldData;
@@ -15,8 +16,14 @@ class FormDataTransformer implements DataTransformerInterface
      */
     protected $form;
 
-    public function __construct(Form $form){
+    protected $dataClass;
+
+    protected $formFieldDataClass;
+
+    public function __construct(BaseForm $form, $dataClass, $formFieldDataClass){
         $this->form = $form;
+        $this->dataClass = $dataClass;
+        $this->formFieldDataClass = $formFieldDataClass;
     }
 
     /**
@@ -24,7 +31,8 @@ class FormDataTransformer implements DataTransformerInterface
      * @return FormData
      */
     public function transform($value){
-        $value = new FormData();
+
+        $value = new $this->dataClass;
 
         $value->setForm($this->form);
         foreach ($this->form->getFormFields() as $key =>  $field) {
@@ -36,7 +44,7 @@ class FormDataTransformer implements DataTransformerInterface
             }
             $id = Urlizer::urlize($name);
 
-            $formFieldData = new FormFieldData();
+            $formFieldData = new $this->formFieldDataClass;
             $formFieldData->setLabel($field->getFieldLabel());
 
             $value->addFormField($formFieldData, $id);

@@ -87,7 +87,7 @@ abstract class BaseFormData implements \ArrayAccess
      *
      * @return $this
      */
-    public function setForm(Form $form)
+    public function setForm(BaseForm $form)
     {
         $this->form = $form;
 

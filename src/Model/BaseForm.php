@@ -36,19 +36,19 @@ abstract class BaseForm
     protected $thankYouText;
 
     /**
-     * @var
+     * @var string
      * @ORM\Column(name="email", type="text", nullable=true)
      */
     protected $email;
 
     /**
-     * @var
+     * @var string
      * @ORM\Column(name="action", type="string", length=255)
      */
     protected $action = 'email';
 
     /**
-     * @var
+     * @var string
      * @ORM\Column(name="redirect", type="string", length=255, nullable=true)
      */
     protected $redirect;
