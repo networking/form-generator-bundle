@@ -14,12 +14,17 @@ require.config({
         },
         'ckeditor': {
             exports: 'CKEDITOR'
-        }
+        },
+        "jqueryFormSerializer": ["jquery"],
+        "confirmExit": ["jquery"]
 
     },
     paths: {
+        jquery: "networkinginitcms/js/jquery",
+        confirmExit: "sonataadmin/jquery/jquery.confirmExit",
         app: "networkingformgenerator/assets/js",
         ckeditor: 'fosckeditor/ckeditor',
+        jqueryFormSerializer: "networkingformgenerator/assets/js/lib/jqueryFormSerializer",
         collections: "networkingformgenerator/assets/js/collections",
         data: "networkingformgenerator/assets/js/data",
         models: "networkingformgenerator/assets/js/models",
@@ -27,7 +32,6 @@ require.config({
         templates: "networkingformgenerator/assets/js/templates",
         views: "networkingformgenerator/assets/js/views",
         underscore: "networkingformgenerator/assets/js/lib/underscore",
-        jquery: "networkingformgenerator/assets/js/lib/jquery",
         backbone: "networkingformgenerator/assets/js/lib/backbone",
         globals: "networkingformgenerator/assets/js/lib/globals",
         config: "networkingformgenerator/assets/js/lib/config",

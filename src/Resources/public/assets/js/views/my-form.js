@@ -1,11 +1,13 @@
 define([
-    "jquery", "ckeditor", "underscore", "backbone", "collections/snippets", "views/temp-snippet", "helper/pubsub", "text!templates/app/renderform.html", "text!templates/app/form.html", "text!templates/app/message.html"
+    "jquery", "jqueryFormSerializer", "confirmExit", "ckeditor", "underscore", "backbone", "collections/snippets", "views/temp-snippet", "helper/pubsub", "text!templates/app/renderform.html", "text!templates/app/form.html", "text!templates/app/message.html"
     , "views/tab", "text!data/input_limited.json", "text!data/radio.json", "text!data/select.json", "text!data/buttons.json", "text!templates/app/render.html"
-], function ($, CKEDITOR, _, Backbone, SnippetsCollection, TempSnippetView, PubSub, _renderForm, _form, __message, TabView, inputJSON, radioJSON, selectJSON, buttonsJSON, renderTab) {
+], function ($, jqueryFormSerializer, confirmExit, CKEDITOR, _, Backbone, SnippetsCollection, TempSnippetView, PubSub, _renderForm, _form, __message, TabView, inputJSON, radioJSON, selectJSON, buttonsJSON, renderTab) {
+
     return Backbone.View.extend({
         template: _form, events: {
             'click button#saveForm': 'saveForm',
-        }, initialize: function (options) {
+        },
+        initialize: function (options) {
             this.collection.on("add", this.render, this);
             this.collection.on("remove", this.render, this);
             this.collection.on("change", this.render, this);
@@ -20,14 +22,14 @@ define([
             $('button#saveForm').on('click', (event) => {
                 PubSub.trigger('saveForm', event)
             })
-            var that = this;
-            this.model.on('error', function (model, errors) {
-                that.showErrors(errors);
+            this.model.on('error',  (model, errors) => {
+                this.showErrors(errors);
                 $('button#saveForm').attr('disabled', true);
             });
-            this.model.on('change', function () {
-                if (!that.isModelInvalid()) {
-                    that.hideErrors();
+
+            this.model.on('change',  () =>  {
+                if (!this.isModelInvalid()) {
+                    this.hideErrors();
                 }
             });
 
@@ -42,7 +44,8 @@ define([
             this.model.collection = this.collection;
 
 
-        }, render: function () {
+        },
+        render: function () {
             const confirmExitConfig = jQuery('[data-sonata-admin]').data('sonata-admin');
             //Render Snippet Views
             var that = this;
@@ -59,19 +62,6 @@ define([
 
 
             CKEDITOR.config.customConfig = '../networkingformgenerator/assets/js/lib/ckeditor_config.js';
-
-            $(window).on('beforeunload', function (event) {
-
-                var e = event || window.event, message = confirmExitConfig.translations.CONFIRM_EXIT;
-                if (module.confirm) {
-                    // For old IE and Firefox
-                    if (e) {
-
-                        e.returnValue = message;
-                    }
-                    return message;
-                }
-            });
 
             //Bootstrap tabs from json.
             new TabView({
@@ -94,18 +84,19 @@ define([
             $("#components .tab-pane").first().addClass("active");
             $("#formtabs li").first().addClass("active");
 
-        }, getBottomAbove: function (eventY) {
+        },
+        getBottomAbove: function (eventY) {
             var myFormBits = $(this.$el.find("#target .component"));
             return _.find(myFormBits, function (renderedSnippet) {
                 return ($(renderedSnippet).position().top + $(renderedSnippet).height()) > eventY - 240;
             });
-
-
-        }, handleSnippetDrag: function (mouseEvent, snippetModel) {
+        },
+        handleSnippetDrag: function (mouseEvent, snippetModel) {
             $("body").append(new TempSnippetView({model: snippetModel}).render());
             this.collection.remove(snippetModel);
             PubSub.trigger("newTempPostRender", mouseEvent);
-        }, handleTempMove: function (mouseEvent) {
+        },
+        handleTempMove: function (mouseEvent) {
             this.build = document.getElementById("collection");
             this.buildBCR = this.build.getBoundingClientRect();
             $(".target").removeClass("target");
@@ -119,7 +110,8 @@ define([
                 $(".targetbefore").removeClass("targetbefore");
                 $(".target").removeClass("target");
             }
-        }, handleTempDrop: function (mouseEvent, model) {
+        },
+        handleTempDrop: function (mouseEvent, model) {
             var target = $(".target");
             var targetBefore = $(".targetbefore");
 
@@ -132,7 +124,8 @@ define([
             target.removeClass("target");
             targetBefore.removeClass("targetbefore");
             this.confirm = true;
-        }, saveForm: function (event) {
+        },
+        saveForm: function (event) {
             var btn = $(event.target);
             btn.button('loading');
             var that = this;
@@ -160,29 +153,36 @@ define([
                     btn.button('reset');
                 }
             });
-        }, showErrors: function (errors) {
+        },
+        showErrors: function (errors) {
             _.each(errors, function (error) {
                 let controlGroup = $(`#sonata-ba-field-container-${this.$uniqId}_${error.property_path} .sonata-ba-field`);
                 controlGroup.addClass('has-error')
                 controlGroup.find('.sonata-ba-field-help').text(error.message);
             }, this);
-        }, hideErrors: function () {
+        },
+        hideErrors: function () {
             $('.sonata-ba-field').removeClass('has-error');
             $('.sonata-ba-field-help').text('');
             $('button#saveForm').attr('disabled', false);
-        }, isModelInvalid: function () {
+        },
+        isModelInvalid: function () {
             return this.model.validate(this.getModelViewAttr());
-        }, getModelViewAttr: function () {
-            return {
-                name: $(`input#${this.$uniqId}_name`).val(),
-                infoText: CKEDITOR.instances[`${this.$uniqId}_infoText`].getData(),
-                thankYouText: CKEDITOR.instances[`${this.$uniqId}_thankYouText`].getData(),
-                email: $(`input#${this.$uniqId}_email`).val(),
-                action: $(`select#${this.$uniqId}_action`).val(),
-                redirect: $(`input#${this.$uniqId}_redirect`).val(),
-                collection: this.collection
-            };
-        }, createMessageBox: function (level, title, message) {
+        },
+        getModelViewAttr: function () {
+
+            let data = $('form').serializeJSON();
+            data[this.$uniqId].infoText = CKEDITOR.instances[`${this.$uniqId}_infoText`].getData()
+            data[this.$uniqId].thankYouText = CKEDITOR.instances[`${this.$uniqId}_thankYouText`].getData()
+
+            data.collection = this.collection
+            data.name = data[this.$uniqId].name
+            data.email = data[this.$uniqId].email
+            data.action = data[this.$uniqId].action
+            data.uniqid = this.$uniqId
+            return data
+        },
+        createMessageBox: function (level, title, message) {
             document.getElementById('messageBox').innerHTML = _.template(__message, {
                 level: level,
                 title: title,

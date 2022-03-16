@@ -5,33 +5,6 @@
     <link href="{{ asset('bundles/networkingformgenerator/assets/css/custom.css') }}" rel="stylesheet">
 {% endblock %}
 
-{% block javascripts %}
-   <script type="text/javascript" src="{{ asset('bundles/networkinginitcms/js/jquery.js') }}"></script>
-   <script type="text/javascript" src="{{ asset('bundles/networkinginitcms/js/bootstrap.js') }}"></script>
-   {% block meta_config %}
-       <meta data-sonata-admin='{{ {
-           config: {
-               CONFIRM_EXIT: sonata_admin.adminPool.getOption('confirm_exit'),
-               USE_SELECT2:sonata_admin.adminPool.getOption('use_select2'),
-               USE_ICHECK: false,
-               USE_STICKYFORMS: sonata_admin.adminPool.getOption('use_stickyforms'),
-           },
-           translations: {
-               CONFIRM_EXIT: 'confirm_exit'|trans({}, 'SonataAdminBundle'),
-           },
-       }|json_encode()|raw }}'
-       >
-   {% endblock %}
-   <script>
-       // http://getbootstrap.com/getting-started/#support-ie10-width
-       if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
-           var msViewportStyle = document.createElement('style');
-           msViewportStyle.appendChild(document.createTextNode('@-ms-viewport{width:auto!important}'));
-           document.querySelector('head').appendChild(msViewportStyle);
-       }
-   </script>
-{% endblock %}
-
 {% block body %}
     {% block init_cms_top_nav %}
         {% include '@NetworkingInitCms/Navbar/admin_navbar.html.twig' %}

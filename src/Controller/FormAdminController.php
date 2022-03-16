@@ -78,7 +78,13 @@ class FormAdminController extends AbstractFOSRestController
 
             $form->setCollection();
 
-            $view = $this->view($form);
+            $view = $this->view([
+                'name' => $form->getName(),
+                'id' => $form->getId(),
+                'collection' => $form->getCollection(),
+                'action' => $form->getAction(),
+                'email' => $form->getAction()
+            ]);
             $view->setFormat('json');
 
             return $this->handleView($view);
@@ -179,14 +185,9 @@ class FormAdminController extends AbstractFOSRestController
      */
     protected function setFields(Request $request, BaseForm $form)
     {
-        $form->setName($request->get('name'));
-        $form->setInfoText($request->get('infoText'));
-        $form->setThankYouText($request->get('thankYouText'));
-        $form->setEmail($request->get('email'));
-        $form->setAction($request->get('action'));
-        $form->setRedirect($request->get('redirect'));
 
-        $collection = $request->get('collection');
+        $collection = $request->request->get('collection');
+
 
         $formFieldClass = $this->getParameter('networking_form_generator.form_field_class');
 
