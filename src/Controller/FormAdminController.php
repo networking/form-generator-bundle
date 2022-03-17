@@ -49,13 +49,6 @@ class FormAdminController extends AbstractFOSRestController
         $this->validator = $validator;
     }
 
-    /**
-     * @Route(requirements={"_format"="json|xml"})
-     */
-    public function cgetAction()
-    {
-        throw new NotFoundHttpException('Action should not be used');
-    }
 
     /**
      *
@@ -92,7 +85,7 @@ class FormAdminController extends AbstractFOSRestController
     }
 
     /**
-     * @Rest\Post(path="/{id}", requirements={"_format"="json|xml"})
+     * @Rest\Post(requirements={"_format"="json|xml"})
      *
      * @param Request $request
      *
@@ -104,18 +97,23 @@ class FormAdminController extends AbstractFOSRestController
         try {
             /** @var FormAdmin $admin */
             $form = $this->admin->getNewInstance();
-            $form = $this->setFields($request, $form);
 
-            $errors = $this->validator->validate($form);
+            $this->admin->setUniqid($request->get('uniqid'));
+            $this->admin->setSubject($form);
+            $adminForm = $this->admin->getForm();
+            $adminForm->setData($form);
+            $adminForm->handleRequest($request);
 
-            if (count($errors) > 0) {
-                $view = $this->view($errors, 500);
-            }else{
+            if($adminForm->isValid()){
+                $form = $this->setFields($request, $form);
                 $this->admin->create($form);
                 $view->setData(['id' => $form->getId(), 'message' => $this->admin->trans(
                     'form_created',
                     [], 'formGenerator'
                 )]);
+            }else{
+                $errors = $this->validator->validate($form);
+                $view = $this->view($errors, 500);
             }
 
         } catch (\Exception $e) {
