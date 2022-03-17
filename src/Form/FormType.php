@@ -159,9 +159,11 @@ class FormType extends AbstractType
                 $fieldOptions['choices'] = $field->getValueMap();
                 $fieldOptions['expanded'] = true;
                 $fieldOptions['multiple'] = true;
+                $fieldOptions['required'] = true;
                 if ($field->getType() == 'Multiple Checkboxes Inline') {
                     $fieldOptions['widget_type'] = 'inline';
                 }
+                $fieldOptions['constraints'] = new NotBlank();
                 break;
             case 'Multiple Radios':
             case 'Multiple Radios Inline':

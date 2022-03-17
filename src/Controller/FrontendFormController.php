@@ -70,7 +70,13 @@ class FrontendFormController extends AbstractController
             throw new NotFoundHttpException(sprintf('Form with id %s could not be found', $id));
         }
 
-        $formType = $this->createForm(FormType::class, [], ['form' => $form]);
+        $formType = $this->createForm(
+            FormType::class, [],
+            [
+                'form' => $form,
+                'data_class' => $this->getParameter('networking_form_generator.form_data_class'),
+                'form_field_data_class' => $this->getParameter('networking_form_generator.form_field_data_class')
+            ]);
 
         $this->clearSessionVariables();
         $formType->handleRequest($request);

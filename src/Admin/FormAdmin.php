@@ -127,6 +127,7 @@ class FormAdmin extends BaseAdmin
                     'DB' => 'db',
                     'Email & DB' => 'email_db',
                 ],
+                'choice_translation_domain' => false
             ])
             ->add('redirect', TextType::class, [
                 'required' => false,

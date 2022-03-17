@@ -5,6 +5,7 @@ namespace Networking\FormGeneratorBundle\DependencyInjection;
 use Networking\FormGeneratorBundle\Model\Form;
 use Networking\FormGeneratorBundle\Model\FormData;
 use Networking\FormGeneratorBundle\Model\FormField;
+use Networking\FormGeneratorBundle\Model\FormFieldData;
 use Networking\FormGeneratorBundle\Model\FormPageContent;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -28,8 +29,9 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('from_email')->isRequired()->cannotBeEmpty()->end()
                 ->scalarNode('form_class')->defaultValue(Form::class)->isRequired()->cannotBeEmpty()->end()
-                ->scalarNode('form_field_class')->defaultValue(FormField::class)->isRequired()->cannotBeEmpty()->end()
                 ->scalarNode('form_data_class')->defaultValue(FormData::class)->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('form_field_class')->defaultValue(FormField::class)->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('form_field_data_class')->defaultValue(FormFieldData::class)->isRequired()->cannotBeEmpty()->end()
                 ->scalarNode('page_content_class')->defaultValue(FormPageContent::class)->isRequired()->cannotBeEmpty()->end()
             ->end();
 
