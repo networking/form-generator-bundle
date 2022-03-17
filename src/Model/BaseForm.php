@@ -19,6 +19,7 @@ abstract class BaseForm
 
     /**
      * @var string
+     * @Assert\NotBlank()
      * @ORM\Column(name="name", type="string", length=255)
      */
     protected $name;
@@ -43,6 +44,7 @@ abstract class BaseForm
 
     /**
      * @var string
+     * @Assert\NotBlank()
      * @ORM\Column(name="action", type="string", length=255)
      */
     protected $action = 'email';
