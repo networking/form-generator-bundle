@@ -94,7 +94,7 @@
                 return {
                     backToListUri: '{{ admin.generateUrl('list') }}',
                     {% if admin.subject.id %}id: {{ admin.subject.id }},{% endif %}
-                    url: '{{ url('networking_formgenerator_formadmin_get') }}',
+                    url: '{{ url('networking_formgenerator_formadmin_post') }}',
                     locale: '{{ app.request.locale|slice(0, 2) }}'
 
                 };
