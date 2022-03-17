@@ -1,7 +1,7 @@
 define([
-    "jquery", "jqueryFormSerializer", "confirmExit", "ckeditor", "underscore", "backbone", "collections/snippets", "views/temp-snippet", "helper/pubsub", "text!templates/app/renderform.html", "text!templates/app/form.html", "text!templates/app/message.html"
-    , "views/tab", "text!data/input_limited.json", "text!data/radio.json", "text!data/select.json", "text!data/buttons.json", "text!templates/app/render.html"
-], function ($, jqueryFormSerializer, confirmExit, CKEDITOR, _, Backbone, SnippetsCollection, TempSnippetView, PubSub, _renderForm, _form, __message, TabView, inputJSON, radioJSON, selectJSON, buttonsJSON, renderTab) {
+    "jquery", "jqueryFormSerializer", "confirmExit", "ckeditor", "underscore", "backbone", "collections/snippets", "views/temp-snippet", "helper/pubsub", "text!templates/app/form.html", "text!templates/app/message.html"
+    , "views/tab", "text!data/input_limited.json", "text!data/radio.json", "text!data/select.json", "text!data/buttons.json"
+], function ($, jqueryFormSerializer, confirmExit, CKEDITOR, _, Backbone, SnippetsCollection, TempSnippetView, PubSub, _form, __message, TabView, inputJSON, radioJSON, selectJSON, buttonsJSON) {
 
     return Backbone.View.extend({
         template: _form, events: {
@@ -22,31 +22,25 @@ define([
             $('button#saveForm').on('click', (event) => {
                 PubSub.trigger('saveForm', event)
             })
-            this.model.on('error',  (model, errors) => {
+            this.model.on('error', (model, errors) => {
                 this.showErrors(errors);
                 $('button#saveForm').attr('disabled', true);
             });
 
-            this.model.on('change',  () =>  {
+            this.model.on('change', () => {
                 if (!this.isModelInvalid()) {
                     this.hideErrors();
                 }
             });
-
-            this.confirm = false;
-            this.renderForm = _.template(_renderForm);
             this.template = _.template(this.template);
             this.backToListUri = options.backToListUri;
             this.render();
-
-
             this.model.view = this;
             this.model.collection = this.collection;
 
 
         },
         render: function () {
-            const confirmExitConfig = jQuery('[data-sonata-admin]').data('sonata-admin');
             //Render Snippet Views
             var that = this;
             this.$el.html(this.template({model: that.model.toJSON(), backToListUri: this.backToListUri}));
@@ -73,14 +67,7 @@ define([
             new TabView({
                 title: "Select", collection: new SnippetsCollection(JSON.parse(selectJSON))
             });
-            new TabView({
-                title: "Rendered", content: renderTab
-            });
-            $("#render").val(that.renderForm({
-                text: _.map(this.collection.renderAllClean(), function (e) {
-                    return e.html()
-                }).join("\n")
-            }));
+
             $("#components .tab-pane").first().addClass("active");
             $("#formtabs li").first().addClass("active");
 
@@ -123,7 +110,6 @@ define([
 
             target.removeClass("target");
             targetBefore.removeClass("targetbefore");
-            this.confirm = true;
         },
         saveForm: function (event) {
             var btn = $(event.target);
@@ -134,7 +120,6 @@ define([
                 success: function (model, xhr) {
                     that.createMessageBox('success', polyglot.t('success'), xhr.message);
                     btn.button('reset');
-                    module.confirm = false;
                     $('html, body').animate({
                         scrollTop: $(".initcms").offset().top
                     }, 2000);
