@@ -123,6 +123,10 @@ define([
                     $('html, body').animate({
                         scrollTop: $(".initcms").offset().top
                     }, 2000);
+
+                    $('.sonata-ba-form form').each(function() {
+                        $(this).confirmExit();
+                    });
                 },
                 error: function (model, xhr) {
                     var errors = [];
