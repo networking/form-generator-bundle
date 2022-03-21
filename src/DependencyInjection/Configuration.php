@@ -28,11 +28,11 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('from_email')->isRequired()->cannotBeEmpty()->end()
-                ->scalarNode('form_class')->defaultValue(Form::class)->isRequired()->cannotBeEmpty()->end()
-                ->scalarNode('form_data_class')->defaultValue(FormData::class)->isRequired()->cannotBeEmpty()->end()
-                ->scalarNode('form_field_class')->defaultValue(FormField::class)->isRequired()->cannotBeEmpty()->end()
-                ->scalarNode('form_field_data_class')->defaultValue(FormFieldData::class)->isRequired()->cannotBeEmpty()->end()
-                ->scalarNode('page_content_class')->defaultValue(FormPageContent::class)->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('form_class')->defaultValue(Form::class)->end()
+                ->scalarNode('form_data_class')->defaultValue(FormData::class)->end()
+                ->scalarNode('form_field_class')->defaultValue(FormField::class)->end()
+                ->scalarNode('form_field_data_class')->defaultValue(FormFieldData::class)->end()
+                ->scalarNode('page_content_class')->defaultValue(FormPageContent::class)->end()
             ->end();
 
         return $treeBuilder;
