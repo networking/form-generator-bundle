@@ -4,6 +4,7 @@ namespace Networking\FormGeneratorBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\MappedSuperclass
@@ -41,6 +42,7 @@ abstract class BaseFormField
     /**
      * @var array
      *
+     * @Serializer\Type("array")
      * @ORM\Column(name="options", type="json")
      */
     protected $options;
@@ -92,6 +94,7 @@ abstract class BaseFormField
      * Mapping of choice fields to there option, value lists.
      *
      * @var array
+     * @Serializer\Exclude(if="true")
      */
     protected $mappable = [
         'Select Basic' => ['options' => 'options', 'values' => 'values'],

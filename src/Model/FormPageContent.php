@@ -34,7 +34,7 @@ class FormPageContent implements ContentInterface
     private $id;
 
     /**
-     * @var BaseForm
+     * @var Form
      * @ORM\ManyToOne(targetEntity="Networking\FormGeneratorBundle\Model\Form",cascade={"merge"})
      * @ORM\JoinColumn(name="form_id", referencedColumnName="id", onDelete="CASCADE")
      */

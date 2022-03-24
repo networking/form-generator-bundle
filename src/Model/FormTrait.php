@@ -4,6 +4,7 @@ namespace Networking\FormGeneratorBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 trait FormTrait
 {
@@ -17,13 +18,15 @@ trait FormTrait
     protected $id;
 
     /**
-     * @var ArrayCollection;
+     * @var FormField[];
+     * @Serializer\Type(ArrayCollection<Networking\FormGeneratorBundle\Model\FormField>)
      * @ORM\OneToMany(targetEntity="Networking\FormGeneratorBundle\Model\FormField",cascade={"persist", "remove"}, mappedBy="form", orphanRemoval=true)
      */
     protected $formFields;
 
     /**
-     * @var ArrayCollection;
+     * @var FormData[];
+     * @Serializer\Exclude(if="true")
      * @ORM\OneToMany(targetEntity="Networking\FormGeneratorBundle\Model\FormData",cascade={ "remove"}, mappedBy="form", orphanRemoval=true)
      * @ORM\OrderBy({"createdAt" = "DESC"})
      */

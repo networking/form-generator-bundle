@@ -5,6 +5,7 @@ namespace Networking\FormGeneratorBundle\Model;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Sluggable\Util\Urlizer;
+use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -56,7 +57,7 @@ abstract class BaseForm
     protected $redirect;
 
     /**
-     * @var boolean
+     * @var bool
      * @ORM\Column(name="online", type="boolean", nullable=true)
      */
     protected $online = true;
@@ -73,6 +74,7 @@ abstract class BaseForm
 
     /**
      * @var array
+     * @Serializer\Exclude(if="true")
      */
     protected $collection = [];
 
