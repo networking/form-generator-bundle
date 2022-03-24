@@ -20,7 +20,7 @@ require.config({
 
     },
     paths: {
-        jquery: "networkinginitcms/js/jquery",
+        jquery: "networkinginitcms/vendor/jquery/dist/jquery.min",
         confirmExit: "sonataadmin/jquery/jquery.confirmExit",
         app: "networkingformgenerator/assets/js",
         ckeditor: 'fosckeditor/ckeditor',
