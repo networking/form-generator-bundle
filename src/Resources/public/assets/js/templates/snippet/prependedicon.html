@@ -3,7 +3,7 @@
     <label class="col-md-4 control-label" for="<%= id %>"><%= polyglot.t(label, { _: label}) %><% if(required) {%> * <% } %></label>
     <div class="<% if ( inputsize.length <= 0){ %>  col-md-4 <%}else { %> <%= inputsize %><%}%>" >
     <div class="input-group">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-<%= prepend %>"></i> </span>
+        <span class="input-group-addon"><i class="fa fa-<%= prepend %>"></i> </span>
         <input  name="<%= id %>" class="form-control" placeholder="<%= placeholder %>" type="text"<% if(required) {%> required <% } %> />
     </div>
     <% if (helptext.length > 0) { %><p class="help-block"><%= helptext %></p><% } %>

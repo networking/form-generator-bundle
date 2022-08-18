@@ -309,7 +309,7 @@
             "prepend": {
                 "label": "Icon",
                 "type": "input",
-                "value": "earphone"
+                "value": "phone"
             },
             "placeholder": {
                 "label": "Placeholder",
