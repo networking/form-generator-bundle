@@ -168,6 +168,7 @@ class FormAdminController extends AbstractFOSRestController
         /** @var BaseForm $data */
         $data = $adminForm->getData();
         if ($adminForm->isSubmitted() && $adminForm->isValid()) {
+           
             if ($action === 'update') {
                 $data->removeFields();
                 $data = $this->setFields($request, $data);
@@ -199,6 +200,7 @@ class FormAdminController extends AbstractFOSRestController
         $collection = $request->request->get('collection');
 
 
+
         $formFieldClass = $this->getParameter('networking_form_generator.form_field_class');
 
 
@@ -212,11 +214,11 @@ class FormAdminController extends AbstractFOSRestController
                     case 'Multiple Checkboxes':
                     case 'Multiple Checkboxes Inline':
                     case 'Multiple Radios Inline':
-                        $field['fields']['name']['value'] = $field['fields']['name']['value'] ?: uniqid(
+                        $field['fields']['id']['value'] = $field['fields']['id']['value'] ?: uniqid(
                             substr($field['fields']['label']['value'], 0, 3)
                         );
+                        $formField->setName($field['fields']['id']['value']);
                         $formField->setFieldLabel($field['fields']['label']['value']);
-                        $formField->setName($field['fields']['name']['value']);
                         $formField->setType($field['title']);
                         $formField->setOptions($field['fields']);
                         $form->addFormField($formField);
