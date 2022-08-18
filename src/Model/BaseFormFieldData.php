@@ -24,7 +24,7 @@ abstract class BaseFormFieldData
     /**
      * @var string
      *
-     * @ORM\Column(name="value", type="json")
+     * @ORM\Column(name="value", type="json", nullable=true)
      */
     protected $value;
 
