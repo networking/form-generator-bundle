@@ -25,6 +25,7 @@ class NetworkingFormGeneratorExtension extends Extension
         $container->setParameter('networking_form_generator.form_class', $config['form_class']);
         $container->setParameter('networking_form_generator.form_field_class', $config['form_field_class']);
         $container->setParameter('networking_form_generator.form_data_class', $config['form_data_class']);
+        $container->setParameter('networking_form_generator.form_field_data_class', $config['form_field_data_class']);
         $container->setParameter('networking_form_generator.page_content_class', $config['page_content_class']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
