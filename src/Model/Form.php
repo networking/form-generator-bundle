@@ -23,6 +23,21 @@ class Form extends BaseForm
      */
     protected $id;
 
+    /**
+     * @var FormField[];
+     * @Serializer\Type("ArrayCollection<Networking\FormGeneratorBundle\Model\FormField>")
+     * @ORM\OneToMany(targetEntity="Networking\FormGeneratorBundle\Model\FormField",cascade={"persist", "remove"}, mappedBy="form", orphanRemoval=true)
+     */
+    protected $formFields;
+
+    /**
+     * @var FormData[];
+     * @Serializer\Exclude(if="true")
+     * @ORM\OneToMany(targetEntity="Networking\FormGeneratorBundle\Model\FormData",cascade={ "remove"}, mappedBy="form", orphanRemoval=true)
+     * @ORM\OrderBy({"createdAt" = "DESC"})
+     */
+    protected $formData;
+
 
     public function __clone()
     {
