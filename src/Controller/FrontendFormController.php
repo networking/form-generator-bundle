@@ -108,7 +108,7 @@ class FrontendFormController extends AbstractController
 
         $request->getSession()->set('no_cache', true);
 
-        return new RedirectResponse($redirect);
+        return new RedirectResponse($redirect . '#formgenerator_form_'.$form->getId());
     }
 
     /**

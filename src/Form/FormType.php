@@ -11,6 +11,7 @@
 namespace Networking\FormGeneratorBundle\Form;
 
 use Gedmo\Sluggable\Util\Urlizer;
+use Networking\FormGeneratorBundle\Model\BaseForm;
 use Networking\FormGeneratorBundle\Model\BaseFormField;
 use Networking\FormGeneratorBundle\Model\Form;
 use Networking\FormGeneratorBundle\Model\FormData;
@@ -26,6 +27,7 @@ use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -54,15 +56,25 @@ class FormType extends AbstractType
             $builder->addModelTransformer(new FormDataTransformer($form, $options['data_class'], $options['form_field_data_class']) );
         }
 
+
+
     }
 
 
     public function configureOptions(OptionsResolver $resolver)
     {
+
+        $setIdAttr = function(Options $options){
+              if($options['form'] and $options['form'] instanceof BaseForm){
+                  return ['id' => 'formgenerator_form_'.$options['form']->getId()];
+              }
+              return [];
+        };
         $resolver->setRequired([
             'form',
         ]);
         $resolver->setDefaults([
+            'attr' => $setIdAttr,
             'horizontal' => true,
             'show_legend' => false,
             'render_fieldset' => false,
