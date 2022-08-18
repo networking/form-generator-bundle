@@ -203,7 +203,7 @@ abstract class BaseForm
 
     public function removeFields()
     {
-        foreach ($this->formFields as $field) {
+        foreach ($this->getFormFields() as $field) {
             $this->formFields->removeElement($field);
         }
     }
@@ -270,7 +270,7 @@ abstract class BaseForm
      */
     public function getFormFields()
     {
-        return $this->formFields;
+        return $this->formFields??[];
     }
 
     /**
