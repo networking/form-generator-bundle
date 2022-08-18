@@ -1,3 +1,4 @@
 {% for formFieldData in formData.formFields %}
 {{ formFieldData.label }}: {% if formFieldData.value is iterable %}{{ formFieldData.value |join(', ') }}{% else %}{{ formFieldData.value  }}{% endif %}
+
 {% endfor %}
