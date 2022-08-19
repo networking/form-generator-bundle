@@ -123,3 +123,7 @@ form .popover form {
 input.form-control, select.form-control{
     width: 100%;
 }
+
+textarea.form-control{
+    width: 100%;
+}

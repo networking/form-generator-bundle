@@ -34,6 +34,15 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class FormType extends AbstractType
 {
 
+    const FRONTEND_INPUT_SIZES = [
+        'xs' => 'col-2',
+        's' => 'col-4',
+        'm' => 'col-6',
+        'l' => 'col-8',
+        'xl' => 'col-10',
+        'xxl' => 'col-12',
+    ];
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -82,7 +91,8 @@ class FormType extends AbstractType
             'csrf_protection' => false,
             'error_type' => 'block',
             'data_class' => FormData::class,
-            'form_field_data_class' => FormFieldData::class
+            'form_field_data_class' => FormFieldData::class,
+            'frontend_css_input_sizes' => self::FRONTEND_INPUT_SIZES
 
 
         ]);
@@ -231,6 +241,28 @@ class FormType extends AbstractType
         if (!$fieldOptions['label_render']) {
             $fieldOptions['horizontal_label_offset_class'] = ' ';
             $fieldOptions['horizontal_input_wrapper_class'] = 'col-md-12';
+        }
+
+        if(array_key_exists('inputsize', $options) && array_key_exists('value', $options['inputsize'])){
+
+            $size = '';
+            foreach ($options['inputsize']['value'] as $option){
+
+                if(!$option['selected']){
+                    continue;
+                }
+
+
+                if(!array_key_exists('css_config', $option)){
+                    continue;
+                }
+
+
+
+                if(array_key_exists($option['css_config'], $formOptions['frontend_css_input_sizes'])){
+                    $fieldOptions['attr']['data-widget-size'] = $formOptions['frontend_css_input_sizes'][$option['css_config']];
+                }
+            }
         }
 
         $fieldOptions['error_type'] = $formOptions['error_type'];

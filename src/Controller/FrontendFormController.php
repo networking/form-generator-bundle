@@ -69,13 +69,13 @@ class FrontendFormController extends AbstractController
         if (!$form || !$form->isOnline()) {
             throw new NotFoundHttpException(sprintf('Form with id %s could not be found', $id));
         }
-
         $formType = $this->createForm(
             FormType::class, [],
             [
                 'form' => $form,
                 'data_class' => $this->getParameter('networking_form_generator.form_data_class'),
-                'form_field_data_class' => $this->getParameter('networking_form_generator.form_field_data_class')
+                'form_field_data_class' => $this->getParameter('networking_form_generator.form_field_data_class'),
+                'frontend_css_input_sizes' => $this->getParameter('networking_form_generator.frontend_css_input_sizes')
             ]);
 
         $this->clearSessionVariables();
@@ -128,7 +128,14 @@ class FrontendFormController extends AbstractController
             $actionUrl = $this->generateUrl('networking_form_view', ['id' => $form->getId()]);
 
         }
-        $options = array_merge(['action' => $actionUrl, 'form' => $form], $options);
+        $options =  [
+                'form' => $form,
+                'action' => $actionUrl,
+                'data_class' => $this->getParameter('networking_form_generator.form_data_class'),
+                'form_field_data_class' => $this->getParameter('networking_form_generator.form_field_data_class'),
+                'frontend_css_input_sizes' => $this->getParameter('networking_form_generator.frontend_css_input_sizes')
+            ];
+        $options = array_merge($options, $options);
         $formType = $this->createForm(FormType::class, [], $options);
 
         $formData = $this->getSubmittedFormData();

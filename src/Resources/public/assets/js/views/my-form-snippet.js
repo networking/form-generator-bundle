@@ -96,7 +96,7 @@ define([
                             break;
                         case "select":
                             var valarr = _.map($e.find("option"), function(e){
-                                return {value: e.value, selected: e.selected, label:$(e).text()};
+                                return {value: e.value, selected: e.selected, label:$(e).text(), css_config: $(e).data('css-config')};
                             });
                             boundContext.model.setField(name, valarr);
                             break;

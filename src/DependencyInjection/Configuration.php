@@ -2,6 +2,7 @@
 
 namespace Networking\FormGeneratorBundle\DependencyInjection;
 
+use Networking\FormGeneratorBundle\Form\FormType;
 use Networking\FormGeneratorBundle\Model\Form;
 use Networking\FormGeneratorBundle\Model\FormData;
 use Networking\FormGeneratorBundle\Model\FormField;
@@ -33,6 +34,17 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('form_field_class')->defaultValue(FormField::class)->end()
                 ->scalarNode('form_field_data_class')->defaultValue(FormFieldData::class)->end()
                 ->scalarNode('page_content_class')->defaultValue(FormPageContent::class)->end()
+                ->arrayNode('frontend_css_input_sizes')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                    ->scalarNode('xs')->end()
+                    ->scalarNode('x')->end()
+                    ->scalarNode('m')->end()
+                    ->scalarNode('l')->end()
+                    ->scalarNode('xl')->end()
+                    ->scalarNode('xxl')->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;

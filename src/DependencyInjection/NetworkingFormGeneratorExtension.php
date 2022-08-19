@@ -2,6 +2,7 @@
 
 namespace Networking\FormGeneratorBundle\DependencyInjection;
 
+use Networking\FormGeneratorBundle\Form\FormType;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -27,6 +28,9 @@ class NetworkingFormGeneratorExtension extends Extension
         $container->setParameter('networking_form_generator.form_data_class', $config['form_data_class']);
         $container->setParameter('networking_form_generator.form_field_data_class', $config['form_field_data_class']);
         $container->setParameter('networking_form_generator.page_content_class', $config['page_content_class']);
+        $cssInputSizes = array_merge(FormType::FRONTEND_INPUT_SIZES, $config['frontend_css_input_sizes']);
+
+        $container->setParameter('networking_form_generator.frontend_css_input_sizes', $cssInputSizes);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yaml');

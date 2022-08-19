@@ -57,33 +57,45 @@
                 "type": "select",
                 "value": [
                     {
-                        "value": "col-md-1",
-                        "label": "Mini",
-                        "selected": false
+                        "value": "",
+                        "label": "Default",
+                        "css_config": "default",
+                        "selected": true
                     },
                     {
                         "value": "col-md-2",
-                        "label": "Small",
+                        "label": "Mini",
+                        "css_config": "xs",
                         "selected": false
                     },
                     {
                         "value": "col-md-4",
-                        "label": "Medium",
-                        "selected": true
-                    },
-                    {
-                        "value": "col-md-5",
-                        "label": "Large",
+                        "label": "Small",
+                        "css_config": "s",
                         "selected": false
                     },
                     {
                         "value": "col-md-6",
-                        "label": "Xlarge",
+                        "label": "Medium",
+                        "css_config": "m",
                         "selected": false
                     },
                     {
                         "value": "col-md-8",
+                        "label": "Large",
+                        "css_config": "l",
+                        "selected": false
+                    },
+                    {
+                        "value": "col-md-10",
+                        "label": "Xlarge",
+                        "css_config": "xl",
+                        "selected": false
+                    },
+                    {
+                        "value": "col-md-12",
                         "label": "Xxlarge",
+                        "css_config": "xxl",
                         "selected": false
                     }
                 ]
@@ -123,33 +135,44 @@
                 "type": "select",
                 "value": [
                     {
-                        "value": "col-md-1",
-                        "label": "Mini",
-                        "selected": false
+                        "value": "",
+                        "label": "Default",
+                        "selected": true
                     },
                     {
                         "value": "col-md-2",
-                        "label": "Small",
+                        "label": "Mini",
+                        "css_config": "xs",
                         "selected": false
                     },
                     {
                         "value": "col-md-4",
-                        "label": "Medium",
-                        "selected": true
-                    },
-                    {
-                        "value": "col-md-5",
-                        "label": "Large",
+                        "label": "Small",
+                        "css_config": "s",
                         "selected": false
                     },
                     {
                         "value": "col-md-6",
-                        "label": "Xlarge",
+                        "label": "Medium",
+                        "css_config": "m",
                         "selected": false
                     },
                     {
                         "value": "col-md-8",
+                        "label": "Large",
+                        "css_config": "l",
+                        "selected": false
+                    },
+                    {
+                        "value": "col-md-10",
+                        "label": "Xlarge",
+                        "css_config": "xl",
+                        "selected": false
+                    },
+                    {
+                        "value": "col-md-12",
                         "label": "Xxlarge",
+                        "css_config": "xxl",
                         "selected": false
                     }
                 ]
@@ -189,33 +212,44 @@
                 "type": "select",
                 "value": [
                     {
-                        "value": "col-md-1",
-                        "label": "Mini",
-                        "selected": false
+                        "value": "",
+                        "label": "Default",
+                        "selected": true
                     },
                     {
                         "value": "col-md-2",
-                        "label": "Small",
+                        "label": "Mini",
+                        "css_config": "xs",
                         "selected": false
                     },
                     {
                         "value": "col-md-4",
-                        "label": "Medium",
-                        "selected": true
-                    },
-                    {
-                        "value": "col-md-5",
-                        "label": "Large",
+                        "label": "Small",
+                        "css_config": "s",
                         "selected": false
                     },
                     {
                         "value": "col-md-6",
-                        "label": "Xlarge",
+                        "label": "Medium",
+                        "css_config": "m",
                         "selected": false
                     },
                     {
                         "value": "col-md-8",
+                        "label": "Large",
+                        "css_config": "l",
+                        "selected": false
+                    },
+                    {
+                        "value": "col-md-10",
+                        "label": "Xlarge",
+                        "css_config": "xl",
+                        "selected": false
+                    },
+                    {
+                        "value": "col-md-12",
                         "label": "Xxlarge",
+                        "css_config": "xxl",
                         "selected": false
                     }
                 ]
@@ -260,33 +294,44 @@
                 "type": "select",
                 "value": [
                     {
-                        "value": "col-md-1",
-                        "label": "Mini",
-                        "selected": false
+                        "value": "",
+                        "label": "Default",
+                        "selected": true
                     },
                     {
                         "value": "col-md-2",
-                        "label": "Small",
+                        "label": "Mini",
+                        "css_config": "xs",
                         "selected": false
                     },
                     {
                         "value": "col-md-4",
-                        "label": "Medium",
-                        "selected": true
-                    },
-                    {
-                        "value": "col-md-5",
-                        "label": "Large",
+                        "label": "Small",
+                        "css_config": "s",
                         "selected": false
                     },
                     {
                         "value": "col-md-6",
-                        "label": "Xlarge",
+                        "label": "Medium",
+                        "css_config": "m",
                         "selected": false
                     },
                     {
                         "value": "col-md-8",
+                        "label": "Large",
+                        "css_config": "l",
+                        "selected": false
+                    },
+                    {
+                        "value": "col-md-10",
+                        "label": "Xlarge",
+                        "css_config": "xl",
+                        "selected": false
+                    },
+                    {
+                        "value": "col-md-12",
                         "label": "Xxlarge",
+                        "css_config": "xxl",
                         "selected": false
                     }
                 ]
@@ -331,33 +376,44 @@
                 "type": "select",
                 "value": [
                     {
-                        "value": "col-md-1",
-                        "label": "Mini",
-                        "selected": false
+                        "value": "",
+                        "label": "Default",
+                        "selected": true
                     },
                     {
                         "value": "col-md-2",
-                        "label": "Small",
+                        "label": "Mini",
+                        "css_config": "xs",
                         "selected": false
                     },
                     {
                         "value": "col-md-4",
-                        "label": "Medium",
-                        "selected": true
-                    },
-                    {
-                        "value": "col-md-5",
-                        "label": "Large",
+                        "label": "Small",
+                        "css_config": "s",
                         "selected": false
                     },
                     {
                         "value": "col-md-6",
-                        "label": "Xlarge",
+                        "label": "Medium",
+                        "css_config": "m",
                         "selected": false
                     },
                     {
                         "value": "col-md-8",
+                        "label": "Large",
+                        "css_config": "l",
+                        "selected": false
+                    },
+                    {
+                        "value": "col-md-10",
+                        "label": "Xlarge",
+                        "css_config": "xl",
+                        "selected": false
+                    },
+                    {
+                        "value": "col-md-12",
                         "label": "Xxlarge",
+                        "css_config": "xxl",
                         "selected": false
                     }
                 ]
@@ -402,33 +458,44 @@
                 "type": "select",
                 "value": [
                     {
-                        "value": "col-md-1",
-                        "label": "Mini",
-                        "selected": false
+                        "value": "",
+                        "label": "Default",
+                        "selected": true
                     },
                     {
                         "value": "col-md-2",
-                        "label": "Small",
+                        "label": "Mini",
+                        "css_config": "xs",
                         "selected": false
                     },
                     {
                         "value": "col-md-4",
-                        "label": "Medium",
-                        "selected": true
-                    },
-                    {
-                        "value": "col-md-5",
-                        "label": "Large",
+                        "label": "Small",
+                        "css_config": "s",
                         "selected": false
                     },
                     {
                         "value": "col-md-6",
-                        "label": "Xlarge",
+                        "label": "Medium",
+                        "css_config": "m",
                         "selected": false
                     },
                     {
                         "value": "col-md-8",
+                        "label": "Large",
+                        "css_config": "l",
+                        "selected": false
+                    },
+                    {
+                        "value": "col-md-10",
+                        "label": "Xlarge",
+                        "css_config": "xl",
+                        "selected": false
+                    },
+                    {
+                        "value": "col-md-12",
                         "label": "Xxlarge",
+                        "css_config": "xxl",
                         "selected": false
                     }
                 ]
@@ -473,33 +540,44 @@
                 "type": "select",
                 "value": [
                     {
-                        "value": "col-md-1",
-                        "label": "Mini",
-                        "selected": false
+                        "value": "",
+                        "label": "Default",
+                        "selected": true
                     },
                     {
                         "value": "col-md-2",
-                        "label": "Small",
+                        "label": "Mini",
+                        "css_config": "xs",
                         "selected": false
                     },
                     {
                         "value": "col-md-4",
-                        "label": "Medium",
-                        "selected": true
-                    },
-                    {
-                        "value": "col-md-5",
-                        "label": "Large",
+                        "label": "Small",
+                        "css_config": "s",
                         "selected": false
                     },
                     {
                         "value": "col-md-6",
-                        "label": "Xlarge",
+                        "label": "Medium",
+                        "css_config": "m",
                         "selected": false
                     },
                     {
                         "value": "col-md-8",
+                        "label": "Large",
+                        "css_config": "l",
+                        "selected": false
+                    },
+                    {
+                        "value": "col-md-10",
+                        "label": "Xlarge",
+                        "css_config": "xl",
+                        "selected": false
+                    },
+                    {
+                        "value": "col-md-12",
                         "label": "Xxlarge",
+                        "css_config": "xxl",
                         "selected": false
                     }
                 ]
@@ -528,6 +606,53 @@
                 "label": "Required",
                 "type": "checkbox",
                 "value": false
+            },
+            "inputsize": {
+                "label": "Input Size",
+                "type": "select",
+                "value": [
+                    {
+                        "value": "",
+                        "label": "Default",
+                        "selected": true
+                    },
+                    {
+                        "value": "col-md-2",
+                        "label": "Mini",
+                        "css_config": "xs",
+                        "selected": false
+                    },
+                    {
+                        "value": "col-md-4",
+                        "label": "Small",
+                        "css_config": "s",
+                        "selected": false
+                    },
+                    {
+                        "value": "col-md-6",
+                        "label": "Medium",
+                        "css_config": "m",
+                        "selected": false
+                    },
+                    {
+                        "value": "col-md-8",
+                        "label": "Large",
+                        "css_config": "l",
+                        "selected": false
+                    },
+                    {
+                        "value": "col-md-10",
+                        "label": "Xlarge",
+                        "css_config": "xl",
+                        "selected": false
+                    },
+                    {
+                        "value": "col-md-12",
+                        "label": "Xxlarge",
+                        "css_config": "xxl",
+                        "selected": false
+                    }
+                ]
             }
         }
     }

@@ -1,9 +1,11 @@
 <!-- Select Multiple -->
 <div class="form-group">
     <label class="col-md-4 control-label" for="<%= id %>"><%= polyglot.t(label, { _: label}) %></label>
-    <div class="<% if ( inputsize.length <= 0){ %>  col-md-4 <%}else { %> <%= inputsize %><%}%>" >
-    <select name="<%= id %>" class="form-control" multiple="multiple"><% _.each(options, function(option,i) { %>
-        <option value="<%= values[i] %>"><%= option %></option><% }); %>
-    </select>
-</div>
+    <div class="col-md-8" >
+        <div class="<% if ( inputsize.length <= 0){ %>  col-md-12 <%}else { %> <%= inputsize %><%}%>">
+        <select name="<%= id %>" class="form-control" multiple="multiple"><% _.each(options, function(option,i) { %>
+            <option value="<%= values[i] %>"><%= option %></option><% }); %>
+        </select>
+    </div>
+    </div>
 </div>
