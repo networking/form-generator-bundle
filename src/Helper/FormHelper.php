@@ -10,7 +10,7 @@
 
 namespace Networking\FormGeneratorBundle\Helper;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Networking\FormGeneratorBundle\Model\BaseForm;
 use Networking\FormGeneratorBundle\Model\BaseFormData;
 use Networking\FormGeneratorBundle\Model\Form;
@@ -41,7 +41,7 @@ class FormHelper
      * @param ManagerRegistry $doctrine
      * @param Environment $twig
      */
-    public function __construct(\Swift_Mailer $mailer, ManagerRegistry $doctrine, Environment $twig)
+    public function __construct(\Swift_Mailer $mailer, Registry $doctrine, Environment $twig)
     {
         $this->mailer = $mailer;
         $this->doctrine = $doctrine;
