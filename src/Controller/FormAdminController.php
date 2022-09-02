@@ -395,7 +395,7 @@ class FormAdminController extends AbstractFOSRestController
      */
     public function copyAction(Request $request, $id)
     {
-        $repo = $this->getDoctrine()->getRepository('NetworkingFormGeneratorBundle:Form');
+        $repo = $this->getDoctrine()->getRepository($this->getParameter('networking_form_generator.form_class'));
         $em = $this->getDoctrine()->getManager();
         /** @var Form $form */
         $form = $repo->find($id);
