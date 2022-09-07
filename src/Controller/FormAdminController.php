@@ -208,15 +208,21 @@ class FormAdminController extends AbstractFOSRestController
 
             $formField = new $formFieldClass;
             if (is_array($field)) {
-
+                $uniqId = uniqid(substr($field['fields']['label']['value'], 0, 3));
+                if(!array_key_exists('id', $field['fields'])){
+                    $field['fields']['id'] = [
+                        'value' => $uniqId,
+                        'label' => 'ID / Name',
+                        'type' => 'hidden',
+                        'name' => 'id',
+                    ];
+                }
                 switch ($field['title']) {
                     case 'Multiple Radios':
                     case 'Multiple Checkboxes':
                     case 'Multiple Checkboxes Inline':
                     case 'Multiple Radios Inline':
-                        $field['fields']['id']['value'] = $field['fields']['id']['value'] ?: uniqid(
-                            substr($field['fields']['label']['value'], 0, 3)
-                        );
+                        $field['fields']['id']['value'] = $field['fields']['id']['value'] ?: $uniqId;
                         $formField->setName($field['fields']['id']['value']);
                         $formField->setFieldLabel($field['fields']['label']['value']);
                         $formField->setType($field['title']);
@@ -224,9 +230,7 @@ class FormAdminController extends AbstractFOSRestController
                         $form->addFormField($formField);
                         break;
                     case 'Legend':
-                        $field['fields']['id']['value'] = $field['fields']['id']['value'] ?: uniqid(
-                            substr($field['fields']['name']['value'], 0, 3)
-                        );
+                        $field['fields']['id']['value'] = $field['fields']['id']['value'] ?: $uniqId;
                         $formField->setName($field['fields']['id']['value']);
                         $formField->setFieldLabel($field['fields']['name']['value']);
                         $formField->setType($field['title']);
@@ -241,9 +245,7 @@ class FormAdminController extends AbstractFOSRestController
                         $form->addFormField($formField);
                         break;
                     default:
-                        $field['fields']['id']['value'] = $field['fields']['id']['value'] ?: uniqid(
-                            substr($field['fields']['label']['value'], 0, 3)
-                        );
+                        $field['fields']['id']['value'] = $field['fields']['id']['value'] ?: $uniqId;
                         $formField->setName($field['fields']['id']['value']);
                         $formField->setFieldLabel($field['fields']['label']['value']);
                         $formField->setType($field['title']);
