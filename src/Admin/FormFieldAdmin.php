@@ -36,7 +36,7 @@ class FormFieldAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $form)
+    protected function configureFormFields(FormMapper $form): void
     {
         $form->add('name')
             ->add('fieldLabel')

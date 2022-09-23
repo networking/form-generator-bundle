@@ -15,7 +15,7 @@ use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -41,7 +41,7 @@ class FormAdmin extends BaseAdmin
         return 'glyphicon-file';
     }
 
-    protected function configureRoutes(RouteCollection $collection)
+    protected function configureRoutes(RouteCollectionInterface $collection): void
     {
         $collection->add(
             'excelExport',
@@ -68,14 +68,13 @@ class FormAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
     {
         $datagridMapper
             ->add(
                 'name',
                 null,
                 [],
-                null,
                 ['translation_domain' => 'formGenerator']
             )->add(
                 'online',
@@ -86,14 +85,16 @@ class FormAdmin extends BaseAdmin
                         'getAllOnline',
                     ],
                 ],
-                ChoiceType::class,
                 [
-                    'placeholder' => 'filter.choice.all',
-                    'choices' => [
-                        'filter.choice.online' => 1,
-                        'filter.choice.offline' => 0,
-                    ],
-                    'translation_domain' => 'formGenerator',
+                    'field_type' => ChoiceType::class,
+                    'field_options' => [
+                        'placeholder' => 'filter.choice.all',
+                        'choices' => [
+                            'filter.choice.online' => 1,
+                            'filter.choice.offline' => 0,
+                        ],
+                        'translation_domain' => 'formGenerator',
+                    ]
                 ]
             );
     }
@@ -101,7 +102,7 @@ class FormAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $form)
+    protected function configureFormFields(FormMapper $form): void
     {
         $form
             ->add(
@@ -138,7 +139,7 @@ class FormAdmin extends BaseAdmin
             ->add('thankYouText', CKEditorType::class, ['widget_form_group_attr' => ['class' => 'col-md-12'], 'autoload' => false]);
     }
 
-    protected function configureListFields(ListMapper $listMapper)
+    protected function configureListFields(ListMapper $listMapper): void
     {
         parent::configureListFields($listMapper);
         $listMapper->addIdentifier('name');
@@ -164,7 +165,7 @@ class FormAdmin extends BaseAdmin
     /**
      * Returns a list of default filters.
      */
-    protected function configureDefaultFilterValues(array &$filterValues)
+    protected function configureDefaultFilterValues(array &$filterValues): void
     {
 
         $filterValues['online'] = ['value' => 1];

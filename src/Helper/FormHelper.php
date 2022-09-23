@@ -15,12 +15,15 @@ use Networking\FormGeneratorBundle\Model\BaseForm;
 use Networking\FormGeneratorBundle\Model\BaseFormData;
 use Networking\FormGeneratorBundle\Model\Form;
 use Networking\FormGeneratorBundle\Model\FormData;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Message;
 use Twig\Environment;
 
 class FormHelper
 {
     /**
-     * @var \Swift_Mailer
+     * @var MailerInterface
      */
     public $mailer;
 
@@ -37,11 +40,11 @@ class FormHelper
     /**
      * FormHelper constructor.
      *
-     * @param \Swift_Mailer $mailer
+     * @param MailerInterface $mailer
      * @param ManagerRegistry $doctrine
      * @param Environment $twig
      */
-    public function __construct(\Swift_Mailer $mailer, ManagerRegistry $doctrine, Environment $twig)
+    public function __construct(MailerInterface $mailer, ManagerRegistry $doctrine, Environment $twig)
     {
         $this->mailer = $mailer;
         $this->doctrine = $doctrine;
@@ -59,22 +62,23 @@ class FormHelper
      */
     public function sendEmail(BaseForm $form, BaseFormData $formData, $emailFrom = '')
     {
-        //https://stackoverflow.com/questions/45447972/attempted-to-call-an-undefined-method-named-newinstance-of-class-swift-messag
-
-        $message = (new \Swift_Message($form->getName()));
-        $message->setFrom($emailFrom);
         $messageText = $this->renderView(
             'NetworkingFormGeneratorBundle:Email:email.txt.twig',
             ['formData' => $formData]
         );
 
-        $message->setBody($messageText);
+        $email = (new Email())
+            ->from($emailFrom)
+            ->subject($form->getName())
+            ->html($messageText);
 
-        foreach (explode(',', $form->getEmail()) as $email) {
-            $message->addTo(trim($email));
+        foreach (explode(',', $form->getEmail()) as $emailAddress) {
+            $email->addTo(trim($emailAddress));
         }
 
-        return $this->mailer->send($message);
+        return $this->mailer->send($email);
+
+
     }
 
     /**
