@@ -12,9 +12,9 @@
         }
     ],
     "require": {
-        "php": ">=7.4",
-        "networking/init-cms-bundle": "^4.4",
-        "friendsofsymfony/rest-bundle": "^3.1",
+        "php": ">=7.4 || ^8.0",
+        "networking/init-cms-bundle": "^4.4 || ^5.0 || dev-upgrade5",
+        "friendsofsymfony/rest-bundle": "^3.4",
         "phpoffice/phpspreadsheet": "^1.4"
     },
     "autoload": {
@@ -23,7 +23,7 @@
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-            "dev-master": "4.x-dev"
+            "dev-master": "5.x-dev"
         }
     }
 }
