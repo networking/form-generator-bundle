@@ -15,10 +15,11 @@ use Sonata\AdminBundle\Form\FormMapper;
 
 class FormFieldAdmin extends BaseAdmin
 {
-    /**
-     * @var string
-     */
-    protected $baseRoutePattern = 'cms/form_fields';
+
+    protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
+    {
+        return 'cms/form_fields';
+    }
 
 
     protected function generateBaseRouteName(bool $isChildAdmin = false): string

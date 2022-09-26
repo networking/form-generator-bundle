@@ -43,14 +43,12 @@ services:
 
 
     Networking\FormGeneratorBundle\Admin\FormAdmin:
-        arguments: [null, '%networking_form_generator.form_class%', 'Networking\InitCmsBundle\Controller\CRUDController']
         calls:
-            - [setTranslationDomain, ['formGenerator']]
             - [setSonataAnnotationReader, ['@networking_init_cms.annotation.reader']]
             - [setLanguages, ["%networking_init_cms.page.languages%"]]
             - [setTemplates, [{'edit': '@@NetworkingFormGenerator/Admin/edit.html.twig', 'show': '@@NetworkingFormGenerator/Admin/show.html.twig'}]]
         tags:
-            - { name: sonata.admin, manager_type: orm, label: 'form.admin.menu_label', label_translator_strategy: sonata.admin.label.strategy.underscore, persist_filters: true }
+            - {name: sonata.admin, manager_type: orm, model_class: '%networking_form_generator.form_class%', controller: 'Networking\InitCmsBundle\Controller\CRUDController', translation_domain: 'formGenerator', label: 'form.admin.menu_label', label_translator_strategy: sonata.admin.label.strategy.underscore, persist_filters: true }
 
     Networking\FormGeneratorBundle\Twig\Extension\FormHelperExtension:
         arguments:

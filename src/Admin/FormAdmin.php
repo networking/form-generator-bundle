@@ -23,11 +23,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class FormAdmin extends BaseAdmin
 {
-    /**
-     * @var string
-     */
-    protected $baseRoutePattern = 'cms/forms';
 
+
+    protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
+    {
+        return 'cms/forms';
+    }
 
     protected function generateBaseRouteName(bool $isChildAdmin = false): string
     {
