@@ -28,10 +28,11 @@ class FormAdmin extends BaseAdmin
      */
     protected $baseRoutePattern = 'cms/forms';
 
-    /**
-     * @var string
-     */
-    protected $baseRouteName = 'admin_networking_forms';
+
+    protected function generateBaseRouteName(bool $isChildAdmin = false): string
+    {
+         return 'admin_networking_forms';
+    }
 
     /**
      * @return string

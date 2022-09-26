@@ -20,10 +20,11 @@ class FormFieldAdmin extends BaseAdmin
      */
     protected $baseRoutePattern = 'cms/form_fields';
 
-    /**
-     * @var string
-     */
-    protected $baseRouteName = 'admin_networking_form_fields';
+
+    protected function generateBaseRouteName(bool $isChildAdmin = false): string
+    {
+        return 'admin_networking_form_fields';
+    }
 
     /**
      * @return string

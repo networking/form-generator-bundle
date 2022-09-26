@@ -45,13 +45,11 @@ class FrontendFormController extends AbstractController
     /**
      * FrontendFormController constructor.
      * @param FormHelper $formHelper
-     * @param SessionInterface $session
      * @param $emailAddress
      */
-    public function __construct(FormHelper $formHelper, SessionInterface $session, $emailAddress)
+    public function __construct(FormHelper $formHelper, $emailAddress)
     {
         $this->formHelper = $formHelper;
-        $this->session = $session;
         $this->emailAddress = $emailAddress;
     }
 
@@ -78,7 +76,7 @@ class FrontendFormController extends AbstractController
                 'frontend_css_input_sizes' => $this->getParameter('networking_form_generator.frontend_css_input_sizes')
             ]);
 
-        $this->clearSessionVariables();
+        $this->clearSessionVariables($request);
         $formType->handleRequest($request);
 
         $redirect = $request->headers->get('referer');
@@ -86,7 +84,7 @@ class FrontendFormController extends AbstractController
         if ($formType->isSubmitted()) {
             if ($formType->isValid()) {
                 $data = $formType->getData();
-                $this->setFormComplete(true);
+                $this->setFormComplete($request, true);
 
                 if ($form->isEmailAction()) {
                     $this->formHelper->sendEmail($form, $data, $this->emailAddress);
@@ -97,12 +95,12 @@ class FrontendFormController extends AbstractController
                 }
 
                 if ($form->getRedirect()) {
-                    $this->session->getFlashBag()->add('form_notice', $form->getThankYouText());
+                    $request->getSession()->getFlashBag()->add('form_notice', $form->getThankYouText());
                     $redirect = $form->getRedirect();
                 }
             } else {
-                $this->setSubmittedFormData($request->request->get($formType->getName()));
-                $this->setFormComplete(false);
+                $this->setSubmittedFormData($request, $request->request->get($formType->getName()));
+                $this->setFormComplete($request, false);
             }
         }
 
@@ -118,7 +116,7 @@ class FrontendFormController extends AbstractController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function renderFormAction(BaseForm $form, $actionUrl = null, $template = '@NetworkingFormGenerator/Form/form.html.twig', $options = [])
+    public function renderFormAction(Request $request, BaseForm $form, $actionUrl = null, $template = '@NetworkingFormGenerator/Form/form.html.twig', $options = [])
     {
 
         if(!$form->isOnline()){
@@ -138,8 +136,8 @@ class FrontendFormController extends AbstractController
         $options = array_merge($options, $options);
         $formType = $this->createForm(FormType::class, [], $options);
 
-        $formData = $this->getSubmittedFormData();
-        $formComplete = $this->getFormComplete();
+        $formData = $this->getSubmittedFormData($request);
+        $formComplete = $this->getFormComplete($request);
 
         $this->clearSessionVariables();
 
@@ -155,41 +153,41 @@ class FrontendFormController extends AbstractController
             ]);
     }
 
-    protected function clearSessionVariables()
+    protected function clearSessionVariables(Request $request)
     {
-        $this->session->remove(self::FORM_DATA);
-        $this->session->remove(self::FORM_COMPLETE);
+        $request->getSession()->remove(self::FORM_DATA);
+        $request->getSession()->remove(self::FORM_COMPLETE);
     }
 
     /**
      * @param $complete
      */
-    protected function setFormComplete($complete)
+    protected function setFormComplete(Request $request, $complete)
     {
-        $this->session->set(self::FORM_COMPLETE, $complete);
+        $request->getSession()->set(self::FORM_COMPLETE, $complete);
     }
 
     /**
      * @return bool
      */
-    protected function getFormComplete()
+    protected function getFormComplete(Request $request)
     {
-        return $this->session->get(self::FORM_COMPLETE, false);
+        $request->getSession()->get(self::FORM_COMPLETE, false);
     }
 
     /**
      * @param $data
      */
-    protected function setSubmittedFormData($data)
+    protected function setSubmittedFormData(Request $request, $data)
     {
-        $this->session->set(self::FORM_DATA, $data);
+        $request->getSession()->set(self::FORM_DATA, $data);
     }
 
     /**
      * @return array
      */
-    protected function getSubmittedFormData()
+    protected function getSubmittedFormData(Request $request)
     {
-        return $this->session->get(self::FORM_DATA, []);
+        return $request->getSession()->get(self::FORM_DATA, []);
     }
 }
