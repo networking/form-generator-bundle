@@ -43,7 +43,7 @@ services:
 
 
     Networking\FormGeneratorBundle\Admin\FormAdmin:
-        arguments: [null, '%networking_form_generator.form_class%', NetworkingInitCmsBundle:CRUD]
+        arguments: [null, '%networking_form_generator.form_class%', 'Networking\InitCmsBundle\Controller\CRUDController']
         calls:
             - [setTranslationDomain, ['formGenerator']]
             - [setSonataAnnotationReader, ['@networking_init_cms.annotation.reader']]

@@ -105,6 +105,7 @@ class FormAdmin extends BaseAdmin
     protected function configureFormFields(FormMapper $form): void
     {
         $form
+            ->with('main', ['label' => false])
             ->add(
                 'name',
                 TextType::class,
@@ -143,7 +144,9 @@ class FormAdmin extends BaseAdmin
     {
         parent::configureListFields($listMapper);
         $listMapper->addIdentifier('name');
-        $listMapper->add('pages', 'string', ['template' => '@NetworkingFormGenerator/Admin/pages.html.twig']);
+        $listMapper->add('pages', 'string', [
+            'virtual_field' => true,
+            'template' => '@NetworkingFormGenerator/Admin/pages.html.twig']);
         $listMapper->add('online', 'boolean', ['editable' => true]);
         $listMapper->add(
             '_action',
@@ -182,7 +185,7 @@ class FormAdmin extends BaseAdmin
     public function getAllOnline(ProxyQuery $ProxyQuery, $alias, $field, $data)
     {
         $active = true;
-        $value = $data['value'];
+        $value = $data->getValue();
 
         $qb = $ProxyQuery->getQueryBuilder();
 

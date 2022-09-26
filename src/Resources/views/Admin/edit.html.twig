@@ -6,35 +6,9 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript" src="{{ asset('bundles/networkinginitcms/vendor/jquery/dist/jquery.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/sonataadmin/treeview.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('jquery-plugins.js', 'init_cms') }}"></script>
-    <script type="text/javascript" src="{{ asset('bootstrap.js', 'init_cms') }}"></script>
-    <script type="text/javascript" src="{{ asset('bootstrap-plugins.js', 'init_cms') }}"></script>
-    <script type="text/javascript" src="{{ asset('admin-lte/app.min.js', 'init_cms') }}"></script>
+    {{ parent() }}
     <script defer src="{{ asset('bundles/networkingformgenerator/assets/fontawesome/js/all.js') }}"></script>
-    {% block meta_config %}
-        <meta data-sonata-admin='{{ {
-            config: {
-                CONFIRM_EXIT: sonata_admin.adminPool.getOption('confirm_exit'),
-                USE_SELECT2:sonata_admin.adminPool.getOption('use_select2'),
-                USE_ICHECK: false,
-                USE_STICKYFORMS: sonata_admin.adminPool.getOption('use_stickyforms'),
-            },
-            translations: {
-                CONFIRM_EXIT: 'confirm_exit'|trans({}, 'SonataAdminBundle'),
-            },
-        }|json_encode()|raw }}'
-        >
-    {% endblock %}
-    <script>
-        // http://getbootstrap.com/getting-started/#support-ie10-width
-        if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
-            var msViewportStyle = document.createElement('style');
-            msViewportStyle.appendChild(document.createTextNode('@-ms-viewport{width:auto!important}'));
-            document.querySelector('head').appendChild(msViewportStyle);
-        }
-    </script>
+
 {% endblock javascripts %}
 
 {% block body %}
@@ -117,7 +91,7 @@
     {% block before_body_end %}
         {{ parent() }}
         <script src="{{ asset('bundles/networkingformgenerator/assets/js/lib/polyglot.js') }}"></script>
-        <script src="{{ asset('/bundles/networkingformgenerator/assets/js/data/' ~app.request.locale|slice(0, 2)~'.js') }}"></script>
+        <script src="{{ asset('bundles/networkingformgenerator/assets/js/data/' ~app.request.locale|slice(0, 2)~'.js') }}"></script>
         <script data-main="{{ asset('bundles/networkingformgenerator/assets/js/main.js') }}"
                 src="{{ asset('bundles/networkingformgenerator/assets/js/lib/require.js') }}"></script>
         <script>

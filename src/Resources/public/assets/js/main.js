@@ -20,8 +20,8 @@ require.config({
 
     },
     paths: {
-        jquery: "networkinginitcms/vendor/jquery/dist/jquery.min",
-        confirmExit: "sonataadmin/jquery/jquery.confirmExit",
+        jquery: "networkingformgenerator/assets/vendor/jquery/dist/jquery.min",
+        confirmExit: "networkingformgenerator/assets/js/jquery.confirmExit",
         app: "networkingformgenerator/assets/js",
         ckeditor: 'fosckeditor/ckeditor',
         jqueryFormSerializer: "networkingformgenerator/assets/js/lib/jqueryFormSerializer",

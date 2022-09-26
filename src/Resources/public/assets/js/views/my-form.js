@@ -23,13 +23,15 @@ define([
                 PubSub.trigger('saveForm', event)
             })
             this.model.on('error', (model, errors) => {
+
                 this.showErrors(errors);
-                $('button#saveForm').attr('disabled', true);
+                document.querySelector('button#saveForm').setAttribute('disabled', true)
             });
 
             this.model.on('change', () => {
                 if (!this.isModelInvalid()) {
                     this.hideErrors();
+                    document.querySelector('button#saveForm').removeAttribute('disabled')
                 }
             });
             this.template = _.template(this.template);
@@ -144,16 +146,32 @@ define([
             });
         },
         showErrors: function (errors) {
+            this.hideErrors();
+
             _.each(errors, function (error) {
-                let controlGroup = $(`#sonata-ba-field-container-${this.$uniqId}_${error.property_path} .sonata-ba-field`);
-                controlGroup.addClass('has-error')
-                controlGroup.find('.sonata-ba-field-help').text(error.message);
+                let controlGroup = document.getElementById(`${this.$uniqId}_${error.property_path}`).parentElement;
+                controlGroup.classList.add('has-error')
+                let helpBlock = controlGroup.querySelector('.help-block');
+                  if(null === helpBlock){
+                      helpBlock = document.createElement('div')
+                      helpBlock.classList.add('help-block')
+                      helpBlock.innerHTML = error.message
+                      controlGroup.append(helpBlock)
+                    return;
+                  }
+                helpBlock.innerHTML = error.message;
             }, this);
         },
         hideErrors: function () {
-            $('.sonata-ba-field').removeClass('has-error');
-            $('.sonata-ba-field-help').text('');
-            $('button#saveForm').attr('disabled', false);
+
+            let controlGroups = document.querySelectorAll(`.form-control`);
+            controlGroups.forEach((el) => {
+                el.parentElement.classList.remove('has-error')
+            })
+            let helpBlocks = document.querySelectorAll(`.help-block`);
+            helpBlocks.forEach((el) => {
+                el.innerHTML = ''
+            })
         },
         isModelInvalid: function () {
             return this.model.validate(this.getModelViewAttr());

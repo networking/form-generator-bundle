@@ -146,7 +146,7 @@ class FormAdminController extends AbstractFOSRestController
      */
     protected function setupAdminForm(Request $request, BaseForm $form)
     {
-        $this->admin->setUniqid($request->get('uniqid'));
+        $this->admin->setUniqid($request->request->get('uniqid'));
         $this->admin->setSubject($form);
         $adminForm = $this->admin->getForm();
         $adminForm->setData($form);
@@ -181,7 +181,7 @@ class FormAdminController extends AbstractFOSRestController
 
             $message = $action === 'create' ? 'form_created' : 'form_updated';
 
-            return $this->view(['id' => $data->getId(), 'message' => $this->admin->trans($message)], 200);
+            return $this->view(['id' => $data->getId(), 'message' => $this->translator->trans($message, [], $this->admin->getTranslationDomain())], 200);
         }
         $errors = $this->validator->validate($data);
 
