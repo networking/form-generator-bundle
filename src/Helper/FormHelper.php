@@ -63,14 +63,14 @@ class FormHelper
     public function sendEmail(BaseForm $form, BaseFormData $formData, $emailFrom = '')
     {
         $messageText = $this->renderView(
-            'NetworkingFormGeneratorBundle:Email:email.txt.twig',
+            '@NetworkingFormGenerator/Email/email.txt.twig',
             ['formData' => $formData]
         );
 
         $email = (new Email())
             ->from($emailFrom)
             ->subject($form->getName())
-            ->html($messageText);
+            ->text($messageText);
 
         foreach (explode(',', $form->getEmail()) as $emailAddress) {
             $email->addTo(trim($emailAddress));
