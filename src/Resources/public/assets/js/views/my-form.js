@@ -25,7 +25,6 @@ define([
             this.model.on('error', (model, errors) => {
 
                 this.showErrors(errors);
-                document.querySelector('button#saveForm').setAttribute('disabled', true)
             });
 
             this.model.on('change', () => {
@@ -134,10 +133,15 @@ define([
                     var errors = [];
                     if (_.isObject(xhr) && xhr.responseText) {
                         errors = $.parseJSON(xhr.responseText);
+
                         that.createMessageBox('danger', 'Oh no!', 'an error has occured, please check your form details');
                     } else {
                         errors = xhr;
                     }
+
+                    $('html, body').animate({
+                        scrollTop: $(".initcms").offset().top
+                    }, 2000);
 
                     that.showErrors(errors);
 
@@ -149,7 +153,12 @@ define([
             this.hideErrors();
 
             _.each(errors, function (error) {
-                let controlGroup = document.getElementById(`${this.$uniqId}_${error.property_path}`).parentElement;
+                let formElement = document.getElementById(`${this.$uniqId}_${error.property_path}`)
+                if(!formElement){
+                    this.createMessageBox('danger', 'Oh no!', error);
+                    return;
+                }
+                let controlGroup = formElement.parentElement;
                 controlGroup.classList.add('has-error')
                 let helpBlock = controlGroup.querySelector('.help-block');
                   if(null === helpBlock){
