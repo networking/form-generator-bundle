@@ -51,6 +51,7 @@
                     {% block sonata_form_action_url %}
                         {{ admin.generateUrl(url, {'id': objectId|default(admin.id(object)), 'uniqid': admin.uniqid}) }}
                     {% endblock %}
+                    {% block sonata_form_attributes %}class="form-horizontal"{% endblock %}
                     {% block formactions %}
                         {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
                         <div class="{% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}modal-footer{% else %}well form-actions{% endif %}">
