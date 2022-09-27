@@ -197,7 +197,7 @@ class FormAdminController extends AbstractFOSRestController
     protected function setFields(Request $request, BaseForm $form)
     {
 
-        $collection = $request->request->get('collection');
+        $collection = $request->request->all('collection');
 
 
 
@@ -208,7 +208,12 @@ class FormAdminController extends AbstractFOSRestController
 
             $formField = new $formFieldClass;
             if (is_array($field)) {
-                $uniqId = uniqid(substr($field['fields']['label']['value'], 0, 3));
+
+                $uniqIdField = !array_key_exists('label', $field['fields'])?'name':'label';
+
+                $uniqId = uniqid(substr($field['fields'][$uniqIdField]['value'], 0, 3));
+
+
                 if(!array_key_exists('id', $field['fields'])){
                     $field['fields']['id'] = [
                         'value' => $uniqId,
@@ -247,7 +252,7 @@ class FormAdminController extends AbstractFOSRestController
                     default:
                         $field['fields']['id']['value'] = $field['fields']['id']['value'] ?: $uniqId;
                         $formField->setName($field['fields']['id']['value']);
-                        $formField->setFieldLabel($field['fields']['label']['value']);
+                        $formField->setFieldLabel($field['fields'][$uniqIdField]['value']);
                         $formField->setType($field['title']);
                         $formField->setOptions($field['fields']);
                         $form->addFormField($formField);
@@ -460,7 +465,7 @@ class FormAdminController extends AbstractFOSRestController
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
 
-        return $request->isXmlHttpRequest() || $request->get('_xml_http_request');
+        return $request->isXmlHttpRequest() || $request->query->get('_xml_http_request');
     }
 
     /**
