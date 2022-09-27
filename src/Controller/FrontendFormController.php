@@ -139,7 +139,7 @@ class FrontendFormController extends AbstractController
         $formData = $this->getSubmittedFormData($request);
         $formComplete = $this->getFormComplete($request);
 
-        $this->clearSessionVariables();
+        $this->clearSessionVariables($request);
 
         if (!empty($formData)) {
             $formType->submit($formData);
@@ -172,7 +172,7 @@ class FrontendFormController extends AbstractController
      */
     protected function getFormComplete(Request $request)
     {
-        $request->getSession()->get(self::FORM_COMPLETE, false);
+        return $request->getSession()->get(self::FORM_COMPLETE, false);
     }
 
     /**
