@@ -1,0 +1,48 @@
+breadcrumb.link_form_list: Form Generator
+form.admin.menu_label: Form Generator
+form:
+    label:
+        form: Formular
+    label_name: Title
+    label_email: Email addresses
+    label_action: Form action
+    label_redirect: 'URL umleiten (Erfolg-Seite)'
+    label_info_text: Info text
+    label_thank_you_text: Thank you text
+    help:
+        comma_separated: Comma separated list of email addresses
+list:
+    label_name: Form Name
+    label_pages: Pages
+    label_online: Online
+
+filter:
+    label_name: Form Name
+    label_online: Online Status
+    choice:
+        all: Show all
+        online: Online
+        offline: Offline
+
+form_created: The form was successfully created
+form_updated: The form was successfully updated
+link_action_export: Export
+link_action_delete: delete
+confirm_deletion: Do you wish to delete this entry?
+
+link_action_delete_all: delete all records
+confirm_deletion_all: Would you like to delete all the records?
+
+title.duplicate_form: Copy form
+info.duplicate_form: Would you like to copy this form?
+button:
+    cancel: Cancel
+    duplicate_form: Copy form
+
+message.copy_saved: A copy of the form was successfully created.
+link_action_create: Create new form
+
+date: Date
+field: Field
+value: Value
+title_create: Create form
