@@ -2,6 +2,7 @@
 
 namespace Networking\FormGeneratorBundle\Controller;
 
+use Doctrine\Persistence\ManagerRegistry;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Networking\FormGeneratorBundle\Admin\FormAdmin;
@@ -61,7 +62,8 @@ class FormAdminController extends AbstractFOSRestController
     public function getAction(Request $request, $id)
     {
         if ($id) {
-            $repo = $this->getDoctrine()->getRepository($this->getParameter('networking_form_generator.form_class'));
+            $repo = $this->container->get('doctrine')
+                ->getRepository($this->getParameter('networking_form_generator.form_class'));
             /** @var Form $form */
             $form = $repo->find($id);
             if (!$form) {
@@ -539,5 +541,13 @@ class FormAdminController extends AbstractFOSRestController
         $response->setContent($content);
 
         return $response;
+    }
+
+    public static function getSubscribedServices(): array
+    {
+        return [
+            'doctrine' => ManagerRegistry::class
+            ] + parent::getSubscribedServices(
+        );
     }
 }
