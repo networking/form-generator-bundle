@@ -26,6 +26,10 @@ class FrontendFormController extends AbstractController
     const FORM_DATA = 'application_networking_form_generator_form_data';
     const FORM_COMPLETE = 'application_networking_form_generator_form_complete';
 
+    const CAPTCHA_KEY = '6LcdYdghAAAAAGbjonnN9sSrE8zwcJEhNJQT3Ujx';
+    const CAPTCHA_SECRET = '6LcdYdghAAAAALozxxgISk9p5B-1RlYeWzCvifId';
+
+
     /**
      * @var SessionInterface
      */
@@ -66,6 +70,7 @@ class FrontendFormController extends AbstractController
             throw new NotFoundHttpException(sprintf('Form with id %s could not be found', $id));
         }
 
+
         $formType = $this->createForm(FormType::class, [], ['form' => $form]);
 
         $this->clearSessionVariables();
@@ -78,18 +83,57 @@ class FrontendFormController extends AbstractController
                 $data = $request->get($formType->getName());
                 $this->setFormComplete(true);
 
-                if ($form->isEmailAction()) {
-                    $this->formHelper->sendEmail($form, $data, $this->emailAddress);
+                //validate captcha v3
+
+                $captcha = real_escape_string($_POST['googlerecaptcha']);
+
+                $request_url = 'https://www.google.com/recaptcha/api/siteverify';
+
+                $request_data = [
+                    'secret' => '6LcdYdghAAAAALozxxgISk9p5B-1RlYeWzCvifId',
+                    'response' => $captcha
+                ];
+
+
+
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $request_url);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $request_data);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+                $response_body = curl_exec($ch);
+
+                curl_close ($ch);
+
+                $response_data = json_decode($response_body, true);
+
+                if ($response_data['success'] == false) {
+                    // return back with error that captcha is invalid
+                    echo "CAPTCHA fehler";
+                    die;
+                } else {
+
+                    echo "CAPTCHA okay";
+                    die;
+
+                    // captcha is valid and proceed for next
+                    if ($form->isEmailAction()) {
+                        $this->formHelper->sendEmail($form, $data, $this->emailAddress);
+                    }
+
+                    if ($form->isDbAction()) {
+                        $this->formHelper->saveToDb($form, $data);
+                    }
+
+                    if ($form->getRedirect()) {
+                        $this->session->getFlashBag()->add('form_notice', $form->getThankYouText());
+                        $redirect = $form->getRedirect();
+                    }
+
                 }
 
-                if ($form->isDbAction()) {
-                    $this->formHelper->saveToDb($form, $data);
-                }
 
-                if ($form->getRedirect()) {
-                    $this->session->getFlashBag()->add('form_notice', $form->getThankYouText());
-                    $redirect = $form->getRedirect();
-                }
             } else {
                 $this->setSubmittedFormData($request->request->get($formType->getName()));
                 $this->setFormComplete(false);
