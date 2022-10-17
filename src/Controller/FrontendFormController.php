@@ -85,7 +85,10 @@ class FrontendFormController extends AbstractController
 
                 //validate captcha v3
 
-                $captcha = real_escape_string($_POST['googlerecaptcha']);
+                //$captcha = real_escape_string($_POST['googlerecaptcha']);
+                $captcha = mysqli_escape_string($_POST['googlerecaptcha']);
+
+
 
                 $request_url = 'https://www.google.com/recaptcha/api/siteverify';
 
