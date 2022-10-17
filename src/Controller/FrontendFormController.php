@@ -86,7 +86,7 @@ class FrontendFormController extends AbstractController
                 //validate captcha v3
 
                 //$captcha = real_escape_string($_POST['googlerecaptcha']);
-                $captcha = mysqli_escape_string($_POST['googlerecaptcha']);
+                $captcha = $_POST['googlerecaptcha'];
 
 
 
@@ -113,12 +113,9 @@ class FrontendFormController extends AbstractController
 
                 if ($response_data['success'] == false) {
                     // return back with error that captcha is invalid
-                    echo "CAPTCHA fehler";
+                    echo "CAPTCHA Error";
                     die;
                 } else {
-
-                    echo "CAPTCHA okay";
-                    die;
 
                     // captcha is valid and proceed for next
                     if ($form->isEmailAction()) {
