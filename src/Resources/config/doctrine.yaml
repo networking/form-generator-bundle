@@ -6,4 +6,4 @@ doctrine:
                     NetworkingFormGeneratorBundle:
                         type: annotation
                         prefix: "Networking\\FormGeneratorBundle\\Model"
-                        dir: '/Model'
+                        dir: '%kernel.project_dir%/vendor/networking/form-generator-bundle/src/Model'
