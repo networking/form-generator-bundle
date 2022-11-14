@@ -296,7 +296,7 @@ class FormAdminController extends AbstractFOSRestController
 
     public function deleteFormEntryAction(Request $request, $id, $rowid)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->registry->getManager();
         $repo = $em->getRepository($this->getParameter('networking_form_generator.form_data_class'));
 
         $formData = $repo->find($rowid);
@@ -308,7 +308,7 @@ class FormAdminController extends AbstractFOSRestController
 
     public function deleteAllFormEntryAction(Request $request, $id)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->registry->getManager();
         $repo = $em->getRepository($this->getParameter('networking_form_generator.form_data_class'));
 
         $formData = $repo->findBy(['form' => $id]);
@@ -331,7 +331,7 @@ class FormAdminController extends AbstractFOSRestController
      */
     public function excelExportAction(Request $request, $id)
     {
-        $repo = $this->getDoctrine()->getRepository($this->getParameter('networking_form_generator.form_class'));
+        $repo = $this->registry->getRepository($this->getParameter('networking_form_generator.form_class'));
         /** @var Form $form */
         $form = $repo->find($id);
         $formFields = $form->getFormFields();
@@ -409,8 +409,8 @@ class FormAdminController extends AbstractFOSRestController
      */
     public function copyAction(Request $request, $id)
     {
-        $repo = $this->getDoctrine()->getRepository($this->getParameter('networking_form_generator.form_class'));
-        $em = $this->getDoctrine()->getManager();
+        $repo = $this->registry->getRepository($this->getParameter('networking_form_generator.form_class'));
+        $em = $this->registry->getManager();
         /** @var Form $form */
         $form = $repo->find($id);
 
@@ -429,7 +429,7 @@ class FormAdminController extends AbstractFOSRestController
                 }
 
                 $status = 'success';
-                $message = $this->admin->trans(
+                $message = $this->admin->getTranslator()->trans(
                     'message.copy_saved',
                     ['%page%' => $formCopy]
                 );
@@ -442,7 +442,7 @@ class FormAdminController extends AbstractFOSRestController
 
             $this->admin->createObjectSecurity($formCopy);
 
-            $this->get('session')->getFlashBag()->add(
+            $request->getSession()->getFlashBag()->add(
                 'sonata_flash_'.$status,
                 $message
             );
@@ -483,10 +483,10 @@ class FormAdminController extends AbstractFOSRestController
     protected function getBaseTemplate()
     {
         if ($this->isXmlHttpRequest()) {
-            return $this->admin->getTemplate('ajax');
+            return $this->admin->getTemplateRegistry()->getTemplate('ajax');
         }
 
-        return $this->admin->getTemplate('layout');
+        return $this->admin->getTemplateRegistry()->getTemplate('layout');
     }
 
     /**
