@@ -38,15 +38,21 @@ class FormAdminController extends AbstractFOSRestController
     protected $validator;
 
     /**
+     * @var ManagerRegistry
+     */
+    protected $registry;
+
+    /**
      * @param FormAdmin $formAdmin
      * @param TranslatorInterface $translator
      * @param ValidatorInterface $validator
      */
-    public function __construct(FormAdmin $formAdmin, TranslatorInterface $translator, ValidatorInterface $validator)
+    public function __construct(FormAdmin $formAdmin, TranslatorInterface $translator, ValidatorInterface $validator, ManagerRegistry $registry)
     {
         $this->admin = $formAdmin;
         $this->translator = $translator;
         $this->validator = $validator;
+        $this->registry = $registry;
     }
 
 
@@ -62,8 +68,7 @@ class FormAdminController extends AbstractFOSRestController
     public function getAction(Request $request, $id)
     {
         if ($id) {
-            $repo = $this->container->get('doctrine')
-                ->getRepository($this->getParameter('networking_form_generator.form_class'));
+            $repo = $this->registry->getRepository($this->getParameter('networking_form_generator.form_class'));
             /** @var Form $form */
             $form = $repo->find($id);
             if (!$form) {
@@ -541,13 +546,5 @@ class FormAdminController extends AbstractFOSRestController
         $response->setContent($content);
 
         return $response;
-    }
-
-    public static function getSubscribedServices(): array
-    {
-        return [
-            'doctrine' => ManagerRegistry::class
-            ] + parent::getSubscribedServices(
-        );
     }
 }
