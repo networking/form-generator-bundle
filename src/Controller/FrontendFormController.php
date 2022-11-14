@@ -10,6 +10,7 @@
 
 namespace Networking\FormGeneratorBundle\Controller;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Networking\FormGeneratorBundle\Form\FormType;
 use Networking\FormGeneratorBundle\Model\BaseForm;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -43,12 +44,18 @@ class FrontendFormController extends AbstractController
     protected $emailAddress;
 
     /**
+     * @var ManagerRegistry
+     */
+    protected $registry;
+
+    /**
      * FrontendFormController constructor.
      * @param FormHelper $formHelper
      * @param $emailAddress
      */
-    public function __construct(FormHelper $formHelper, $emailAddress)
+    public function __construct(ManagerRegistry $registry, FormHelper $formHelper, $emailAddress)
     {
+        $this->registry = $registry;
         $this->formHelper = $formHelper;
         $this->emailAddress = $emailAddress;
     }
@@ -63,7 +70,7 @@ class FrontendFormController extends AbstractController
     public function viewFormAction(Request $request, $id)
     {
         /** @var Form $form */
-        $form = $this->getDoctrine()->getRepository(Form::class)->find($id);
+        $form = $this->registry->getRepository(Form::class)->find($id);
         if (!$form || !$form->isOnline()) {
             throw new NotFoundHttpException(sprintf('Form with id %s could not be found', $id));
         }
@@ -79,10 +86,14 @@ class FrontendFormController extends AbstractController
         $this->clearSessionVariables($request);
         $formType->handleRequest($request);
 
+
+
         $redirect = $request->headers->get('referer');
 
         if ($formType->isSubmitted()) {
+
             if ($formType->isValid()) {
+
                 $data = $formType->getData();
                 $this->setFormComplete($request, true);
 
@@ -99,7 +110,7 @@ class FrontendFormController extends AbstractController
                     $redirect = $form->getRedirect();
                 }
             } else {
-                $this->setSubmittedFormData($request, $request->request->get($formType->getName()));
+                $this->setSubmittedFormData($request, $request->request->all($formType->getName()));
                 $this->setFormComplete($request, false);
             }
         }
