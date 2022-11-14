@@ -12,6 +12,8 @@ use JMS\Serializer\Annotation as Serializer;
 abstract class BaseFormField
 {
 
+    const TEXT_FIELDS = ['Text Input', 'Password Input', 'Search Input', 'Prepended Text', 'Prepended Icon', 'Appended Text', 'Appended Icon', 'Text Area' ];
+
     /**
      * @var Form
      *
@@ -214,6 +216,10 @@ abstract class BaseFormField
      */
     public function getOptions()
     {
+
+        if(in_array($this->type, self::TEXT_FIELDS) && !array_key_exists('required', $this->options)){
+            return $this->options + ['required' => ['label' => 'Required', 'name' => 'required', 'type' => 'checkbox', 'value' => false]];
+        }
         return $this->options;
     }
 
