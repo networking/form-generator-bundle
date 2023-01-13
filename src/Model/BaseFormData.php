@@ -155,7 +155,12 @@ abstract class BaseFormData implements \ArrayAccess
 
     public function offsetGet($offset)
     {
-        return $this->getFormFieldDataObject($offset);
+        $formFieldData = $this->getFormFieldDataObject($offset);
+
+        if($formFieldData){
+            return $formFieldData->getValue();
+        }
+        return null;
     }
 
 
