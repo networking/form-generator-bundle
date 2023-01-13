@@ -3,6 +3,7 @@
 namespace Networking\FormGeneratorBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -148,41 +149,58 @@ abstract class BaseFormData implements \ArrayAccess
 
     public function offsetExists($offset): bool
     {
-        return array_key_exists($offset, $this->formFields);
+        return $this->getFormFieldDataObject($offset) !== null;
     }
 
 
     public function offsetGet($offset)
     {
-        if (!array_key_exists($offset, $this->formFields)) {
-            return null;
-        }
-
-        /** @var BaseFormFieldData $field */
-        $field = $this->formFields[$offset];
-
-        return $field->getValue();
+        return $this->getFormFieldDataObject($offset);
     }
 
 
     public function offsetSet($offset, $value): void
     {
-        if (!array_key_exists($offset, $this->formFields)) {
-            return;
-        }
+        $field = $this->getFormFieldDataObject($offset);
         /** @var BaseFormFieldData $field */
-        $field = $this->formFields[$offset];
+        if($field instanceof BaseFormFieldData){
+            $field->setValue($value);
+        }
 
-        $field->setValue($value);
     }
 
 
     public function offsetUnset($offset): void
     {
+        if($this->formFields instanceof Collection){
+            $this->formFields->remove($offset);
+            return ;
+        }
+
         if (!array_key_exists($offset, $this->formFields)) {
             return;
         }
         unset($this->formFields[$offset]);
+    }
+
+
+    protected function getFormFieldDataObject($offset): ?BaseFormFieldData
+    {
+        $field = null;
+        if($this->formFields instanceof Collection){
+            $field = $this->formFields->get($offset);
+        }
+
+        if(is_array($this->formFields) && array_key_exists($offset, $this->formFields)) {
+            $field = $this->formFields[$offset];
+        }
+
+
+        if($field instanceof BaseFormFieldData){
+            return $field;
+        }
+
+        return null;
     }
 
     /**
