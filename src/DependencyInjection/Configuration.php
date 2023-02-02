@@ -28,7 +28,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('from_email')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('from_email')->defaultValue('example@example.com')->end()
                 ->scalarNode('form_class')->defaultValue(Form::class)->end()
                 ->scalarNode('form_data_class')->defaultValue(FormData::class)->end()
                 ->scalarNode('form_field_class')->defaultValue(FormField::class)->end()
