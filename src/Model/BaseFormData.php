@@ -163,7 +163,7 @@ abstract class BaseFormData implements \ArrayAccess
         return null;
     }
 
-
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value): void
     {
         $field = $this->getFormFieldDataObject($offset);
