@@ -15,13 +15,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Networking\InitCmsBundle\Entity\LayoutBlock;
 use Sonata\AdminBundle\Admin\Pool;
 use Doctrine\Persistence\ManagerRegistry;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Class NetworkingHelperExtension.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class FormHelperExtension extends \Twig_Extension
+class FormHelperExtension extends AbstractExtension
 {
     /**
      * Container.
@@ -96,7 +98,7 @@ class FormHelperExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('get_form_page_links', [$this, 'getPageLinks'], ['is_safe' => ['html']]),
+            new TwigFunction('get_form_page_links', [$this, 'getPageLinks'], ['is_safe' => ['html']]),
         ];
     }
 
