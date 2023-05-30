@@ -26,6 +26,7 @@ class FrontendFormController extends Controller
     const FORM_DATA = 'application_networking_form_generator_form_data';
     const FORM_COMPLETE = 'application_networking_form_generator_form_complete';
     const FORM_ERROR = '';
+    const EMAIL_FIELD = 'email';
 
     /**
      * @var SessionInterface
@@ -93,6 +94,7 @@ class FrontendFormController extends Controller
                     //formular wurde nicht korret ausgefüllt
                     $this->setFormComplete(false);
                     $this->setFormError('email-wrong');
+                    $this->setEmailField($emailField);
                     $this->setSubmittedFormData($request->request->get($formType->getName()));
 
                 }else{
@@ -169,6 +171,7 @@ class FrontendFormController extends Controller
         $formData = $this->getSubmittedFormData();
         $formComplete = $this->getFormComplete();
         $formError = $this->getFormError();
+        $emailField = $this->getEmailField();
 
         $this->clearSessionVariables();
 
@@ -180,6 +183,7 @@ class FrontendFormController extends Controller
             [
                 'formComplete' => $formComplete,
                 'formError' => $formError,
+                'emailField' => $emailField,
                 'formView' => $formType->createView(),
                 'form' => $form,
             ]);
@@ -190,6 +194,25 @@ class FrontendFormController extends Controller
         $this->session->remove(self::FORM_DATA);
         $this->session->remove(self::FORM_COMPLETE);
         $this->session->remove(self::FORM_ERROR);
+        $this->session->remove(self::EMAIL_FIELD);
+    }
+
+
+
+    /**
+     * @param $complete
+     */
+    protected function setEmailField($value)
+    {
+        $this->session->set(self::EMAIL_FIELD, $value);
+    }
+
+    /**
+     * @return bool
+     */
+    protected function getEmailField()
+    {
+        return $this->session->get(self::EMAIL_FIELD, '');
     }
 
 
