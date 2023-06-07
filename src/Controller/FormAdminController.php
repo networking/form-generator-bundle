@@ -346,7 +346,7 @@ class FormAdminController extends FOSRestController
             ++$row;
             $formFields2 = $rowData->getFormFields();
             foreach ($formFields2 as $key =>  $field) {
-                if($formFields[$key]->getType() != 'Search Input') {
+                if($formFields[$key] and $formFields[$key]->getType() != 'Search Input') {
 
                     $value = $field->getValue();
                     if (is_array($value)) {
