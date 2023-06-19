@@ -1,31 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\FormGeneratorBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\MappedSuperclass
- * @ORM\HasLifecycleCallbacks
- */
-abstract class BaseFormData implements \ArrayAccess
+#[ORM\MappedSuperclass]
+#[ORM\HasLifecycleCallbacks]
+abstract class BaseFormData implements \ArrayAccess, \Stringable
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
 
     /**
      * @var \DateTime
-     *
-     * @ORM\Column(name="createdAt", type="datetime")
      */
+    #[ORM\Column(name: 'createdAt', type: 'datetime')]
     protected $createdAt;
 
     /**
@@ -39,9 +37,7 @@ abstract class BaseFormData implements \ArrayAccess
      */
     protected $formFields = [];
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->createdAt = new \DateTime();
@@ -127,9 +123,6 @@ abstract class BaseFormData implements \ArrayAccess
         }
     }
 
-    /**
-     * @param BaseFormFieldData $formField
-     */
     public function addFormField(BaseFormFieldData $formField, $key)
     {
         $formField->setFormData($this);
@@ -210,9 +203,9 @@ abstract class BaseFormData implements \ArrayAccess
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->getId();
+        return (string) $this->getId();
     }
 
 }

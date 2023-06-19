@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\FormGeneratorBundle\DependencyInjection;
 
 use Networking\FormGeneratorBundle\Form\FormType;

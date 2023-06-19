@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the sko  package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\FormGeneratorBundle\Admin;
 
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
@@ -35,10 +37,7 @@ class FormAdmin extends BaseAdmin
          return 'admin_networking_forms';
     }
 
-    /**
-     * @return string
-     */
-    public function getIcon()
+    public function getIcon(): string
     {
         return 'glyphicon-file';
     }
@@ -82,10 +81,7 @@ class FormAdmin extends BaseAdmin
                 'online',
                 CallbackFilter::class,
                 [
-                    'callback' => [
-                        $this,
-                        'getAllOnline',
-                    ],
+                    'callback' => $this->getAllOnline(...),
                 ],
                 [
                     'field_type' => ChoiceType::class,
@@ -177,11 +173,9 @@ class FormAdmin extends BaseAdmin
     }
 
     /**
-     * @param ProxyQuery $ProxyQuery
      * @param $alias
      * @param $field
      * @param $data
-     *
      * @return bool
      */
     public function getAllOnline(ProxyQuery $ProxyQuery, $alias, $field, $data)

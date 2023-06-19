@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\FormGeneratorBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\MappedSuperclass
- */
+#[ORM\MappedSuperclass]
 abstract class BaseFormFieldData
 {
 
@@ -17,21 +17,19 @@ abstract class BaseFormFieldData
 
     /**
      * @var string
-     * @ORM\Column(name="label", type="text")
      */
+    #[ORM\Column(name: 'label', type: 'text')]
     protected $label;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="value", type="json", nullable=true)
      */
+    #[ORM\Column(name: 'value', type: 'json', nullable: true)]
     protected $value;
 
     /**
      * Set formData.
      *
-     * @param BaseFormData $formData
      *
      * @return FormFieldData
      */
@@ -55,9 +53,7 @@ abstract class BaseFormFieldData
     /**
      * Set value.
      *
-     * @param FormField $formField
      * @param $value
-     *
      * @return $this
      */
     public function setFormFieldValue(FormField $formField, $value)

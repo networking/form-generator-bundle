@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the sko  package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\FormGeneratorBundle\Controller;
 
 use Doctrine\Persistence\ManagerRegistry;
@@ -26,8 +28,8 @@ use Networking\FormGeneratorBundle\Helper\FormHelper;
 
 class FrontendFormController extends AbstractController
 {
-    const FORM_DATA = 'application_networking_form_generator_form_data';
-    const FORM_COMPLETE = 'application_networking_form_generator_form_complete';
+    final public const FORM_DATA = 'application_networking_form_generator_form_data';
+    final public const FORM_COMPLETE = 'application_networking_form_generator_form_complete';
 
     /**
      * @var SessionInterface
@@ -40,32 +42,24 @@ class FrontendFormController extends AbstractController
     protected $formHelper;
 
     /**
-     * @var string
-     */
-    protected $emailAddress;
-
-    /**
      * @var ManagerRegistry
      */
     protected $registry;
 
     /**
      * FrontendFormController constructor.
-     * @param FormHelper $formHelper
      * @param $emailAddress
+     * @param string $emailAddress
      */
-    public function __construct(ManagerRegistry $registry, FormHelper $formHelper, $emailAddress)
+    public function __construct(ManagerRegistry $registry, FormHelper $formHelper, protected $emailAddress)
     {
         $this->registry = $registry;
         $this->formHelper = $formHelper;
-        $this->emailAddress = $emailAddress;
     }
 
 
     /**
-     * @param Request $request
      * @param $id
-     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function viewFormAction(Request $request, $id)
@@ -145,7 +139,7 @@ class FrontendFormController extends AbstractController
                 'form_field_data_class' => $this->getParameter('networking_form_generator.form_field_data_class'),
                 'frontend_css_input_sizes' => $this->getParameter('networking_form_generator.frontend_css_input_sizes')
             ];
-        $options = array_merge($options, $options);
+        $options = [...$options, ...$options];
         $formType = $this->createForm(FormType::class, [], $options);
 
         $formData = $this->getSubmittedFormData($request);

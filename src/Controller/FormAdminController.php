@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\FormGeneratorBundle\Controller;
 
 use Doctrine\Persistence\ManagerRegistry;
@@ -43,11 +45,6 @@ class FormAdminController extends AbstractFOSRestController
      */
     protected $registry;
 
-    /**
-     * @param FormAdmin $formAdmin
-     * @param TranslatorInterface $translator
-     * @param ValidatorInterface $validator
-     */
     public function __construct(FormAdmin $formAdmin, TranslatorInterface $translator, ValidatorInterface $validator, ManagerRegistry $registry)
     {
         $this->admin = $formAdmin;
@@ -57,18 +54,12 @@ class FormAdminController extends AbstractFOSRestController
     }
 
 
-    /**
-     *
-     * @Rest\Get(path="/{id}", requirements={"_format"="json|xml"}, defaults={"id": "0"})
-     *
-     * @param Request $request
-     * @param $id
-     *
-     * @return Response
-     */
-    public function getAction(Request $request, $id)
+    #[Rest\Get(path: "/{id}", requirements: ["_format" => "json|xml", "id" => "\d+"])]
+    public function getAction(Request $request, $id): Response
     {
-        if ($id) {
+        if (!$id) {
+
+        }
             $repo = $this->registry->getRepository($this->getParameter('networking_form_generator.form_class'));
             /** @var Form $form */
             $form = $repo->find($id);
@@ -88,17 +79,11 @@ class FormAdminController extends AbstractFOSRestController
             $view->setFormat('json');
 
             return $this->handleView($view);
-        }
+
     }
 
-    /**
-     * @Rest\Post(requirements={"_format"="json|xml"})
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function postAction(Request $request)
+    #[Rest\Post(path: "/", requirements: ["_format" => "json|xml"])]
+    public function postAction(Request $request): Response
     {
         $view = $this->view([], 200);
         try {
@@ -116,16 +101,14 @@ class FormAdminController extends AbstractFOSRestController
     }
 
     /**
-     * @Rest\Put(path="/{id}", requirements={"_format"="json|xml"})
-     *
-     * @param Request $request
      * @param $id
-     *
      * @return Response
      */
-    public function putAction(Request $request, $id)
+    #[Rest\Put(path: "/{id}", requirements: ["_format" => "json|xml", "id" => "\d+"])]
+    public function putAction(Request $request, $id): Response
     {
 
+        $view = null;
         try {
             if ($id) {
                 /** @var BaseForm $form */
@@ -148,11 +131,7 @@ class FormAdminController extends AbstractFOSRestController
         return $this->handleView($view);
     }
 
-    /**
-     * @param BaseForm $form
-     * @return \Symfony\Component\Form\FormInterface|null
-     */
-    protected function setupAdminForm(Request $request, BaseForm $form)
+    protected function setupAdminForm(Request $request, BaseForm $form): ?\Symfony\Component\Form\FormInterface
     {
         $this->admin->setUniqid($request->request->get('uniqid'));
         $this->admin->setSubject($form);
@@ -163,14 +142,12 @@ class FormAdminController extends AbstractFOSRestController
     }
 
     /**
-     * @param Request $request
-     * @param FormInterface $adminForm
      * @param $action
      * @return \FOS\RestBundle\View\View
      * @throws \Sonata\AdminBundle\Exception\LockException
      * @throws \Sonata\AdminBundle\Exception\ModelManagerThrowable
      */
-    protected function processForm(Request $request, FormInterface $adminForm, $action = 'create')
+    protected function processForm(Request $request, FormInterface $adminForm, $action = 'create'): \FOS\RestBundle\View\View
     {
         $adminForm->handleRequest($request);
         /** @var BaseForm $data */
@@ -197,12 +174,10 @@ class FormAdminController extends AbstractFOSRestController
     }
 
     /**
-     * @param Request $request
      * @param Form $form
-     *
      * @return Form
      */
-    protected function setFields(Request $request, BaseForm $form)
+    protected function setFields(Request $request, BaseForm $form): BaseForm
     {
 
         $collection = $request->request->all('collection');
@@ -271,16 +246,12 @@ class FormAdminController extends AbstractFOSRestController
         return $form;
     }
 
-    /**
-     * @Rest\Delete(path="/{id}", requirements={"_format"="json|xml"}, defaults={"_format": "json"})
-     *
-     * @param Request $request
-     */
-    public function deleteAction(Request $request, $id)
+    #[Rest\Delete(path: "/{id}", requirements: ["_format" => "json|xml", "id" => "\d+"], defaults: ["_format" => "json"])]
+    public function deleteAction(Request $request, $id): void
     {
 
         /** @var FormAdmin $admin */
-        $admin = $this->get('Networking\FormGeneratorBundle\Admin\FormAdmin');
+        $admin = $this->get(\Networking\FormGeneratorBundle\Admin\FormAdmin::class);
 
         $form = $admin->getObject($id);
         if (!$form) {
@@ -290,9 +261,6 @@ class FormAdminController extends AbstractFOSRestController
         $admin->delete($form);
     }
 
-    /*
-     * deletes a single entry
-     * */
 
     public function deleteFormEntryAction(Request $request, $id, $rowid)
     {
@@ -321,7 +289,6 @@ class FormAdminController extends AbstractFOSRestController
     }
 
     /**
-     * @param Request $request
      * @param $id
      *
      * @return StreamedResponse
@@ -402,12 +369,10 @@ class FormAdminController extends AbstractFOSRestController
     }
 
     /**
-     * @param Request $request
      * @param $id
-     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function copyAction(Request $request, $id)
+    public function copyAction(Request $request, $id): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         $repo = $this->registry->getRepository($this->getParameter('networking_form_generator.form_class'));
         $em = $this->registry->getManager();
@@ -491,24 +456,19 @@ class FormAdminController extends AbstractFOSRestController
 
     /**
      * @param $view
-     * @param array $parameters
      * @param Response|null $response
      *
      * @return Response
      * @throws \Twig\Error\Error
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function renderWithExtraParams($view, array $parameters = [], Response $response = null)
     {
-        $parameters['admin'] = isset($parameters['admin']) ?
-            $parameters['admin'] :
-            $this->admin;
+        $parameters['admin'] ??= $this->admin;
 
-        $parameters['base_template'] = isset($parameters['base_template']) ?
-            $parameters['base_template'] :
-            $this->getBaseTemplate();
+        $parameters['base_template'] ??= $this->getBaseTemplate();
 
         $parameters['admin_pool'] = ''; //$this->get('sonata.admin.pool');
 
@@ -517,15 +477,14 @@ class FormAdminController extends AbstractFOSRestController
 
     /**
      * @param $view
-     * @param array $parameters
      * @param Response|null $response
      *
      * @return Response
      *
      * @throws \Twig\Error\Error
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function renderTemplate($view, array $parameters = [], Response $response = null)
     {

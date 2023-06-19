@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the sko  package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\FormGeneratorBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -18,27 +20,22 @@ use Symfony\Component\Form\FormBuilder;
 use Doctrine\ORM\EntityRepository;
 /**
  * FormPageContent.
- *
- * @ORM\Table(name="form_page_content")
- * @ORM\Entity
  */
+#[ORM\Table(name: 'form_page_content')]
+#[ORM\Entity]
 class FormPageContent implements ContentInterface
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @var Form
-     * @ORM\ManyToOne(targetEntity="Networking\FormGeneratorBundle\Model\Form",cascade={"merge"})
-     * @ORM\JoinColumn(name="form_id", referencedColumnName="id", onDelete="CASCADE")
-     */
-    private $form;
+    #[ORM\ManyToOne(targetEntity: \Networking\FormGeneratorBundle\Model\Form::class, cascade: ['merge'])]
+    #[ORM\JoinColumn(name: 'form_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    private ?\Networking\FormGeneratorBundle\Model\Form $form = null;
 
     /**
      * @return mixed
@@ -49,7 +46,6 @@ class FormPageContent implements ContentInterface
     }
 
     /**
-     * @param \Symfony\Component\Form\FormBuilder $formBuilder
      * @Sonata\FormCallback
      */
     public static function configureFormFields(FormBuilder $formBuilder)
@@ -89,8 +85,6 @@ class FormPageContent implements ContentInterface
     }
 
     /**
-     * @param Form $form
-     *
      * @return $this
      */
     public function setForm(Form $form)
@@ -124,10 +118,7 @@ class FormPageContent implements ContentInterface
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function getContentTypeName()
+    public function getContentTypeName(): string
     {
         return 'Custom Form';
     }

@@ -1,103 +1,94 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\FormGeneratorBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as Serializer;
 
-/**
- * @ORM\MappedSuperclass
- */
+#[ORM\MappedSuperclass]
 abstract class BaseFormField
 {
 
-    const TEXT_FIELDS = ['Text Input', 'Password Input', 'Search Input', 'Prepended Text', 'Prepended Icon', 'Appended Text', 'Appended Icon', 'Text Area' ];
+    public const TEXT_FIELDS = ['Text Input', 'Password Input', 'Search Input', 'Prepended Text', 'Prepended Icon', 'Appended Text', 'Appended Icon', 'Text Area' ];
 
     /**
      * @var Form
      *
      */
-    protected $form;
+    protected BaseForm $form;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255)
      */
-    protected $name;
+    #[ORM\Column(name: 'name', type: 'string', length: 255)]
+    protected string $name;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="field_label", type="string", length=255)
      */
-    protected $fieldLabel;
+    #[ORM\Column(name: 'field_label', type: 'string', length: 255)]
+    protected string $fieldLabel;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="type", type="string", length=255)
      */
-    protected $type;
+    #[ORM\Column(name: 'type', type: 'string', length: 255)]
+    protected string $type;
 
     /**
      * @var array
-     *
-     * @Serializer\Type("array")
-     * @ORM\Column(name="options", type="json")
      */
-    protected $options;
+    #[Serializer\Type('array')]
+    #[ORM\Column(name: 'options', type: 'json')]
+    protected array $options;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="placeholder", type="string", length=255, nullable =true)
      */
+    #[ORM\Column(name: 'placeholder', type: 'string', length: 255, nullable: true)]
     protected $placeholder;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="mandatory", type="boolean", nullable =true)
      */
+    #[ORM\Column(name: 'mandatory', type: 'boolean', nullable: true)]
     protected $mandatory;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="invalid_message", type="string", length=510, nullable =true)
      */
+    #[ORM\Column(name: 'invalid_message', type: 'string', length: 510, nullable: true)]
     protected $invalidMessage;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="empty_message", type="string", length=510, nullable =true)
      */
+    #[ORM\Column(name: 'empty_message', type: 'string', length: 510, nullable: true)]
     protected $emptyMessage;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="validation_type", type="string", length=255, nullable =true)
      */
+    #[ORM\Column(name: 'validation_type', type: 'string', length: 255, nullable: true)]
     protected $validationType;
 
     /**
      * @var int
      *
      * @Gedmo\SortablePosition
-     * @ORM\Column(name="position", type="integer")
      */
+    #[ORM\Column(name: 'position', type: 'integer')]
     protected $position;
 
     /**
      * Mapping of choice fields to there option, value lists.
      *
      * @var array
-     * @Serializer\Exclude(if="true")
      */
+    #[Serializer\Exclude()]
     protected $mappable = [
         'Select Basic' => ['options' => 'options', 'values' => 'values'],
         'Select Multiple' => ['options' => 'options', 'values' => 'values'],
@@ -142,7 +133,7 @@ abstract class BaseFormField
      *
      * @return string
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -351,10 +342,7 @@ abstract class BaseFormField
         return $this->position;
     }
 
-    /**
-     * @param mixed $position
-     */
-    public function setPosition($position)
+    public function setPosition(mixed $position)
     {
         $this->position = $position;
     }

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the sko  package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\FormGeneratorBundle\Form;
 
 use Gedmo\Sluggable\Util\Urlizer;
@@ -34,7 +36,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class FormType extends AbstractType
 {
 
-    const FRONTEND_INPUT_SIZES = [
+    final public const FRONTEND_INPUT_SIZES = [
         'xs' => 'col-2',
         's' => 'col-4',
         'm' => 'col-6',
@@ -43,7 +45,7 @@ class FormType extends AbstractType
         'xxl' => 'col-12',
     ];
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
         $form = $options['form'];
@@ -70,7 +72,7 @@ class FormType extends AbstractType
     }
 
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
 
         $setIdAttr = function(Options $options){
@@ -104,44 +106,25 @@ class FormType extends AbstractType
 
     protected function getFieldType($type)
     {
-        switch ($type) {
-            case 'Legend':
-                $type = LegendType::class;
-                break;
-            case 'Infotext':
-                $type = InfotextType::class;
-                break;
-            case 'Password Input':
-                $type = PasswordType::class;
-                break;
-            case 'Search Input':
-                $type = SearchType::class;
-                break;
-            case 'Text Area':
-                $type = TextareaType::class;
-                break;
-            case 'Multiple Checkboxes':
-            case 'Multiple Checkboxes Inline':
-            case 'Multiple Radios':
-            case 'Multiple Radios Inline':
-            case 'Select Basic':
-            case 'Select Multiple':
-                $type = ChoiceType::class;
-                break;
-            default:
-                $type = TextType::class;
-                break;
-        }
+        $type = match ($type) {
+            'Legend' => LegendType::class,
+            'Infotext' => InfotextType::class,
+            'Password Input' => PasswordType::class,
+            'Search Input' => SearchType::class,
+            'Text Area' => TextareaType::class,
+            'Multiple Checkboxes', 'Multiple Checkboxes Inline', 'Multiple Radios', 'Multiple Radios Inline', 'Select Basic', 'Select Multiple' => ChoiceType::class,
+            default => TextType::class,
+        };
 
         return $type;
     }
 
-    protected function extractFieldOptions(BaseFormField $field, array $formOptions)
+    protected function extractFieldOptions(BaseFormField $field, array $formOptions): array
     {
         $options = $field->getOptions();
 
         $fieldOptions = [];
-        $fieldOptions['label'] = $field->getFieldLabel() ? $field->getFieldLabel() : false;
+        $fieldOptions['label'] = $field->getFieldLabel() ?: false;
         if (!$field->getFieldLabel()) {
             $fieldOptions['label_render'] = false;
         } else {

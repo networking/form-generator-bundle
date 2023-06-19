@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\FormGeneratorBundle\Twig\Extension;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
@@ -63,20 +65,12 @@ class FormHelperExtension extends AbstractExtension
     protected $managerRegistry;
 
     /**
-     * @var string
+     * @param string $pageClass
+     * @param string $pageContentClass
      */
-    protected $pageClass;
-
-    /**
-     * @var string
-     */
-    protected $pageContentClass;
-
-    public function __construct(Pool $pool, ManagerRegistry $managerRegistry, $pageClass, $pageContentClass){
+    public function __construct(Pool $pool, ManagerRegistry $managerRegistry, protected $pageClass, protected $pageContentClass){
         $this->pool = $pool;
         $this->managerRegistry = $managerRegistry;
-        $this->pageClass = $pageClass;
-        $this->pageContentClass = $pageContentClass;
     }
 
 
@@ -85,7 +79,7 @@ class FormHelperExtension extends AbstractExtension
      *
      * @return string The extension name
      */
-    public function getName()
+    public function getName(): string
     {
         return 'networking_form_generator.helper.twig';
     }
@@ -98,7 +92,7 @@ class FormHelperExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('get_form_page_links', [$this, 'getPageLinks'], ['is_safe' => ['html']]),
+            new TwigFunction('get_form_page_links', $this->getPageLinks(...), ['is_safe' => ['html']]),
         ];
     }
 

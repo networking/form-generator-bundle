@@ -21,7 +21,6 @@ require.config({
     },
     paths: {
         jquery: "networkingformgenerator/assets/vendor/jquery/dist/jquery.min",
-        confirmExit: "networkingformgenerator/assets/js/jquery.confirmExit",
         app: "networkingformgenerator/assets/js",
         ckeditor: 'fosckeditor/ckeditor',
         jqueryFormSerializer: "networkingformgenerator/assets/js/lib/jqueryFormSerializer",

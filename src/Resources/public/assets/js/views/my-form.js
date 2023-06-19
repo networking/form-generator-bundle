@@ -1,7 +1,7 @@
 define([
-    "jquery", "jqueryFormSerializer", "confirmExit", "ckeditor", "underscore", "backbone", "collections/snippets", "views/temp-snippet", "helper/pubsub", "text!templates/app/form.html", "text!templates/app/message.html"
+    "jquery", "jqueryFormSerializer", "ckeditor", "underscore", "backbone", "collections/snippets", "views/temp-snippet", "helper/pubsub", "text!templates/app/form.html", "text!templates/app/message.html"
     , "views/tab", "text!data/input_limited.json", "text!data/radio.json", "text!data/select.json", "text!data/buttons.json"
-], function ($, jqueryFormSerializer, confirmExit, CKEDITOR, _, Backbone, SnippetsCollection, TempSnippetView, PubSub, _form, __message, TabView, inputJSON, radioJSON, selectJSON, buttonsJSON) {
+], function ($, jqueryFormSerializer,  CKEDITOR, _, Backbone, SnippetsCollection, TempSnippetView, PubSub, _form, __message, TabView, inputJSON, radioJSON, selectJSON, buttonsJSON) {
 
     return Backbone.View.extend({
         template: _form, events: {
@@ -125,8 +125,8 @@ define([
                         scrollTop: $(".initcms").offset().top
                     }, 2000);
 
-                    $('.sonata-ba-form form').each(function() {
-                        $(this).confirmExit();
+                    document.querySelectorAll('.sonata-ba-form form').forEach((formElement) => {
+                        InitCms.confirmExit(formElement);
                     });
                 },
                 error: function (model, xhr) {

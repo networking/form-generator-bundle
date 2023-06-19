@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\FormGeneratorBundle\Form;
 
 use Gedmo\Sluggable\Util\Urlizer;
@@ -16,21 +18,15 @@ class FormDataTransformer implements DataTransformerInterface
      */
     protected $form;
 
-    protected $dataClass;
-
-    protected $formFieldDataClass;
-
-    public function __construct(BaseForm $form, $dataClass, $formFieldDataClass){
+    public function __construct(BaseForm $form, protected $dataClass, protected $formFieldDataClass){
         $this->form = $form;
-        $this->dataClass = $dataClass;
-        $this->formFieldDataClass = $formFieldDataClass;
     }
 
     /**
      * @param $value
-     * @return FormData
      */
-    public function transform($value){
+    public function transform($value): FormData
+    {
 
         $value = new $this->dataClass;
 
@@ -56,9 +52,8 @@ class FormDataTransformer implements DataTransformerInterface
 
     /**
      * @param $value
-     * @return mixed
      */
-    public function reverseTransform($value)
+    public function reverseTransform($value): mixed
     {
         return $value;
     }

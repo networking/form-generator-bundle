@@ -1,15 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\FormGeneratorBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * FieldData.
- *
- * @ORM\Table(name="form_field_data")
- * @ORM\Entity
  */
+#[ORM\Table(name: 'form_field_data')]
+#[ORM\Entity]
 class FormFieldData extends BaseFormFieldData
 {
 
@@ -17,19 +18,17 @@ class FormFieldData extends BaseFormFieldData
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
     
     /**
      * @var FormData
-     *
-     * @ORM\ManyToOne(targetEntity="Networking\FormGeneratorBundle\Model\FormData", inversedBy="formFields")
-     * @ORM\JoinColumn(name="form_data_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\ManyToOne(targetEntity: \Networking\FormGeneratorBundle\Model\FormData::class, inversedBy: 'formFields')]
+    #[ORM\JoinColumn(name: 'form_data_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     protected $formData;
 
 }

@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Networking\FormGeneratorBundle\Form\Type;
 
@@ -10,13 +11,13 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class InfotextType extends AbstractType
 {
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['label'] = false;
         $view->vars['text'] = $options['label'];
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function setDefaultOptions(OptionsResolverInterface $resolver): void
     {
         $resolver->setRequired([
             'text',

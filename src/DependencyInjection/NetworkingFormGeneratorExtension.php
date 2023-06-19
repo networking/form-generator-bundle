@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\FormGeneratorBundle\DependencyInjection;
 
 use Networking\FormGeneratorBundle\Form\FormType;
@@ -18,7 +20,7 @@ class NetworkingFormGeneratorExtension extends Extension
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);

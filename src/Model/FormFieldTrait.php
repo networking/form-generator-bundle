@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\FormGeneratorBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -12,10 +14,10 @@ trait FormFieldTrait
     /**
      * @var Form
      * @Gedmo\SortableGroup
-     * @ORM\ManyToOne(targetEntity="Networking\FormGeneratorBundle\Model\Form", inversedBy="formFields")
-     * @ORM\JoinColumn(name="form_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    protected $form;
+    #[ORM\ManyToOne(targetEntity: \Networking\FormGeneratorBundle\Model\Form::class, inversedBy: 'formFields')]
+    #[ORM\JoinColumn(name: 'form_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    protected BaseForm $form;
 
     /**
      * Get id.

@@ -1,5 +1,5 @@
 networking_api_forms:
-    type: annotation
+    type: attribute
     prefix: /admin/cms/forms/api
     resource: Networking\FormGeneratorBundle\Controller\FormAdminController
 

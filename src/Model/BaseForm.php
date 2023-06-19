@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\FormGeneratorBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -9,57 +11,55 @@ use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-/**
- * @ORM\MappedSuperclass
- */
-abstract class BaseForm
+#[ORM\MappedSuperclass]
+abstract class BaseForm implements \Stringable
 {
-    const EMAIL = 'email';
-    const DB = 'db';
-    const EMAIL_DB = 'email_db';
+    public const EMAIL = 'email';
+    public const DB = 'db';
+    public const EMAIL_DB = 'email_db';
 
     /**
      * @var string
-     * @Assert\NotBlank()
-     * @ORM\Column(name="name", type="string", length=255)
      */
+    #[Assert\NotBlank]
+    #[ORM\Column(name: 'name', type: 'string', length: 255)]
     protected $name;
 
     /**
      * @var string
-     * @ORM\Column(name="info_text", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'info_text', type: 'text', nullable: true)]
     protected $infoText;
 
     /**
      * @var string
-     * @ORM\Column(name="thank_you_text", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'thank_you_text', type: 'text', nullable: true)]
     protected $thankYouText;
 
     /**
      * @var string
-     * @ORM\Column(name="email", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'email', type: 'text', nullable: true)]
     protected $email;
 
     /**
      * @var string
-     * @Assert\NotBlank()
-     * @ORM\Column(name="action", type="string", length=255)
      */
+    #[Assert\NotBlank]
+    #[ORM\Column(name: 'action', type: 'string', length: 255)]
     protected $action = 'email';
 
     /**
      * @var string
-     * @ORM\Column(name="redirect", type="string", length=255, nullable=true)
      */
+    #[ORM\Column(name: 'redirect', type: 'string', length: 255, nullable: true)]
     protected $redirect;
 
     /**
      * @var bool
-     * @ORM\Column(name="online", type="boolean", nullable=true)
      */
+    #[ORM\Column(name: 'online', type: 'boolean', nullable: true)]
     protected $online = true;
 
     /**
@@ -74,8 +74,8 @@ abstract class BaseForm
 
     /**
      * @var array
-     * @Serializer\Exclude(if="true")
      */
+    #[Serializer\Exclude()]
     protected $collection = [];
 
     public function __clone()
@@ -86,9 +86,7 @@ abstract class BaseForm
         $this->name = $this->name.' copy '.$date->format('d.m.Y H:i:s');
     }
 
-    /**
-     * @Assert\Callback
-     */
+    #[Assert\Callback]
     public function validate(ExecutionContextInterface $context)
     {
         // check if the name is actually a fake name
@@ -100,7 +98,7 @@ abstract class BaseForm
         }
 
         if ($this->getEmail()) {
-            $emailArr = explode(',', $this->getEmail());
+            $emailArr = explode(',', (string) $this->getEmail());
             foreach ($emailArr as $email) {
                 if (!preg_match('/^.+\@\S+\.\S+$/', trim($email))) {
                     $context
@@ -129,10 +127,7 @@ abstract class BaseForm
         return $this->action;
     }
 
-    /**
-     * @param mixed $action
-     */
-    public function setAction($action)
+    public function setAction(mixed $action)
     {
         $this->action = $action;
     }
@@ -145,10 +140,7 @@ abstract class BaseForm
         return $this->email;
     }
 
-    /**
-     * @param mixed $email
-     */
-    public function setEmail($email)
+    public function setEmail(mixed $email)
     {
         $this->email = $email;
     }
@@ -232,10 +224,7 @@ abstract class BaseForm
         return $this->redirect;
     }
 
-    /**
-     * @param mixed $redirect
-     */
-    public function setRedirect($redirect)
+    public function setRedirect(mixed $redirect)
     {
         $this->redirect = $redirect;
     }
@@ -294,7 +283,7 @@ abstract class BaseForm
         $this->formFields[] = $formField;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getName();
     }
@@ -354,9 +343,7 @@ abstract class BaseForm
      */
     public function getField($key)
     {
-        $fields = $this->formFields->filter(function ($field) use ($key) {
-            return Urlizer::urlize($field->getName()) == $key;
-        });
+        $fields = $this->formFields->filter(fn($field) => Urlizer::urlize($field->getName()) == $key);
 
         if ($fields->count() > 0) {
             return $fields->first();

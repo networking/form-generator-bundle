@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the sko  package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\FormGeneratorBundle\Admin;
 
 use Networking\InitCmsBundle\Admin\BaseAdmin;
@@ -27,10 +29,7 @@ class FormFieldAdmin extends BaseAdmin
         return 'admin_networking_form_fields';
     }
 
-    /**
-     * @return string
-     */
-    public function getIcon()
+    public function getIcon(): string
     {
         return 'glyphicon-file';
     }
@@ -44,15 +43,7 @@ class FormFieldAdmin extends BaseAdmin
             ->add('fieldLabel')
             ->add('type',
                 'choice',
-                array(
-                    'choices' => array(
-                        'text' => 'text',
-                        'textarea' => 'textarea',
-                        'select' => 'select',
-                        'radio' => 'radio',
-                        'checkboxes' => 'checkboxes',
-                    ),
-                )
+                ['choices' => ['text' => 'text', 'textarea' => 'textarea', 'select' => 'select', 'radio' => 'radio', 'checkboxes' => 'checkboxes']]
             )
         ;
     }

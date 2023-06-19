@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the sko  package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\FormGeneratorBundle\Helper;
 
 use Doctrine\Persistence\ManagerRegistry;
@@ -39,10 +41,6 @@ class FormHelper
 
     /**
      * FormHelper constructor.
-     *
-     * @param MailerInterface $mailer
-     * @param ManagerRegistry $doctrine
-     * @param Environment $twig
      */
     public function __construct(MailerInterface $mailer, ManagerRegistry $doctrine, Environment $twig)
     {
@@ -55,9 +53,7 @@ class FormHelper
      * Send an plain text email of the data.
      *
      * @param Form $form
-     * @param BaseFormData $formData
      * @param string $emailFrom
-     *
      * @return int
      */
     public function sendEmail(BaseForm $form, BaseFormData $formData, $emailFrom = '')
@@ -72,7 +68,7 @@ class FormHelper
             ->subject($form->getName())
             ->text($messageText);
 
-        foreach (explode(',', $form->getEmail()) as $emailAddress) {
+        foreach (explode(',', (string) $form->getEmail()) as $emailAddress) {
             $email->addTo(trim($emailAddress));
         }
 
