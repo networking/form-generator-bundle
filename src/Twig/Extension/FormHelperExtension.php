@@ -14,6 +14,7 @@ namespace Networking\FormGeneratorBundle\Twig\Extension;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Collections\ArrayCollection;
+use Networking\FormGeneratorBundle\Model\FormPageContent;
 use Networking\InitCmsBundle\Entity\LayoutBlock;
 use Sonata\AdminBundle\Admin\Pool;
 use Doctrine\Persistence\ManagerRegistry;
@@ -107,38 +108,15 @@ class FormHelperExtension extends AbstractExtension
             ['form' => $formId]
         );
 
-        $blocks = $this->getFormPageContentLayoutBlocks();
-
-        $filteredBlocks = $blocks->filter(function (LayoutBlock $block) use ($content) {
-            foreach ($content as $item) {
-                if ($item->getId() == $block->getObjectId()) {
-                    return true;
-                }
-            }
-        });
-
         $links = [];
         $pageAdmin = $this->pool->getAdminByClass($this->pageClass);
 
         /** @var LayoutBlock $block */
-        foreach ($filteredBlocks as $block) {
+        foreach ($content as $block) {
             $url = $pageAdmin->generateUrl('show', ['id' => $block->getPageId()]);
             $links[] = ['url' => $url, 'title' => $block->getPage()->getAdminTitle()];
         }
 
         return $links;
-    }
-
-    protected function getFormPageContentLayoutBlocks()
-    {
-        if (!$this->formBlocks) {
-            $blocks = $this->managerRegistry->getRepository(LayoutBlock::class)->findBy(
-                ['classType' => $this->pageContentClass]
-            );
-
-            $this->formBlocks = new ArrayCollection($blocks);
-        }
-
-        return $this->formBlocks;
     }
 }

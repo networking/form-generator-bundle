@@ -7,10 +7,11 @@ namespace Networking\FormGeneratorBundle\Model;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Networking\InitCmsBundle\Model\IgnoreRevertInterface;
 
 #[ORM\MappedSuperclass]
 #[ORM\HasLifecycleCallbacks]
-abstract class BaseFormData implements \ArrayAccess, \Stringable
+abstract class BaseFormData implements \ArrayAccess, \Stringable, IgnoreRevertInterface
 {
     /**
      * @var int

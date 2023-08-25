@@ -10,61 +10,62 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\FormGeneratorBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 use Networking\InitCmsBundle\Form\Type\AutocompleteType;
 use Networking\InitCmsBundle\Model\ContentInterface;
 use Networking\InitCmsBundle\Annotation as Sonata;
+use Networking\InitCmsBundle\Entity\LayoutBlock;
+use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\FormBuilder;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * FormPageContent.
  */
 #[ORM\Table(name: 'form_page_content')]
 #[ORM\Entity]
-class FormPageContent implements ContentInterface
+class FormPageContent extends LayoutBlock implements ContentInterface
 {
     /**
      * @var int
+     *
      */
-    #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    private $id;
+    protected $id;
 
-    #[ORM\ManyToOne(targetEntity: \Networking\FormGeneratorBundle\Model\Form::class, cascade: ['merge'])]
+    #[ORM\ManyToOne(targetEntity: \Networking\FormGeneratorBundle\Model\Form::class)]
     #[ORM\JoinColumn(name: 'form_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[Assert\NotNull]
     private ?\Networking\FormGeneratorBundle\Model\Form $form = null;
-
-    /**
-     * @return mixed
-     */
-    public function __clone()
-    {
-        $this->id = null;
-    }
 
     /**
      * @Sonata\FormCallback
      */
-    public static function configureFormFields(FormBuilder $formBuilder)
+    #[Sonata\FormCallback]
+    public static function configureFormFields(FormMapper $formBuilder)
     {
         $formBuilder->add(
             'form',
             AutocompleteType::class,
-               [
-                   'label' => 'form.label.form',
-                   'translation_domain' => 'formGenerator',
-                   'class' => Form::class,
-                   'attr' => ['style' => 'width: 220px;'],
-                   'layout' => 'horizontal',
-                   'query_builder' => function(EntityRepository $repository){
-                        $qb = $repository->createQueryBuilder('f');
-                        $qb->where('f.online = 1 OR f.online IS NULL');
-                        return $qb;
-                   }
-               ]
+            [
+                'label' => 'form.label.form',
+                'translation_domain' => 'formGenerator',
+                'class' => Form::class,
+                'attr' => ['style' => 'width: 220px;'],
+                'layout' => 'horizontal',
+                'query_builder' => function (EntityRepository $repository) {
+                    $qb = $repository->createQueryBuilder('f');
+                    $qb->where('f.online = 1 OR f.online IS NULL');
+
+                    return $qb;
+                },
+            ]
         );
     }
 

@@ -17,7 +17,7 @@ trait FormFieldTrait
      */
     #[ORM\ManyToOne(targetEntity: \Networking\FormGeneratorBundle\Model\Form::class, inversedBy: 'formFields')]
     #[ORM\JoinColumn(name: 'form_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    protected BaseForm $form;
+    protected ?BaseForm $form = null;
 
     /**
      * Get id.

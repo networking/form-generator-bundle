@@ -10,6 +10,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use Gedmo\Sluggable\Util\Urlizer;
 use Networking\FormGeneratorBundle\Admin\FormAdmin;
 use Networking\FormGeneratorBundle\Model\BaseForm;
+use Networking\FormGeneratorBundle\Model\BaseFormField;
 use Networking\FormGeneratorBundle\Model\Form;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -54,33 +55,31 @@ class FormAdminController extends AbstractFOSRestController
     }
 
 
-    #[Rest\Get(path: "/{id}", requirements: ["_format" => "json|xml", "id" => "\d+"])]
-    public function getAction(Request $request, $id): Response
-    {
-        if (!$id) {
-
-        }
-            $repo = $this->registry->getRepository($this->getParameter('networking_form_generator.form_class'));
-            /** @var Form $form */
-            $form = $repo->find($id);
-            if (!$form) {
-                throw new NotFoundHttpException('Form not found');
-            }
-
-            $form->setCollection();
-
-            $view = $this->view([
-                'name' => $form->getName(),
-                'id' => $form->getId(),
-                'collection' => $form->getCollection(),
-                'action' => $form->getAction(),
-                'email' => $form->getAction(),
-            ]);
-            $view->setFormat('json');
-
-            return $this->handleView($view);
-
-    }
+//    #[Rest\Get(path: "/{id}", requirements: ["_format" => "json|xml", "id" => "\d+"])]
+//    public function getAction(Request $request, $id): Response
+//    {
+//
+//        $repo = $this->registry->getRepository($this->getParameter('networking_form_generator.form_class'));
+//        /** @var Form $form */
+//        $form = $repo->find($id);
+//        if (!$form) {
+//            throw new NotFoundHttpException('Form not found');
+//        }
+//
+//
+//        $view = $this->view([
+//            'name' => $form->getName(),
+//            'id' => $form->getId(),
+//            'collection' => $form->getCollection(),
+//            'action' => $form->getAction(),
+//            'email' => $form->getAction(),
+//            'objectId' => $objectId,
+//        ]);
+//        $view->setFormat('json');
+//
+//        return $this->handleView($view);
+//
+//    }
 
     #[Rest\Post(path: "/", requirements: ["_format" => "json|xml"])]
     public function postAction(Request $request): Response
@@ -109,16 +108,14 @@ class FormAdminController extends AbstractFOSRestController
     {
 
         $view = null;
+
         try {
             if ($id) {
                 /** @var BaseForm $form */
                 $form = $this->admin->getObject($id);
-
                 if (!$form) {
                     throw new NotFoundHttpException('Form not found');
                 }
-
-                $request->setMethod('POST');
                 $adminForm = $this->setupAdminForm($request, $form);
                 $view = $this->processForm($request, $adminForm, 'update');
             }
@@ -133,7 +130,7 @@ class FormAdminController extends AbstractFOSRestController
 
     protected function setupAdminForm(Request $request, BaseForm $form): ?\Symfony\Component\Form\FormInterface
     {
-        $this->admin->setUniqid($request->request->get('uniqid'));
+        $this->admin->setUniqid($request->get('uniqid'));
         $this->admin->setSubject($form);
         $adminForm = $this->admin->getForm();
         $adminForm->setData($form);
@@ -152,8 +149,10 @@ class FormAdminController extends AbstractFOSRestController
         $adminForm->handleRequest($request);
         /** @var BaseForm $data */
         $data = $adminForm->getData();
+
+
+
         if ($adminForm->isSubmitted() && $adminForm->isValid()) {
-           
             if ($action === 'update') {
                 $data->removeFields();
                 $data = $this->setFields($request, $data);
@@ -170,7 +169,9 @@ class FormAdminController extends AbstractFOSRestController
         }
         $errors = $this->validator->validate($data);
 
-        return $this->view($errors, 500);
+        $message = $this->translator->trans('An error occured', [], $this->admin->getTranslationDomain());
+
+        return $this->view(['violations' => $errors, 'message' => $message], 500);
     }
 
     /**
@@ -180,7 +181,9 @@ class FormAdminController extends AbstractFOSRestController
     protected function setFields(Request $request, BaseForm $form): BaseForm
     {
 
-        $collection = $request->request->all('collection');
+        $collectionJson = $request->request->get('collection');
+
+        $collection = json_decode($collectionJson, true);
 
 
 
@@ -189,57 +192,24 @@ class FormAdminController extends AbstractFOSRestController
 
         foreach ($collection as $key => $field) {
 
+            /** @var BaseFormField $formField */
             $formField = new $formFieldClass;
             if (is_array($field)) {
 
-                $uniqIdField = !array_key_exists('label', $field['fields'])?'name':'label';
+                $uniqIdField = !array_key_exists('label', $field)?'name':'label';
 
-                $uniqId = uniqid(substr(Urlizer::transliterate($field['fields'][$uniqIdField]['value']), 0, 3));
+                $uniqId = uniqid(substr(Urlizer::transliterate($field[$uniqIdField]), 0, 3));
 
-                if(!array_key_exists('id', $field['fields'])){
-                    $field['fields']['id'] = [
-                        'value' => $uniqId,
-                        'label' => 'ID / Name',
-                        'type' => 'hidden',
-                        'name' => 'id',
-                    ];
+                if(!array_key_exists('id', $field)){
+                    $field['id'] =  $uniqId;
                 }
-                switch ($field['title']) {
-                    case 'Multiple Radios':
-                    case 'Multiple Checkboxes':
-                    case 'Multiple Checkboxes Inline':
-                    case 'Multiple Radios Inline':
-                        $field['fields']['id']['value'] = $field['fields']['id']['value'] ?: $uniqId;
-                        $formField->setName($field['fields']['id']['value']);
-                        $formField->setFieldLabel($field['fields']['label']['value']);
-                        $formField->setType($field['title']);
-                        $formField->setOptions($field['fields']);
-                        $form->addFormField($formField);
-                        break;
-                    case 'Legend':
-                        $field['fields']['id']['value'] = $field['fields']['id']['value'] ?: $uniqId;
-                        $formField->setName($field['fields']['id']['value']);
-                        $formField->setFieldLabel($field['fields']['name']['value']);
-                        $formField->setType($field['title']);
-                        $formField->setOptions($field['fields']);
-                        $form->addFormField($formField);
-                        break;
-                    case 'Infotext':
-                        $formField->setName(uniqid('info_text'));
-                        $formField->setFieldLabel($field['fields']['label']['value']);
-                        $formField->setType($field['title']);
-                        $formField->setOptions($field['fields']);
-                        $form->addFormField($formField);
-                        break;
-                    default:
-                        $field['fields']['id']['value'] = $field['fields']['id']['value'] ?: $uniqId;
-                        $formField->setName($field['fields']['id']['value']);
-                        $formField->setFieldLabel($field['fields'][$uniqIdField]['value']);
-                        $formField->setType($field['title']);
-                        $formField->setOptions($field['fields']);
-                        $form->addFormField($formField);
-                        break;
-                }
+
+                $formField->setName($field['id']);
+                $formField->setFieldLabel($field['value']);
+                $formField->setType($field['type']);
+                $formField->setOptions($field['config']);
+
+                $form->addFormField($formField);
             }
         }
 

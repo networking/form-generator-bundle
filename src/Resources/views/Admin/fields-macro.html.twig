@@ -1,0 +1,252 @@
+{% macro formLegend(id, value ) %}
+    {% set value = value??'Form Legend' %}
+    <div>
+        <legend class="float-none">{{ value }}</legend>
+    </div>
+{% endmacro %}
+
+{% macro infoText(id = '', value) %}
+    {% set value = value??'Freie Textblock: Fügen Sie hier Ihren Text hinzu' %}
+    <!-- Info Text -->
+    <div class="panel-body" data-html>
+        {{ value|raw }}
+    </div>
+{% endmacro %}
+
+{% macro textInput(id = '', value, config  ) %}
+    {% set value = value??'Text Feld' %}
+    <div class="mb-3">
+        <label class="control-label {{ config.required?'required':'' }}" for="" data-label>{{ value }}</label>
+        <input name="" type="text" class="form-control"
+               data-placeholder
+               placeholder="{{ config.placeholder }}" {% if config.required %} required{% endif %} >
+    </div>
+{% endmacro %}
+
+{% macro textArea(id = '', value, config  ) %}
+    {% set value = value??'Text Area' %}
+    <div class="mb-3">
+        <label class="control-label {{ config.required?'required':'' }}" for="" data-label>{{ value }}</label>
+        <textarea name="" type="text" class="form-control" cols="30" rows="5"
+                  data-placeholder
+                  placeholder="{{ config.placeholder }}" {% if config.required %} required{% endif %} ></textarea>
+    </div>
+{% endmacro %}
+
+{% macro selectBasic(id = '', value, config  ) %}
+    {% set value = value??'Basic Auswahl' %}
+    <div class="form-group">
+        <label class="col-md-4 control-label {{ config.required?'required':'' }}" for=""
+               data-label>{{ value }}</label>
+        <div class="col-md-8">
+            <div class="  col-md-12 ">
+                <select name="" class="form-control" {% if config.required %} required{% endif %} data-options>
+                    {% for option in config.options %}
+                        <option value="{{ loop.index }}">{{ option }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}
+
+{% macro selectMultiple(id = '', value, config  ) %}
+    {% set value = value??'Mehrfach Auswahl' %}
+    <div class="form-group">
+        <label class="col-md-4 control-label {{ config.required?'required':'' }}" for=""
+               data-label>{{ value }}</label>
+        <div class="col-md-8">
+            <div class="col-md-12 ">
+                <select name="" class="form-control" multiple {% if config.required %} required{% endif %}
+                        data-options>
+                    {% for option in config.options %}
+                        <option value="{{ loop.index }}">{{ option }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro multipleRadios(id = '', value, config  ) %}
+    {% set value = value??'Mehrfach Radio' %}
+    <label class="control-label">{{ value }}</label>
+    {% set key = random() %}
+    <div class="form-group">
+        {% for option in config.options %}
+            <div class="form-check mb-3" data-label>
+                <input class="form-check-input" type="radio" name="{{ key }}" value=""
+                       id="radio{{ key }}{{ loop.index }}">
+                <label class="form-check-label" for="radio{{ key }}{{ loop.index }}">
+                    {{ option }}
+                </label>
+            </div>
+        {% endfor %}
+    </div>
+{% endmacro %}
+
+{% macro multipleRadiosInline(id = '', value, config  ) %}
+    {% set value = value??'Mehrfach Radios (in einer Linie)' %}
+    <label class="control-label" data-label>{{ value }}</label>
+    {% set key = random() %}
+    <div class="form-group">
+        {% for option in config.options %}
+            <div class="form-check form-check-inline" data-options>
+                <input class="form-check-input" type="radio" name="{{ key }}" value=""
+                       id="radioInline{{ key }}{{ loop.index }}">
+                <label class="form-check-label" for="radioInline{{ key }}{{ loop.index }}">
+                    {{ option }}
+                </label>
+            </div>
+        {% endfor %}
+    </div>
+{% endmacro %}
+
+{% macro multipleCheckboxes(id = '', value, config  ) %}
+    {% set value = value??'Mehrfach Checkboxes' %}
+
+        <label class="control-label" data-label>{{ value }}</label>
+        {% set key = random() %}
+        <div class="form-group">
+            {% for option in config.options %}
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" value="" id="checkbox{{ key }}{{ loop.index }}">
+                    <label class="form-check-label" for="checkbox{{ key }}{{ loop.index }}">
+                        {{ option }}
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+
+{% endmacro %}
+
+{% macro multipleCheckboxesInline(id = '', value, config  ) %}
+    {% set value = value??'Mehrfach Checkboxes (in einer Linie)' %}
+        <label class="control-label" data-label>{{ value }}</label>
+        {% set key = random() %}
+        <div class="form-group">
+            {% for option in config.options %}
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" value=""
+                           id="checkboxInline{{ key }}{{ loop.index }}">
+                    <label class="form-check-label" for="checkboxInline{{ key }}{{ loop.index }}">
+                        {{ option }}
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+{% endmacro %}
+
+{% macro textInputPrependedText(id = '', value = 'Text Feld ', config  ) %}
+
+    <div class="form-group">
+        <label class="control-label" for="">Vorangestellter
+            Text</label>
+        <div class="input-group">
+            <span class="input-group-text">Text</span>
+            <input name="" class="form-control" placeholder="" type="text">
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro textInputPrependedIcon(id = '', value = 'Text Feld ', config  ) %}
+    <div class="form-group">
+        <label class="control-label" for="">Vorangestellter
+            Ikon</label>
+        <div class="input-group">
+            <span class="input-group-text"><i class="fa fa-phone"></i></span>
+            <input name="" class="form-control" placeholder="" type="text">
+        </div>
+    </div>
+{% endmacro %}
+{% macro textInputAppendedText(id = '', value = 'Text Feld ', config  ) %}
+    <!-- Prepended text-->
+    <div class="form-group">
+        <label class="control-label" for="">Angehängter
+            Text</label>
+        <div class="input-group">
+            <input name="" class="form-control" placeholder="" type="text">
+            <span class="input-group-text">Text</span>
+        </div>
+    </div>
+{% endmacro %}
+{% macro textInputAppendedIcon(id = '', value = 'Text Feld ', config  ) %}
+
+    <!-- Prepended text-->
+    <div class="form-group">
+        <label class="control-label" for="">Angehängtes
+            Ikon</label>
+        <div class="input-group">
+            <input name="" class="form-control" placeholder="" type="text">
+            <span class="input-group-text"><i class="fa fa-phone"></i></span>
+        </div>
+    </div>
+
+{% endmacro %}
+
+
+{% macro create_field(field) %}
+    {% set config = {}|merge(field.options) %}
+    {% set id = field.name|replace({' ':'_'}) %}
+    <div class="component mb-3 bg-white border p-3 content_preview"
+         data-type="{{ field.type }}"
+         data-id="{{ id }}"
+         data-value="{{ field.fieldLabel|raw }}"
+         data-config="{{ config|json_encode() }}"
+    >
+
+
+        {% if field.type == 'Legend' %}
+            {{ _self.formLegend(id, field.fieldLabel, config) }}
+        {% endif %}
+
+        {% if field.type == 'Infotext' %}
+            {{ _self.infoText(id, field.fieldLabel, config) }}
+        {% endif %}
+
+        {% if field.type == 'Text Input' %}
+            {{ _self.textInput(id, field.fieldLabel, config) }}
+        {% endif %}
+
+        {% if field.type == 'Text Area' %}
+            {{ _self.textArea(id, field.fieldLabel, config) }}
+        {% endif %}
+
+        {% if field.type == 'Select Basic' %}
+            {{ _self.selectBasic(id, field.fieldLabel, config) }}
+        {% endif %}
+
+        {% if field.type == 'Select Multiple' %}
+            {{ _self.selectMultiple(id, field.fieldLabel, config) }}
+        {% endif %}
+
+        {% if field.type == 'Multiple Radios' %}
+            {{ _self.multipleRadios(id, field.fieldLabel, config) }}
+        {% endif %}
+
+        {% if field.type == 'Multiple Radios Inline' %}
+            {{ _self.multipleRadiosInline(id, field.fieldLabel, config) }}
+        {% endif %}
+
+        {% if field.type == 'Multiple Checkboxes' %}
+            {{ _self.multipleCheckboxes(id, field.fieldLabel, field.options) }}
+        {% endif %}
+
+        {% if field.type == 'Multiple Checkboxes Inline' %}
+            {{ _self.multipleCheckboxesInline(id, field.fieldLabel, field.options) }}
+        {% endif %}
+
+        {% if id %}
+            <div class="toolbar">
+                <button type="button" class="me-2 btn btn-sm btn-light-danger delete_block" data-id="{{ id }}">
+                    <i class="fa fa-trash soft-background pe-0"></i>
+                </button>
+                <button type="button" class="me-2 btn btn-sm btn-light-primary edit_block" data-id="{{ id }}">
+                    <i class="fa-regular fa-pen-to-square layout-link  pe-0"></i>
+                </button>
+            </div>
+        {% endif %}
+    </div>
+{% endmacro %}
+

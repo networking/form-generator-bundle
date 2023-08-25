@@ -2,7 +2,7 @@
 {% if formComplete %}
     {{ form.thankYouText|raw }}
 {% else %}
-    {% form_theme formView '@NetworkingBootstrap/Form/fields.html.twig' %}
+    {% form_theme formView 'bootstrap_5_layout.html.twig' %}
     {{ form.infoText|raw }}
     {{ form_start(formView, {'attr': {'class': 'content_form form-horizontal', 'novalidate': 'novalidate' }}) }}
     <fieldset>

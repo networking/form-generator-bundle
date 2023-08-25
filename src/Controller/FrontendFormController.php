@@ -89,7 +89,9 @@ class FrontendFormController extends AbstractController
 
             if ($formType->isValid()) {
 
+
                 $data = $formType->getData();
+
                 $this->setFormComplete($request, true);
 
                 if ($form->isEmailAction()) {

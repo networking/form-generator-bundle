@@ -6,8 +6,10 @@ namespace Networking\FormGeneratorBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use Gedmo\Sluggable\Util\Urlizer;
 use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -75,8 +77,14 @@ abstract class BaseForm implements \Stringable
     /**
      * @var array
      */
-    #[Serializer\Exclude()]
+    #[Ignore]
     protected $collection = [];
+
+    public function __construct()
+    {
+        $this->formData = new ArrayCollection();
+        $this->formFields = new ArrayCollection();
+    }
 
     public function __clone()
     {
@@ -84,6 +92,12 @@ abstract class BaseForm implements \Stringable
         $this->formFields = new ArrayCollection();
         $date = new \DateTime();
         $this->name = $this->name.' copy '.$date->format('d.m.Y H:i:s');
+    }
+
+    public function setId($id): self
+    {
+        $this->id = $id;
+        return $this;
     }
 
     #[Assert\Callback]
@@ -232,26 +246,19 @@ abstract class BaseForm implements \Stringable
     /**
      * @return array
      */
-    public function getCollection()
-    {
-        return $this->collection;
-    }
-
-    /**
-     * Set up the collection variable.
-     *
-     * @return $this
-     */
-    public function setCollection()
+    #[Ignore]
+    public function getFormFieldConfiguration()
     {
         foreach ($this->getFormFields() as $formField) {
             $this->collection[] = [
-                'title' => $formField->getType(),
-                'fields' => $formField->getOptions(),
+                'id' => $formField->getName(),
+                'type' => $formField->getType(),
+                'value' => $formField->getFieldLabel(),
+                'options' => $formField->getOptions(),
             ];
         }
 
-        return $this;
+        return $this->collection;
     }
 
     /**
@@ -267,8 +274,6 @@ abstract class BaseForm implements \Stringable
      */
     public function setFormFields($formFields)
     {
-        $this->formFields = new ArrayCollection();
-
         foreach ($formFields as $field) {
             $this->addFormField($field);
         }
@@ -279,8 +284,12 @@ abstract class BaseForm implements \Stringable
      */
     public function addFormField(BaseFormField $formField)
     {
+
+        if($this->formFields->filter(fn($field) => $field->getId() == $formField->getId())->count()){
+            return;
+        }
         $formField->setForm($this);
-        $this->formFields[] = $formField;
+        $this->formFields->add($formField);
     }
 
     public function __toString(): string

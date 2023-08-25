@@ -6,6 +6,7 @@ namespace Networking\FormGeneratorBundle\Form;
 
 use Gedmo\Sluggable\Util\Urlizer;
 use Networking\FormGeneratorBundle\Model\BaseForm;
+use Networking\FormGeneratorBundle\Model\BaseFormField;
 use Networking\FormGeneratorBundle\Model\Form;
 use Networking\FormGeneratorBundle\Model\FormData;
 use Networking\FormGeneratorBundle\Model\FormFieldData;
@@ -32,9 +33,10 @@ class FormDataTransformer implements DataTransformerInterface
 
         $value->setForm($this->form);
         foreach ($this->form->getFormFields() as $key =>  $field) {
-            if($field->getType() === 'Infotext'){
+            if(in_array($field->getType(), BaseFormField::NON_VALUE_FIELDS)){
                 continue;
             }
+
             if(!$name = $field->getName()){
                 $name = $field->getType().$key;
             }
@@ -42,6 +44,7 @@ class FormDataTransformer implements DataTransformerInterface
 
             $formFieldData = new $this->formFieldDataClass;
             $formFieldData->setLabel($field->getFieldLabel());
+
 
             $value->addFormField($formFieldData, $id);
 
@@ -55,6 +58,42 @@ class FormDataTransformer implements DataTransformerInterface
      */
     public function reverseTransform($value): mixed
     {
+        foreach ($this->form->getFormFields() as $key =>  $field) {
+
+            $id = Urlizer::urlize($field->getName());
+            if(in_array($field->getType(), BaseFormField::SINGLE_CHOICE_FIELDS)){
+
+                $formFieldData = $value->getFormFields()[$id];
+
+                $choices = array_flip($field->getValueMap());
+
+                $submittedValue = $formFieldData->getValue();
+
+                if(!array_key_exists($submittedValue, $choices)){
+                    continue;
+                }
+                $newValue = $choices[$submittedValue];
+
+                $formFieldData->setValue($newValue);
+                continue;
+            }
+
+            if(in_array($field->getType(), BaseFormField::MULTI_CHOICE_FIELDS)){
+                $formFieldData = $value->getFormFields()[$id];
+                $choices = array_flip($field->getValueMap());
+
+                $submittedValue = $formFieldData->getValue();
+
+                $newValue = [];
+                foreach($submittedValue as $index){
+                    if(!array_key_exists($index, $choices)){
+                        continue;
+                    }
+                    $newValue[] = $choices[$index];
+                }
+                $formFieldData->setValue($newValue);
+            }
+        }
         return $value;
     }
 }

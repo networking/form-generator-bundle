@@ -52,6 +52,7 @@ class FormType extends AbstractType
 
         if (!is_null($form )) {
             foreach ($form->getFormFields() as $key =>  $field) {
+
                 if(!$name = $field->getName()){
                     $name = $field->getType().$key;
                 }
@@ -66,9 +67,6 @@ class FormType extends AbstractType
 
             $builder->addModelTransformer(new FormDataTransformer($form, $options['data_class'], $options['form_field_data_class']) );
         }
-
-
-
     }
 
 
@@ -91,7 +89,6 @@ class FormType extends AbstractType
             'render_fieldset' => false,
             'error_bubbling' => true,
             'csrf_protection' => false,
-            'error_type' => 'block',
             'data_class' => FormData::class,
             'form_field_data_class' => FormFieldData::class,
             'frontend_css_input_sizes' => self::FRONTEND_INPUT_SIZES
@@ -106,9 +103,11 @@ class FormType extends AbstractType
 
     protected function getFieldType($type)
     {
+
         $type = match ($type) {
             'Legend' => LegendType::class,
             'Infotext' => InfotextType::class,
+            'ckeditor' => InfotextType::class,
             'Password Input' => PasswordType::class,
             'Search Input' => SearchType::class,
             'Text Area' => TextareaType::class,
@@ -136,37 +135,38 @@ class FormType extends AbstractType
             case 'Infotext':
                 break;
             case 'Password Input':
-                $fieldOptions['attr']['placeholder'] = $options['placeholder']['value'];
+                $fieldOptions['attr']['placeholder'] = $options['placeholder'];
                 break;
             case 'Search Input':
-                $fieldOptions['attr']['placeholder'] = $options['placeholder']['value'];
+                $fieldOptions['attr']['placeholder'] = $options['placeholder'];
                 break;
             case 'Text Input':
-                $fieldOptions['attr']['placeholder'] = $options['placeholder']['value'];
+                $fieldOptions['attr']['placeholder'] = $options['placeholder'];
                 break;
             case 'Prepended Text':
             case 'Prepended Icon':
                 $type = ($field->getType() == 'Prepended Text') ? 'text' : 'icon';
-                $fieldOptions['attr']['placeholder'] = $options['placeholder']['value'];
-                $fieldOptions['widget_addon_prepend'] = [$type => $options['prepend']['value']];
+                $fieldOptions['attr']['placeholder'] = $options['placeholder'];
+                $fieldOptions['widget_addon_prepend'] = [$type => $options['prepend']];
                 break;
             case 'Appended Text':
             case 'Appended Icon':
                 $type = ($field->getType() == 'Appended Text') ? 'text' : 'icon';
-                $fieldOptions['attr']['placeholder'] = $options['placeholder']['value'];
-                $fieldOptions['widget_addon_append'] = [$type => $options['append']['value']];
+                $fieldOptions['attr']['placeholder'] = $options['placeholder'];
+                $fieldOptions['widget_addon_append'] = [$type => $options['append']];
                 break;
             case 'Text Area':
-                $fieldOptions['attr']['placeholder'] = $options['textarea']['value'];
+                $fieldOptions['attr']['placeholder'] = $options['placeholder'];
                 break;
             case 'Multiple Checkboxes':
             case 'Multiple Checkboxes Inline':
+
                 $fieldOptions['choices'] = $field->getValueMap();
                 $fieldOptions['expanded'] = true;
                 $fieldOptions['multiple'] = true;
                 $fieldOptions['required'] = true;
                 if ($field->getType() == 'Multiple Checkboxes Inline') {
-                    $fieldOptions['widget_type'] = 'inline';
+                    $fieldOptions['label_attr'] = ['class' => 'checkbox-inline'];
                 }
                 $fieldOptions['constraints'] = new NotBlank();
                 break;
@@ -177,7 +177,7 @@ class FormType extends AbstractType
                 $fieldOptions['multiple'] = false;
                 $fieldOptions['required'] = true;
                 if ($field->getType() == 'Multiple Radios Inline') {
-                    $fieldOptions['widget_type'] = 'inline';
+                    $fieldOptions['label_attr'] = ['class' => 'radio-inline'];
                 }
                 reset($fieldOptions['choices']);
                 $fieldOptions['data'] = current($fieldOptions['choices']);
@@ -202,7 +202,7 @@ class FormType extends AbstractType
         }
 
         if (array_key_exists('required', $options)) {
-            $fieldOptions['required'] = $options['required']['value'];
+            $fieldOptions['required'] = $options['required'];
             if ($fieldOptions['required']) {
                 $fieldOptions['constraints'] = new NotBlank();
             }
@@ -210,7 +210,7 @@ class FormType extends AbstractType
             $fieldOptions['required'] = false;
         }
         if (array_key_exists('helptext', $options)) {
-            $fieldOptions['help_block'] = $options['helptext']['value'];
+            $fieldOptions['help_block'] = $options['helptext'];
         }
 
         if ($formOptions['horizontal']) {
@@ -229,7 +229,7 @@ class FormType extends AbstractType
         if(array_key_exists('inputsize', $options) && array_key_exists('value', $options['inputsize'])){
 
             $size = '';
-            foreach ($options['inputsize']['value'] as $option){
+            foreach ($options['inputsize'] as $option){
 
                 if(!$option['selected']){
                     continue;
@@ -248,7 +248,6 @@ class FormType extends AbstractType
             }
         }
 
-        $fieldOptions['error_type'] = $formOptions['error_type'];
 
         return $fieldOptions;
     }

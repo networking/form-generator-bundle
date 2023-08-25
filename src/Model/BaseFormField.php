@@ -12,13 +12,39 @@ use JMS\Serializer\Annotation as Serializer;
 abstract class BaseFormField
 {
 
-    public const TEXT_FIELDS = ['Text Input', 'Password Input', 'Search Input', 'Prepended Text', 'Prepended Icon', 'Appended Text', 'Appended Icon', 'Text Area' ];
+    public const TEXT_FIELDS  = [
+            'Text Input',
+            'Password Input',
+            'Search Input',
+            'Prepended Text',
+            'Prepended Icon',
+            'Appended Text',
+            'Appended Icon',
+            'Text Area',
+        ];
+
+    public const SINGLE_CHOICE_FIELDS  = [
+            'Select Basic',
+            'Multiple Radios',
+            'Inline Radios',
+        ];
+
+    public const MULTI_CHOICE_FIELDS = [
+            'Select Multiple',
+            'Multiple Checkboxes',
+            'Inline Checkboxes',
+        ];
+
+    public const NON_VALUE_FIELDS = [
+            'Legend',
+            'Infotext',
+        ];
 
     /**
      * @var Form
      *
      */
-    protected BaseForm $form;
+    protected ?BaseForm $form = null;
 
     /**
      * @var string
@@ -43,7 +69,7 @@ abstract class BaseFormField
      */
     #[Serializer\Type('array')]
     #[ORM\Column(name: 'options', type: 'json')]
-    protected array $options;
+    protected array $options = [];
 
     /**
      * @var string
@@ -89,14 +115,33 @@ abstract class BaseFormField
      * @var array
      */
     #[Serializer\Exclude()]
-    protected $mappable = [
-        'Select Basic' => ['options' => 'options', 'values' => 'values'],
-        'Select Multiple' => ['options' => 'options', 'values' => 'values'],
-        'Multiple Checkboxes' => ['options' => 'checkboxes', 'values' => 'checkboxesValues'],
-        'Multiple Checkboxes Inline' => ['options' => 'checkboxes', 'values' => 'checkboxesValues'],
-        'Multiple Radios' => ['options' => 'radios', 'values' => 'radiosValues'],
-        'Multiple Radios Inline' => ['options' => 'radios', 'values' => 'radiosValues'],
-    ];
+    protected $mappable
+        = [
+            'Select Basic' => ['options' => 'options', 'values' => 'values'],
+            'Select Multiple' => ['options' => 'options', 'values' => 'values'],
+            'Multiple Checkboxes' => [
+                'options' => 'checkboxes',
+                'values' => 'checkboxesValues',
+            ],
+            'Multiple Checkboxes Inline' => [
+                'options' => 'checkboxes',
+                'values' => 'checkboxesValues',
+            ],
+            'Multiple Radios' => [
+                'options' => 'radios',
+                'values' => 'radiosValues',
+            ],
+            'Multiple Radios Inline' => [
+                'options' => 'radios',
+                'values' => 'radiosValues',
+            ],
+        ];
+
+    public function setId($id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
 
     /**
      * @return Form
@@ -121,7 +166,7 @@ abstract class BaseFormField
      *
      * @return FormField
      */
-    public function setName($name)
+    public function setName(?string $name)
     {
         $this->name = $name;
 
@@ -135,7 +180,7 @@ abstract class BaseFormField
      */
     public function getName(): ?string
     {
-        return $this->name;
+        return $this->name??null;
     }
 
     /**
@@ -157,9 +202,9 @@ abstract class BaseFormField
      *
      * @return string
      */
-    public function getFieldLabel()
+    public function getFieldLabel(): ?string
     {
-        return $this->fieldLabel;
+        return $this->fieldLabel??null;
     }
 
     /**
@@ -181,9 +226,9 @@ abstract class BaseFormField
      *
      * @return string
      */
-    public function getType()
+    public function getType(): ?string
     {
-        return $this->type;
+        return $this->type??null;
     }
 
     /**
@@ -207,11 +252,46 @@ abstract class BaseFormField
      */
     public function getOptions()
     {
+        $options = [];
+        foreach ($this->options as $key => $option) {
+            if (is_array($option) && array_key_exists('value', $option)) {
+                $options[$key] = $option['value'];
+            }
 
-        if(in_array($this->type, self::TEXT_FIELDS) && !array_key_exists('required', $this->options)){
-            return $this->options + ['required' => ['label' => 'Required', 'name' => 'required', 'type' => 'checkbox', 'value' => false]];
+            if (!in_array($this->type, self::TEXT_FIELDS)
+                && $key == 'options'
+            ) {
+                $options[$key] = $option;
+            }
+
+            if (in_array(
+                $this->type,
+                ['Multiple Checkboxes', 'Multiple Checkboxes Inline']
+            )
+                && $key == 'checkboxes'
+            ) {
+                $options['options'] = $option['value'];
+            }
+
+            if (in_array(
+                $this->type,
+                ['Multiple Radios', 'Multiple Radios Inline']
+            )
+                && $key == 'radios'
+            ) {
+                $options['options'] = $option['value'];
+            }
+
+            if (!is_array($option)) {
+                $options[$key] = $option;
+            }
+
+            if ($key == 'textarea') {
+                $options['placeholder'] = $option;
+            }
         }
-        return $this->options;
+
+        return $options;
     }
 
     /**
@@ -350,18 +430,43 @@ abstract class BaseFormField
     public function getValueMap()
     {
         if (array_key_exists($this->getType(), $this->mappable)) {
-            $map = [];
             $key = $this->mappable[$this->getType()];
             $options = $key['options'];
-            $values = $key['values'];
 
-            foreach ($this->options[$values]['value'] as $k => $val) {
-                if (array_key_exists($k, $this->options[$options]['value'])) {
-                    $map[$this->options[$options]['value'][$k]] = $val;
+            if (array_key_exists($options, $this->options)
+                && array_key_exists(
+                    'value',
+                    $this->options[$options]
+                )
+            ) {
+
+                $choices = $this->options[$options]['value'];
+                $valueMap = [];
+                foreach ($choices as $choice => $value) {
+                    $valueMap[$value] = $choice;
                 }
+                return $valueMap;
             }
 
-            return $map;
+            if(array_key_exists($options, $this->options)){
+                $choices = $this->options[$options];
+                $valueMap = [];
+                foreach ($choices as $choice => $value) {
+                    $valueMap[$value] = $choice;
+                }
+                return $valueMap;
+            }
+
+
+            $choices = $this->options['options'];
+            $valueMap = [];
+            foreach ($choices as $choice => $value) {
+                $valueMap[$value] = $choice;
+            }
+            return $valueMap;
+
+
+
         }
 
         return false;

@@ -1,116 +1,117 @@
 {% extends base_template %}
-{% block stylesheets %}
-    {{ parent() }}
-    <link href="{{ asset('bundles/networkingformgenerator/assets/css/lib/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('bundles/networkingformgenerator/assets/css/custom.css') }}" rel="stylesheet">
-{% endblock %}
+{# {% block stylesheets %} #}
+{#    {{ parent() }} #}
+{#    <link href="{{ asset('bundles/networkingformgenerator/assets/css/lib/bootstrap.min.css') }}" rel="stylesheet"> #}
+{#    <link href="{{ asset('bundles/networkingformgenerator/assets/css/custom.css') }}" rel="stylesheet"> #}
+{# {% endblock %} #}
 
-{% block javascripts %}
-    <script type="text/javascript" src="{{ asset('admin.js', 'init_cms') }}"></script>
-    <script type="text/javascript" src="{{ asset('jquery-plugins.js', 'init_cms') }}"></script>
-    <script type="text/javascript" src="{{ asset('bootstrap.js', 'init_cms') }}"></script>
-    <script type="text/javascript" src="{{ asset('bootstrap-plugins.js', 'init_cms') }}"></script>
-    <script type="text/javascript" src="{{ asset('app.js', 'init_cms') }}"></script>
-    <script type="text/javascript" src="{{ asset('vendor/icheck/icheck.min.js', 'init_cms') }}"></script>
-    <script defer src="{{ asset('bundles/networkingformgenerator/assets/fontawesome/js/all.js') }}"></script>
+{# {% block javascripts %} #}
+{#    <script type="text/javascript" src="{{ asset('admin.js', 'init_cms') }}"></script> #}
+{#    <script type="text/javascript" src="{{ asset('jquery-plugins.js', 'init_cms') }}"></script> #}
+{#    <script type="text/javascript" src="{{ asset('bootstrap.js', 'init_cms') }}"></script> #}
+{#    <script type="text/javascript" src="{{ asset('bootstrap-plugins.js', 'init_cms') }}"></script> #}
+{#    <script type="text/javascript" src="{{ asset('app.js', 'init_cms') }}"></script> #}
+{#    <script type="text/javascript" src="{{ asset('vendor/icheck/icheck.min.js', 'init_cms') }}"></script> #}
+{#    <script defer src="{{ asset('bundles/networkingformgenerator/assets/fontawesome/js/all.js') }}"></script> #}
 
-{% endblock javascripts %}
+{# {% endblock javascripts %} #}
 
-{% block body %}
-    {% block init_cms_top_nav %}
-        {% include '@NetworkingInitCms/Navbar/admin_navbar.html.twig' %}
-    {% endblock init_cms_top_nav %}
+{% block form %}
+    {% import "@NetworkingFormGenerator/Admin/fields-macro.html.twig" as fields %}
+    <div class="d-flex flex-row mb-3">
+        <div class="card shadow-sm flex-grow-1 me-3">
+            <div class="card-header">
+                <h3 class="card-title">Ziehen Sie Elemente hierher</h3>
+            </div>
+            <div class="card-body">
+                <div id="form-contents" class="dropzone min-h-800px"
+                     data-form-fields="{{ admin.subject.formFieldConfiguration|json_encode() }}"
+                     data-object-id="{{ admin.subject.id }}">
 
-    <div class="{% block container_class %}container{% if app.user and app.user.getAdminSetting('admin_portal_width') != 'small' %}-fluid{% endif %}{% endblock container_class %} row-offcanvas">
-        <div class="notice-block affix">
-            {% block notice %}
-                {% for notice_level in ['success','error','info', 'warning'] %}
-                    {% set session_var = 'sonata_flash_' ~ notice_level %}
-                    {% for flash in app.session.flashbag.get(session_var) %}
-
-                        <div class="col-sm-12 col-xs-12 col-md-offset-2 col-md-10 alert {{ (notice_level=='error')?'alert-danger':'alert-' ~ notice_level }}"
-                             role="alert">
-                            <a class="close" data-dismiss="alert" href="#">×</a>
-                            {{ flash|trans([], 'NetworkingInitCmsBundle') }}
-                        </div>
+                    {% for field in admin.subject.formFields %}
+                        {{ fields.create_field(field) }}
                     {% endfor %}
-                {% endfor %}
-            {% endblock notice %}
-        </div>
-        <div class="row-fluid clearfix">
-            {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
-            <h1>{% if admin.id(object) is not null %}
-                    {{ "title_edit"|trans({'%name%': admin.toString(object),'%admin_label%': admin_label }, 'SonataAdminBundle') }}
-                {% else %}
-                    {% set title =  "title_create"|trans({'%admin_label%': admin_label}, admin.translationDomain) %}
-                    {% if title == 'title_create' %}
-                        {{ "title_create"|trans({}, 'SonataAdminBundle') }}
-                    {% else %}
-                        {{ title }}
-                    {% endif %}
-                {% endif %}</h1>
-            <!-- Building Form. -->
 
-            <div id="build" data-uniq-id="{{ admin.uniqId }}" class="sonata-ba-form">
-                {% embed '@NetworkingInitCms/CRUD/base_edit_form.html.twig' %}
-                    {% block sonata_form_action_url %}
-                        {{ admin.generateUrl(url, {'id': objectId|default(admin.id(object)), 'uniqid': admin.uniqid}) }}
-                    {% endblock %}
-                    {% block sonata_form_attributes %}class="form-horizontal"{% endblock %}
-                    {% block formactions %}
-                        {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
-                        <div class="{% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}modal-footer{% else %}well form-actions{% endif %}">
-                            {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
-                                <button class="btn btn-default" data-dismiss="modal"
-                                        aria-hidden="true">{{ 'button.cancel'|trans({'%admin_label%': admin_label}, 'PageAdmin') }}</button>
-                                {% if admin.id(object) %}
-                                    <button type="button" class="btn btn-primary" name="btn_update">
-                                        {{ 'btn_update_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}</button>
-                                {% else %}
-                                    <button type="button" class="btn btn-primary" name="btn_create">
-                                        {{ 'btn_update_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}</button>
-                                {% endif %}
-                            {% else %}
-                                <a class="btn btn-default"
-                                   href="{{ admin.generateUrl('list') }}">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
-                                {% if admin.id(object) %}
-                                    <button type="button" id="saveForm" class="btn btn-primary"
-                                            name="btn_update_and_edit">
-                                        {{ 'btn_update_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}</button>
-                                {% else %}
-                                    <button type="button" id="saveForm" class="btn btn-primary"
-                                            name="btn_create_and_edit">
-                                        {{ 'btn_update_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}</button>
-                                {% endif %}
-                            {% endif %}
-                        </div>
-                    {% endblock formactions %}
-                {% endembed %}
+                </div>
             </div>
 
-            <!-- / Building Form. -->
         </div>
-        {% block formactions %}
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h3 class="card-title">Drag & Drop-Komponenten</h3>
+            </div>
+            <div class="card-body  min-h-800px">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs nav-line-tabs mb-5 fs-6" id="formtabs">
+                        <!-- Tab nav -->
+                        <li class="nav-item"><a href="#input" class="nav-link active"
+                                                data-bs-toggle="tab">Eingabefelder</a>
+                        </li>
+                        <li class="nav-item"><a href="#select" class="nav-link" data-bs-toggle="tab">Auswahl
+                                Felder</a></li>
+                        {#                            <li class="nav-item"><a href="#radioscheckboxes" class="nav-link" data-bs-toggle="tab">Radios #}
+                        {#                                    / Checkboxen</a></li> #}
+                    </ul>
+                    <div class="form-horizontal" id="components" role="form">
+                        <fieldset>
+                            <div class="tab-content">
+                                <!-- Tabs of snippets go here -->
+                                <div class="tab-pane active" id="input">
+                                    {% set config = {placeholder: '', required: false} %}
+                                    {{ fields.create_field({name: '', fieldLabel: null, type: 'Legend', options: config}) }}
+                                    {{ fields.create_field({name: '', fieldLabel: null, type: 'Infotext', options: config}) }}
+                                    {{ fields.create_field({name: '', fieldLabel: null, type: 'Text Input', options: config}) }}
+                                    {{ fields.create_field({name: '', fieldLabel: null, type: 'Text Area', options: config}) }}
+                                </div>
+                                <div class="tab-pane" id="select">
+                                    {% set config = {placeholder: '', required: false, options: ['Option one','Option two']} %}
+                                    {{ fields.create_field({name: '', fieldLabel: null, type: 'Select Basic', options: config}) }}
+                                    {{ fields.create_field({name: '', fieldLabel: null, type: 'Select Multiple', options: config}) }}
+                                    {{ fields.create_field({name: '', fieldLabel: null, type: 'Multiple Radios', options: config}) }}
+                                    {{ fields.create_field({name: '', fieldLabel: null, type: 'Multiple Radios Inline', options: config}) }}
+                                    {{ fields.create_field({name: '', fieldLabel: null, type: 'Multiple Checkboxes', options: config}) }}
+                                    {{ fields.create_field({name: '', fieldLabel: null, type: 'Multiple Checkboxes Inline', options: config}) }}
+                                </div>
+                                {#                                    <div class="tab-pane" id="select"> #}
+                                {#                                        #}{#                                        {{ fields.selectBasic() }} #}
+                                {#                                        #}{#                                        {{ fields.selectMultiple() }} #}
+                                {#                                    </div> #}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
 
-        {% endblock formactions %}
+            </div>
+        </div>
     </div>
-    {% block before_body_end %}
-        {{ parent() }}
-        <script src="{{ asset('bundles/networkingformgenerator/assets/js/lib/polyglot.js') }}"></script>
-        <script src="{{ asset('bundles/networkingformgenerator/assets/js/data/' ~app.request.locale|slice(0, 2)~'.js') }}"></script>
-        <script data-main="{{ asset('bundles/networkingformgenerator/assets/js/main.js') }}"
-                src="{{ asset('bundles/networkingformgenerator/assets/js/lib/require.js') }}"></script>
-        <script>
-            var polyglot = new Polyglot({phrases: polyglot_phrases});
-            define('config', function () {
-                return {
-                    backToListUri: '{{ admin.generateUrl('list') }}',
-                    {% if admin.subject.id %}id: {{ admin.subject.id }},{% endif %}
-                    url: '{{ url('networking_formgenerator_formadmin_post') }}',
-                    locale: '{{ app.request.locale|slice(0, 2) }}'
 
-                };
-            });
-        </script>
-    {% endblock %}
-{% endblock body %}
+    <div id="build" class="sonata-ba-form">
+        {% embed '@NetworkingInitCms/CRUD/base_edit_form.html.twig' %}
+            {% block sonata_form_action_url %}
+                {% set url = objectId?'networking_formgenerator_formadmin_put':'networking_formgenerator_formadmin_post' %}
+                {{ url(url, {'id': objectId|default(admin.id(object)), 'uniqid': admin.uniqid}) }}
+            {% endblock %}
+            {% block sonata_form_attributes %}data-uniq-id="{{ admin.uniqId }}"{% endblock %}
+            {% block formactions %}
+                {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
+                <div class="{{ isAjax?'modal':'card' }}-footer form-actions">
+
+                    <a class="btn btn-light"
+                       href="{{ admin.generateUrl('list') }}">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
+
+                    {% if admin.id(object) %}
+                        <input type="submit" class="btn btn-primary" name="btn_update_and_edit"
+                               value="{{ 'btn_update_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
+                    {% else %}
+                        <input class="btn btn-primary" type="submit" name="btn_create_and_edit"
+                               value="{{ 'btn_create_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
+                    {% endif %}
+                </div>
+            {% endblock formactions %}
+        {% endembed %}
+    </div>
+{% endblock form %}
+{% block before_body_end %}
+    {{ parent() }}
+    <script src="{{ asset('formAdmin.js', 'init_cms') }}"></script>
+{% endblock %}
