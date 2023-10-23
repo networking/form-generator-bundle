@@ -7,6 +7,7 @@ namespace Networking\FormGeneratorBundle\Model;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\MappedSuperclass]
 abstract class BaseFormField
@@ -114,7 +115,7 @@ abstract class BaseFormField
      *
      * @var array
      */
-    #[Serializer\Exclude()]
+    #[Ignore]
     protected $mappable
         = [
             'Select Basic' => ['options' => 'options', 'values' => 'values'],
@@ -268,8 +269,11 @@ abstract class BaseFormField
                 $this->type,
                 ['Multiple Checkboxes', 'Multiple Checkboxes Inline']
             )
-                && $key == 'checkboxes'
+                && $key == 'checkboxes' && array_key_exists(
+                    'value',
+                    $option)
             ) {
+
                 $options['options'] = $option['value'];
             }
 
@@ -277,7 +281,9 @@ abstract class BaseFormField
                 $this->type,
                 ['Multiple Radios', 'Multiple Radios Inline']
             )
-                && $key == 'radios'
+                && $key == 'radios' && array_key_exists(
+                    'value',
+                    $option)
             ) {
                 $options['options'] = $option['value'];
             }

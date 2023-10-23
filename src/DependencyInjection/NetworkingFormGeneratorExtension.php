@@ -24,6 +24,7 @@ class NetworkingFormGeneratorExtension extends Extension
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
+
         $container->setParameter('networking_form_generator.from_email', $config['from_email']);
         $container->setParameter('networking_form_generator.form_class', $config['form_class']);
         $container->setParameter('networking_form_generator.form_field_class', $config['form_field_class']);

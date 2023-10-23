@@ -6,6 +6,7 @@ namespace Networking\FormGeneratorBundle\Form;
 
 use Gedmo\Sluggable\Util\Urlizer;
 use Networking\FormGeneratorBundle\Model\BaseForm;
+use Networking\FormGeneratorBundle\Model\BaseFormData;
 use Networking\FormGeneratorBundle\Model\BaseFormField;
 use Networking\FormGeneratorBundle\Model\Form;
 use Networking\FormGeneratorBundle\Model\FormData;
@@ -26,7 +27,7 @@ class FormDataTransformer implements DataTransformerInterface
     /**
      * @param $value
      */
-    public function transform($value): FormData
+    public function transform($value): BaseFormData
     {
 
         $value = new $this->dataClass;

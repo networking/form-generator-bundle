@@ -16,6 +16,15 @@
 
 {# {% endblock javascripts %} #}
 
+{% block actions %}
+    {% if admin.hasAccess('list') and admin.hasRoute('list') %}
+        <a class="btn btn-sm btn-outine btn-light-primary" href="{{ admin.generateUrl('list') }}">
+            <i class="fas fa-list" aria-hidden="true"></i>
+            {{ 'link_action_list'|trans({}, 'SonataAdminBundle') }}
+        </a>
+    {% endif %}
+{% endblock %}
+
 {% block form %}
     {% import "@NetworkingFormGenerator/Admin/fields-macro.html.twig" as fields %}
     <div class="d-flex flex-row mb-3">
@@ -36,7 +45,7 @@
             </div>
 
         </div>
-        <div class="card shadow-sm">
+        <div class="card shadow-sm w-25">
             <div class="card-header">
                 <h3 class="card-title">Drag & Drop-Komponenten</h3>
             </div>

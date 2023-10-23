@@ -1,5 +1,7 @@
-breadcrumb.link_form_list: Formular Generator
 form.admin.menu_label: Formular Generator
+breadcrumb:
+    link_form_list: Formular Generator
+    link_form_create: Formular erstellen
 form:
     label:
         form: Formular

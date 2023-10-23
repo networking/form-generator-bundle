@@ -210,7 +210,7 @@ class FormType extends AbstractType
             $fieldOptions['required'] = false;
         }
         if (array_key_exists('helptext', $options)) {
-            $fieldOptions['help_block'] = $options['helptext'];
+            $fieldOptions['help'] = $options['helptext'];
         }
 
         if ($formOptions['horizontal']) {

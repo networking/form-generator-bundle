@@ -69,9 +69,9 @@ class FormAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
+    protected function configureDatagridFilters(DatagridMapper $filter): void
     {
-        $datagridMapper
+        $filter
             ->add(
                 'name',
                 null,
@@ -138,15 +138,15 @@ class FormAdmin extends BaseAdmin
             ->add('thankYouText', CKEditorType::class, ['widget_form_group_attr' => ['class' => 'col-md-12'], 'autoload' => false]);
     }
 
-    protected function configureListFields(ListMapper $listMapper): void
+    protected function configureListFields(ListMapper $list): void
     {
-        parent::configureListFields($listMapper);
-        $listMapper->addIdentifier('name');
-        $listMapper->add('pages', 'string', [
+        parent::configureListFields($list);
+        $list->addIdentifier('name');
+        $list->add('pages', 'string', [
             'virtual_field' => true,
             'template' => '@NetworkingFormGenerator/Admin/pages.html.twig']);
-        $listMapper->add('online', 'boolean', ['editable' => true]);
-        $listMapper->add(
+        $list->add('online', 'boolean', ['editable' => true]);
+        $list->add(
             '_action',
             'actions',
             [

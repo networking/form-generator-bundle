@@ -36,11 +36,12 @@
 {% macro selectBasic(id = '', value, config  ) %}
     {% set value = value??'Basic Auswahl' %}
     <div class="form-group">
-        <label class="col-md-4 control-label {{ config.required?'required':'' }}" for=""
+        <label class="col-md-4 control-label {{ config.required|default(false)?'required':'' }}" for=""
                data-label>{{ value }}</label>
         <div class="col-md-8">
             <div class="  col-md-12 ">
-                <select name="" class="form-control" {% if config.required %} required{% endif %} data-options>
+                <select name="" class="form-control" {% if config.required|default(false) %} required{% endif %} data-options>
+
                     {% for option in config.options %}
                         <option value="{{ loop.index }}">{{ option }}</option>
                     {% endfor %}
@@ -188,6 +189,15 @@
 
 {% macro create_field(field) %}
     {% set config = {}|merge(field.options) %}
+    {% if config.placeholder is defined and config.placeholder.value is defined %}
+        {% set config = config|merge({'placeholder': config.placeholder.value})  %}
+    {% endif %}
+
+    {% if config.options.value is defined %}
+        {% set config = config|merge({'options': config.options.value})  %}
+    {% endif %}
+
+
     {% set id = field.name|replace({' ':'_'}) %}
     <div class="component mb-3 bg-white border p-3 content_preview"
          data-type="{{ field.type }}"

@@ -111,7 +111,7 @@ class FormPageContent extends LayoutBlock implements ContentInterface
     /**
      * @return array
      */
-    public function getAdminContent()
+    public function getAdminContent():array
     {
         return [
             'content' => ['form_page_content' => $this->form],

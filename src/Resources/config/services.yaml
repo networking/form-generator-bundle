@@ -11,44 +11,53 @@ services:
         public: false
 
 
+
+
     Networking\FormGeneratorBundle\Form\Type\LegendType:
         public: true
         tags:
-            - { name: 'form.type', alias: 'form_legend'}
+            - { name: 'form.type', alias: 'form_legend' }
 
     Networking\FormGeneratorBundle\Form\FormType:
         public: true
         tags:
-            - { name: 'form.type', alias: 'generated_form'}
+            - { name: 'form.type', alias: 'generated_form' }
 
     Networking\FormGeneratorBundle\Helper\FormHelper:
         autowire: true
 
     networking_form_generator.helper.form:
-          alias: Networking\FormGeneratorBundle\Helper\FormHelper
-          public: true
+        alias: Networking\FormGeneratorBundle\Helper\FormHelper
+        public: true
 
     Networking\FormGeneratorBundle\Controller\FormAdminController:
-          autowire: true
-          public: true
-          tags:
-              - { name: 'controller.service_arguments'}
+        autowire: true
+        public: true
+        tags:
+            - { name: 'controller.service_arguments' }
 
     Networking\FormGeneratorBundle\Controller\FrontendFormController:
-          public: true
-          arguments:
-              $emailAddress: '%networking_form_generator.from_email%'
-          tags:
-              - { name: 'controller.service_arguments'}
+        public: true
+        arguments:
+            $emailAddress: '%networking_form_generator.from_email%'
+        tags:
+            - { name: 'controller.service_arguments' }
 
 
     Networking\FormGeneratorBundle\Admin\FormAdmin:
         calls:
-            - [setSonataAnnotationReader, ['@networking_init_cms.annotation.reader']]
-            - [setLanguages, ["%networking_init_cms.page.languages%"]]
-            - [setTemplates, [{'edit': '@@NetworkingFormGenerator/Admin/edit.html.twig', 'show': '@@NetworkingFormGenerator/Admin/show.html.twig'}]]
+            - [ setSonataAnnotationReader, [ '@networking_init_cms.annotation.reader' ] ]
+            - [ setLanguages, [ "%networking_init_cms.page.languages%" ] ]
+            - [ setTemplates, [ { 'edit': '@@NetworkingFormGenerator/Admin/edit.html.twig', 'show': '@@NetworkingFormGenerator/Admin/show.html.twig' } ] ]
         tags:
-            - {name: sonata.admin, manager_type: orm, model_class: '%networking_form_generator.form_class%', controller: 'Networking\InitCmsBundle\Controller\CRUDController', translation_domain: 'formGenerator', label: 'form.admin.menu_label', label_translator_strategy: sonata.admin.label.strategy.underscore, persist_filters: true }
+            -   name: sonata.admin
+                manager_type: orm
+                model_class: '%networking_form_generator.form_class%'
+                controller: 'Networking\InitCmsBundle\Controller\CRUDController'
+                translation_domain: 'formGenerator'
+                label: 'form.admin.menu_label'
+                label_translator_strategy: sonata.admin.label.strategy.underscore
+                persist_filters: true
 
     Networking\FormGeneratorBundle\Twig\Extension\FormHelperExtension:
         arguments:
