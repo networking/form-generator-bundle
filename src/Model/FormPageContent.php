@@ -110,10 +110,7 @@ class FormPageContent extends LayoutBlock implements ContentInterface
      */
     public function getAdminContent():array
     {
-        return [
-            'content' => ['form_page_content' => $this->form],
-            'template' => '@NetworkingFormGenerator/Admin/formPageContent.html.twig',
-        ];
+        return [];
     }
 
     public function getContentTypeName(): string

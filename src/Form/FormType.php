@@ -83,6 +83,7 @@ class FormType extends AbstractType
             'form',
         ]);
         $resolver->setDefaults([
+            'is_admin' => false,
             'attr' => $setIdAttr,
             'horizontal' => true,
             'show_legend' => false,
@@ -213,41 +214,12 @@ class FormType extends AbstractType
             $fieldOptions['help'] = $options['helptext'];
         }
 
-        if ($formOptions['horizontal']) {
-            $fieldOptions['layout'] = 'horizontal';
+
+        if($formOptions['is_admin']){
+            $fieldOptions['attr']['disabled'] = true;
+            $fieldOptions['attr']['readonly'] = true;
         }
-
-        if ($formOptions['label_attr']) {
-            $fieldOptions['label_attr'] = $formOptions['label_attr'];
-        }
-
-        if (!$fieldOptions['label_render']) {
-            $fieldOptions['horizontal_label_offset_class'] = ' ';
-            $fieldOptions['horizontal_input_wrapper_class'] = 'col-md-12';
-        }
-
-        if(array_key_exists('inputsize', $options) && array_key_exists('value', $options['inputsize'])){
-
-            $size = '';
-            foreach ($options['inputsize'] as $option){
-
-                if(!$option['selected']){
-                    continue;
-                }
-
-
-                if(!array_key_exists('css_config', $option)){
-                    continue;
-                }
-
-
-
-                if(array_key_exists($option['css_config'], $formOptions['frontend_css_input_sizes'])){
-                    $fieldOptions['attr']['data-widget-size'] = $formOptions['frontend_css_input_sizes'][$option['css_config']];
-                }
-            }
-        }
-
+        
 
         return $fieldOptions;
     }

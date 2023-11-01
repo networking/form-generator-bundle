@@ -4,12 +4,13 @@
 {% else %}
     {% form_theme formView 'bootstrap_5_layout.html.twig' %}
     {{ form.infoText|raw }}
-    {{ form_start(formView, {'attr': {'class': 'content_form form-horizontal', 'novalidate': 'novalidate' }}) }}
+    {% if not is_admin %}{{ form_start(formView, {'attr': {'class': 'content_form form-horizontal', 'novalidate': 'novalidate' }}) }}{% endif %}
     <fieldset>
-        {{ form(formView) }}
+        {{ form(formView, {attr: {'disabled': is_admin}}) }}
         <div class="button_div">
             <input type="submit" name="submit" id="submit" value="Weiter" class="btn btn-primary">
         </div>
     </fieldset>
-    {{ form_end(formView) }}
+
+    {% if not is_admin %}{{ form_end(formView) }}{% endif %}
 {% endif %}

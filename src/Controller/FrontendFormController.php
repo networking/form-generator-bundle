@@ -135,6 +135,7 @@ class FrontendFormController extends AbstractController
 
         }
         $options =  [
+                'is_admin' => $request->get('is_admin', false),
                 'form' => $form,
                 'action' => $actionUrl,
                 'data_class' => $this->getParameter('networking_form_generator.form_data_class'),
@@ -158,6 +159,7 @@ class FrontendFormController extends AbstractController
                 'formComplete' => $formComplete,
                 'formView' => $formType->createView(),
                 'form' => $form,
+                'is_admin' => $request->get('is_admin', false)
             ]);
     }
 
