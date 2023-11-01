@@ -102,10 +102,7 @@ class FormPageContent extends LayoutBlock implements ContentInterface
      */
     public function getTemplateOptions($params = []): array
     {
-        return [
-            'form_page_content' => $this->form,
-            'params' => $params,
-        ];
+        return [];
     }
 
     /**
