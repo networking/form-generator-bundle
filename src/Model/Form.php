@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Networking\FormGeneratorBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 /**
  * Form.
@@ -29,14 +29,13 @@ class Form extends BaseForm
      */
     #[ORM\OneToMany(targetEntity: \Networking\FormGeneratorBundle\Model\FormField::class, cascade: ['persist', 'remove'], mappedBy: 'form', orphanRemoval: true)]
     #[ORM\OrderBy(['position' => 'ASC'])]
-    #[Serializer\Type("ArrayCollection<Networking\FormGeneratorBundle\Model\FormField>")]
     protected $formFields;
 
     /**
      * @var FormData[];
      */
     #[ORM\OneToMany(targetEntity: \Networking\FormGeneratorBundle\Model\FormData::class, cascade: ['remove'], mappedBy: 'form', orphanRemoval: true)]
-    #[Serializer\Exclude(if: 'true')]
+    #[Ignore]
     protected $formData;
 
 

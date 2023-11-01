@@ -6,7 +6,6 @@ namespace Networking\FormGeneratorBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\MappedSuperclass]
@@ -68,7 +67,6 @@ abstract class BaseFormField
     /**
      * @var array
      */
-    #[Serializer\Type('array')]
     #[ORM\Column(name: 'options', type: 'json')]
     protected array $options = [];
 

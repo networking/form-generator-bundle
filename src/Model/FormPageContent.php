@@ -100,7 +100,7 @@ class FormPageContent extends LayoutBlock implements ContentInterface
      *
      * @return array
      */
-    public function getTemplateOptions($params = [])
+    public function getTemplateOptions($params = []): array
     {
         return [
             'form_page_content' => $this->form,
