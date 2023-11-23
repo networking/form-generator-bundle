@@ -12,10 +12,10 @@ file that was distributed with this source code.
 <a  href="{{ admin.generateObjectUrl('copy', object) }}"
     class="{% if isSubNav is defined %}menu-link px-3{% else %} btn btn-light btn-sm button-in-row {% endif %} dialog-link"
     {% if isSubNav is not defined %}data-bs-toggle="tooltip" data-bs-placement="bottom"{% endif %}
-    title="{{ 'action._copy'|trans({}, 'formGenerator') }}">
-    <i class="ki-outline ki-copy fs-3"></i>
+    title="{{ 'button.duplicate_form'|trans({}, 'formGenerator') }}">
+    <i class="ki-outline ki-copy fs-3  menu-icon"></i>
     {% if isSubNav is defined  %}
-        &nbsp; {{ 'action._copy'|trans({}, 'formGenerator') }}
+        &nbsp; {{ 'button.duplicate_form'|trans({}, 'formGenerator') }}
     {% endif %}
 </a>
 {% endif %}
