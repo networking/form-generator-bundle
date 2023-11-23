@@ -283,10 +283,6 @@ abstract class BaseForm implements \Stringable
      */
     public function addFormField(BaseFormField $formField)
     {
-
-        if($this->formFields->filter(fn($field) => $field->getId() == $formField->getId())->count()){
-            return;
-        }
         $formField->setForm($this);
         $this->formFields->add($formField);
     }
