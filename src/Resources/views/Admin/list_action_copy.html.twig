@@ -14,8 +14,6 @@ file that was distributed with this source code.
     {% if isSubNav is not defined %}data-bs-toggle="tooltip" data-bs-placement="bottom"{% endif %}
     title="{{ 'button.duplicate_form'|trans({}, 'formGenerator') }}">
     <i class="ki-outline ki-copy fs-3  menu-icon"></i>
-    {% if isSubNav is defined  %}
-        &nbsp; {{ 'button.duplicate_form'|trans({}, 'formGenerator') }}
-    {% endif %}
+    {% if isSubNav is defined  %}{{ 'button.duplicate_form'|trans({}, 'formGenerator') }}{% endif %}
 </a>
 {% endif %}
