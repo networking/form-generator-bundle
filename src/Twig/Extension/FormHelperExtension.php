@@ -10,14 +10,14 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\FormGeneratorBundle\Twig\Extension;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Collections\ArrayCollection;
-use Networking\FormGeneratorBundle\Model\FormPageContent;
+use Doctrine\Persistence\ManagerRegistry;
 use Networking\InitCmsBundle\Entity\LayoutBlock;
 use Sonata\AdminBundle\Admin\Pool;
-use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -69,11 +69,15 @@ class FormHelperExtension extends AbstractExtension
      * @param string $pageClass
      * @param string $pageContentClass
      */
-    public function __construct(Pool $pool, ManagerRegistry $managerRegistry, protected $pageClass, protected $pageContentClass){
+    public function __construct(
+        Pool $pool,
+        ManagerRegistry $managerRegistry,
+        protected $pageClass,
+        protected $pageContentClass
+    ) {
         $this->pool = $pool;
         $this->managerRegistry = $managerRegistry;
     }
-
 
     /**
      * Returns the name of the extension.
@@ -93,18 +97,22 @@ class FormHelperExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('get_form_page_links', $this->getPageLinks(...), ['is_safe' => ['html']]),
+            new TwigFunction(
+                'get_form_page_links',
+                $this->getPageLinks(...),
+                ['is_safe' => ['html']]
+            ),
         ];
     }
 
     /**
-     * @param $formId
-     *
      * @return array
      */
     public function getPageLinks($formId)
     {
-        $content = $this->managerRegistry->getRepository($this->pageContentClass)->findBy(
+        $content = $this->managerRegistry->getRepository(
+            $this->pageContentClass
+        )->findBy(
             ['form' => $formId]
         );
 
@@ -113,8 +121,24 @@ class FormHelperExtension extends AbstractExtension
 
         /** @var LayoutBlock $block */
         foreach ($content as $block) {
-            $url = $pageAdmin->generateUrl('show', ['id' => $block->getPageId()]);
-            $links[] = ['url' => $url, 'title' => $block->getPage()->getAdminTitle()];
+            $draftRoute = $pageAdmin->getRouteGenerator()->generate(
+                RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                [
+                    RouteObjectInterface::ROUTE_OBJECT => $block->getPage()
+                        ->getRoute(),
+                ]
+            );
+            $url = $pageAdmin->getRouteGenerator()->generate(
+                'networking_init_view_draft',
+                [
+                    'locale' => $block->getPage()->getLocale(),
+                    'path' => base64_encode($draftRoute),
+                ]
+            );
+            $links[] = [
+                'url' => $url,
+                'title' => $block->getPage()->getAdminTitle(),
+            ];
         }
 
         return $links;
