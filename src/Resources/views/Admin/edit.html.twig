@@ -1,20 +1,4 @@
 {% extends base_template %}
-{# {% block stylesheets %} #}
-{#    {{ parent() }} #}
-{#    <link href="{{ asset('bundles/networkingformgenerator/assets/css/lib/bootstrap.min.css') }}" rel="stylesheet"> #}
-{#    <link href="{{ asset('bundles/networkingformgenerator/assets/css/custom.css') }}" rel="stylesheet"> #}
-{# {% endblock %} #}
-
-{# {% block javascripts %} #}
-{#    <script type="text/javascript" src="{{ asset('admin.js', 'init_cms') }}"></script> #}
-{#    <script type="text/javascript" src="{{ asset('jquery-plugins.js', 'init_cms') }}"></script> #}
-{#    <script type="text/javascript" src="{{ asset('bootstrap.js', 'init_cms') }}"></script> #}
-{#    <script type="text/javascript" src="{{ asset('bootstrap-plugins.js', 'init_cms') }}"></script> #}
-{#    <script type="text/javascript" src="{{ asset('app.js', 'init_cms') }}"></script> #}
-{#    <script type="text/javascript" src="{{ asset('vendor/icheck/icheck.min.js', 'init_cms') }}"></script> #}
-{#    <script defer src="{{ asset('bundles/networkingformgenerator/assets/fontawesome/js/all.js') }}"></script> #}
-
-{# {% endblock javascripts %} #}
 
 {% block actions %}
     {% if admin.hasAccess('list') and admin.hasRoute('list') %}
@@ -100,14 +84,14 @@
                 {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
                 <div class="{{ isAjax?'modal':'card' }}-footer form-actions">
 
-                    <a class="btn btn-light"
+                    <a class="btn btn-sm btn-light"
                        href="{{ admin.generateUrl('list') }}">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
 
                     {% if admin.id(object) %}
-                        <input type="submit" class="btn btn-primary" name="btn_update_and_edit"
+                        <input type="submit" class="btn btn-sm btn-primary" name="btn_update_and_edit"
                                value="{{ 'btn_update_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
                     {% else %}
-                        <input class="btn btn-primary" type="submit" name="btn_create_and_edit"
+                        <input class="btn btn-sm btn-primary" type="submit" name="btn_create_and_edit"
                                value="{{ 'btn_create_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
                     {% endif %}
                 </div>
