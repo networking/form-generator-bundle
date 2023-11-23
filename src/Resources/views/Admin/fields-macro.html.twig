@@ -1,12 +1,12 @@
 {% macro formLegend(id, value ) %}
-    {% set value = value??'Form Legend' %}
+    {% set value = value??'fields.legend'|trans({}, 'formGenerator') %}
     <div>
         <legend class="float-none">{{ value }}</legend>
     </div>
 {% endmacro %}
 
 {% macro infoText(id = '', value) %}
-    {% set value = value??'Freie Textblock: Fügen Sie hier Ihren Text hinzu' %}
+    {% set value = value??'fields.free_text_area'|trans({}, 'formGenerator') %}
     <!-- Info Text -->
     <div class="panel-body" data-html>
         {{ value|raw }}
@@ -14,7 +14,7 @@
 {% endmacro %}
 
 {% macro textInput(id = '', value, config  ) %}
-    {% set value = value??'Text Feld' %}
+    {% set value = value??'fields.text_input'|trans({}, 'formGenerator') %}
     <div class="mb-3">
         <label class="control-label {{ config.required?'required':'' }}" for="" data-label>{{ value }}</label>
         <input name="" type="text" class="form-control"
@@ -24,7 +24,7 @@
 {% endmacro %}
 
 {% macro textArea(id = '', value, config  ) %}
-    {% set value = value??'Text Area' %}
+    {% set value = value??'fields.text_area'|trans({}, 'formGenerator') %}
     <div class="mb-3">
         <label class="control-label {{ config.required?'required':'' }}" for="" data-label>{{ value }}</label>
         <textarea name="" type="text" class="form-control" cols="30" rows="5"
@@ -34,13 +34,14 @@
 {% endmacro %}
 
 {% macro selectBasic(id = '', value, config  ) %}
-    {% set value = value??'Basic Auswahl' %}
+    {% set value = value??'fields.dropdown_select_menu'|trans({}, 'formGenerator') %}
     <div class="form-group">
         <label class="col-md-4 control-label {{ config.required|default(false)?'required':'' }}" for=""
                data-label>{{ value }}</label>
         <div class="col-md-8">
             <div class="  col-md-12 ">
-                <select name="" class="form-control" {% if config.required|default(false) %} required{% endif %} data-options>
+                <select name="" class="form-control" {% if config.required|default(false) %} required{% endif %}
+                        data-options>
 
                     {% for option in config.options %}
                         <option value="{{ loop.index }}">{{ option }}</option>
@@ -53,7 +54,7 @@
 {% endmacro %}
 
 {% macro selectMultiple(id = '', value, config  ) %}
-    {% set value = value??'Mehrfach Auswahl' %}
+    {% set value = value??'fields.multiple_dropdown_select_menu'|trans({}, 'formGenerator')  %}
     <div class="form-group">
         <label class="col-md-4 control-label {{ config.required?'required':'' }}" for=""
                data-label>{{ value }}</label>
@@ -71,7 +72,7 @@
 {% endmacro %}
 
 {% macro multipleRadios(id = '', value, config  ) %}
-    {% set value = value??'Mehrfach Radio' %}
+    {% set value = value??'fields.radio_button_group'|trans({}, 'formGenerator') %}
     <label class="control-label">{{ value }}</label>
     {% set key = random() %}
     <div class="form-group">
@@ -88,7 +89,7 @@
 {% endmacro %}
 
 {% macro multipleRadiosInline(id = '', value, config  ) %}
-    {% set value = value??'Mehrfach Radios (in einer Linie)' %}
+    {% set value = value??'fields.radio_button_group_inline'|trans({}, 'formGenerator')  %}
     <label class="control-label" data-label>{{ value }}</label>
     {% set key = random() %}
     <div class="form-group">
@@ -105,38 +106,38 @@
 {% endmacro %}
 
 {% macro multipleCheckboxes(id = '', value, config  ) %}
-    {% set value = value??'Mehrfach Checkboxes' %}
+    {% set value = value??'fields.multiple_checkboxes'|trans({}, 'formGenerator') %}
 
-        <label class="control-label" data-label>{{ value }}</label>
-        {% set key = random() %}
-        <div class="form-group">
-            {% for option in config.options %}
-                <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" value="" id="checkbox{{ key }}{{ loop.index }}">
-                    <label class="form-check-label" for="checkbox{{ key }}{{ loop.index }}">
-                        {{ option }}
-                    </label>
-                </div>
-            {% endfor %}
-        </div>
+    <label class="control-label" data-label>{{ value }}</label>
+    {% set key = random() %}
+    <div class="form-group">
+        {% for option in config.options %}
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" value="" id="checkbox{{ key }}{{ loop.index }}">
+                <label class="form-check-label" for="checkbox{{ key }}{{ loop.index }}">
+                    {{ option }}
+                </label>
+            </div>
+        {% endfor %}
+    </div>
 
 {% endmacro %}
 
 {% macro multipleCheckboxesInline(id = '', value, config  ) %}
-    {% set value = value??'Mehrfach Checkboxes (in einer Linie)' %}
-        <label class="control-label" data-label>{{ value }}</label>
-        {% set key = random() %}
-        <div class="form-group">
-            {% for option in config.options %}
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" value=""
-                           id="checkboxInline{{ key }}{{ loop.index }}">
-                    <label class="form-check-label" for="checkboxInline{{ key }}{{ loop.index }}">
-                        {{ option }}
-                    </label>
-                </div>
-            {% endfor %}
-        </div>
+    {% set value = value??'fields.multiple_checkboxes_inline'|trans({}, 'formGenerator') %}
+    <label class="control-label" data-label>{{ value }}</label>
+    {% set key = random() %}
+    <div class="form-group">
+        {% for option in config.options %}
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" value=""
+                       id="checkboxInline{{ key }}{{ loop.index }}">
+                <label class="form-check-label" for="checkboxInline{{ key }}{{ loop.index }}">
+                    {{ option }}
+                </label>
+            </div>
+        {% endfor %}
+    </div>
 {% endmacro %}
 
 {% macro textInputPrependedText(id = '', value = 'Text Feld ', config  ) %}
@@ -190,22 +191,34 @@
 {% macro create_field(field) %}
     {% set config = {}|merge(field.options) %}
     {% if config.placeholder is defined and config.placeholder.value is defined %}
-        {% set config = config|merge({'placeholder': config.placeholder.value})  %}
+        {% set config = config|merge({'placeholder': config.placeholder.value}) %}
     {% endif %}
 
     {% if config.options.value is defined %}
-        {% set config = config|merge({'options': config.options.value})  %}
+        {% set config = config|merge({'options': config.options.value}) %}
     {% endif %}
 
 
     {% set id = field.name|replace({' ':'_'}) %}
-    <div class="component mb-3 bg-white border p-3 content_preview"
+    <div class="component mb-3 bg-white border p-3 content_preview min-h-75px"
          data-type="{{ field.type }}"
          data-id="{{ id }}"
          data-value="{{ field.fieldLabel|raw }}"
          data-config="{{ config|json_encode() }}"
     >
 
+        <div class="toolbar float-end mb-3">
+            {% if id %}
+                <div class="d-flex align-items-center">
+                    <button type="button" class="me-2 btn btn-sm btn-light-danger delete_block" data-id="{{ id }}">
+                        <i class="fa fa-trash soft-background pe-0"></i>
+                    </button>
+                    <button type="button" class="me-2 btn btn-sm btn-light-primary edit_block" data-id="{{ id }}">
+                        <i class="fa-regular fa-pen-to-square layout-link  pe-0"></i>
+                    </button>
+                </div>
+            {% endif %}
+        </div>
 
         {% if field.type == 'Legend' %}
             {{ _self.formLegend(id, field.fieldLabel, config) }}
@@ -247,16 +260,6 @@
             {{ _self.multipleCheckboxesInline(id, field.fieldLabel, field.options) }}
         {% endif %}
 
-        {% if id %}
-            <div class="toolbar">
-                <button type="button" class="me-2 btn btn-sm btn-light-danger delete_block" data-id="{{ id }}">
-                    <i class="fa fa-trash soft-background pe-0"></i>
-                </button>
-                <button type="button" class="me-2 btn btn-sm btn-light-primary edit_block" data-id="{{ id }}">
-                    <i class="fa-regular fa-pen-to-square layout-link  pe-0"></i>
-                </button>
-            </div>
-        {% endif %}
     </div>
 {% endmacro %}
 

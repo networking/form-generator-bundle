@@ -2,6 +2,9 @@ form.admin.menu_label: Formular Generator
 breadcrumb:
     link_form_list: Formular Generator
     link_form_create: Formular erstellen
+drag_components_here: Ziehen Sie Elemente hierher, um sie in das Formular einzufügen.
+
+drag_and_drop_components: Drag & Drop-Komponenten
 form:
     label:
         form: Formular
@@ -26,6 +29,10 @@ filter:
         online: Online
         offline: Offline
 
+tab:
+    simple_text_fields: Einfache Textfelder
+    choice_fields: Auswahl Felder
+
 form_created: Formular wurde erfolgreich erstellt
 form_updated: Formular wurde erfolgreich aktualisiert
 link_action_export: Export Daten
@@ -49,3 +56,21 @@ date: Datum
 field: Feld
 value: Wert
 title_create: Formular erstellen
+
+fields:
+    legend: Formular Legende
+    free_text_area: 'Freier Textbereich, mit begrenzter HTML-Markierung'
+    text_input: Texteingabe
+    text_area: Textbereich
+    dropdown_select_menu: Dropdown-Auswahlmenü
+    multiple_dropdown_select_menu: Dropdown-Auswahlmenü (mehrfach)
+    radio_button_group: Radio-Button-Gruppe (vertikal)
+    radio_button_group_inline: Radio-Button-Gruppe (in einer Reihe)
+    multiple_checkboxes: Mehrere Kontrollkästchen (vertikal)
+    multiple_checkboxes_inline: Mehrere Kontrollkästchen (in einer Reihe)
+    label: Label
+    placeholder: Platzhalter
+    required: Erforderlich
+    close: Schliessen
+    save: Speichern
+    options: Optionen

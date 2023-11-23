@@ -30,7 +30,7 @@
     <div class="d-flex flex-row mb-3">
         <div class="card shadow-sm flex-grow-1 me-3">
             <div class="card-header">
-                <h3 class="card-title">Ziehen Sie Elemente hierher</h3>
+                <h3 class="card-title">{{ 'drag_components_here'|trans({}, 'formGenerator') }}</h3>
             </div>
             <div class="card-body">
                 <div id="form-contents" class="dropzone min-h-800px"
@@ -47,19 +47,18 @@
         </div>
         <div class="card shadow-sm w-25">
             <div class="card-header">
-                <h3 class="card-title">Drag & Drop-Komponenten</h3>
+                <h3 class="card-title">{{ 'drag_and_drop_components'|trans({}, 'formGenerator') }}</h3>
             </div>
             <div class="card-body  min-h-800px">
                 <div class="tabbable">
                     <ul class="nav nav-tabs nav-line-tabs mb-5 fs-6" id="formtabs">
                         <!-- Tab nav -->
-                        <li class="nav-item"><a href="#input" class="nav-link active"
-                                                data-bs-toggle="tab">Eingabefelder</a>
+                        <li class="nav-item">
+                            <a href="#input" class="nav-link active" data-bs-toggle="tab">{{ 'tab.simple_text_fields'|trans({}, 'formGenerator') }}</a>
                         </li>
-                        <li class="nav-item"><a href="#select" class="nav-link" data-bs-toggle="tab">Auswahl
-                                Felder</a></li>
-                        {#                            <li class="nav-item"><a href="#radioscheckboxes" class="nav-link" data-bs-toggle="tab">Radios #}
-                        {#                                    / Checkboxen</a></li> #}
+                        <li class="nav-item">
+                            <a href="#select" class="nav-link" data-bs-toggle="tab">{{ 'tab.choice_fields'|trans({}, 'formGenerator') }}</a>
+                        </li>
                     </ul>
                     <div class="form-horizontal" id="components" role="form">
                         <fieldset>
@@ -81,10 +80,6 @@
                                     {{ fields.create_field({name: '', fieldLabel: null, type: 'Multiple Checkboxes', options: config}) }}
                                     {{ fields.create_field({name: '', fieldLabel: null, type: 'Multiple Checkboxes Inline', options: config}) }}
                                 </div>
-                                {#                                    <div class="tab-pane" id="select"> #}
-                                {#                                        #}{#                                        {{ fields.selectBasic() }} #}
-                                {#                                        #}{#                                        {{ fields.selectMultiple() }} #}
-                                {#                                    </div> #}
                             </div>
                         </fieldset>
                     </div>

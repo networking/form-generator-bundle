@@ -10,6 +10,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\FormGeneratorBundle\Admin;
 
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
@@ -34,7 +35,7 @@ class FormAdmin extends BaseAdmin
 
     protected function generateBaseRouteName(bool $isChildAdmin = false): string
     {
-         return 'admin_networking_forms';
+        return 'admin_networking_forms';
     }
 
     public function getIcon(): string
@@ -75,24 +76,34 @@ class FormAdmin extends BaseAdmin
             ->add(
                 'name',
                 null,
-                [],
+                [
+                    'field_options' => [
+
+                        'row_attr' => ['class' => 'form-floating'],
+                    ],
+                ],
                 ['translation_domain' => 'formGenerator']
             )->add(
                 'online',
                 CallbackFilter::class,
                 [
                     'callback' => $this->getAllOnline(...),
+                    'field_options' => [
+
+                        'row_attr' => ['class' => 'form-floating'],
+                    ],
                 ],
                 [
                     'field_type' => ChoiceType::class,
                     'field_options' => [
+                        'row_attr' => ['class' => 'form-floating'],
                         'placeholder' => 'filter.choice.all',
                         'choices' => [
                             'filter.choice.online' => 1,
                             'filter.choice.offline' => 0,
                         ],
                         'translation_domain' => 'formGenerator',
-                    ]
+                    ],
                 ]
             );
     }
@@ -107,35 +118,47 @@ class FormAdmin extends BaseAdmin
             ->add(
                 'name',
                 TextType::class,
-                ['layout' => 'horizontal', 'attr' => ['class' => 'input-xlarge']]
+                [
+                    'row_attr' => ['class' => 'form-floating mb-3'],
+                ]
             )
             ->add(
                 'email',
                 TextType::class,
                 [
                     'required' => false,
-                    'layout' => 'horizontal',
-                    'attr' => ['class' => 'input-xlarge'],
+                    'row_attr' => ['class' => 'form-floating mb-3'],
                     'help_block' => 'form.help.comma_separated',
                 ]
             )
             ->add('action', ChoiceType::class, [
                 'layout' => 'horizontal',
-                'attr' => ['class' => 'input-xlarge'],
+                'row_attr' => ['class' => 'form-floating mb-3'],
                 'choices' => [
                     'Email' => 'email',
                     'DB' => 'db',
                     'Email & DB' => 'email_db',
                 ],
-                'choice_translation_domain' => false
+                'choice_translation_domain' => false,
             ])
             ->add('redirect', TextType::class, [
                 'required' => false,
                 'layout' => 'horizontal',
-                'attr' => ['class' => 'input-xlarge'],
+                'row_attr' => ['class' => 'form-floating mb-3'],
             ])
-            ->add('infoText', CKEditorType::class, ['widget_form_group_attr' => ['class' => 'col-md-12']])
-            ->add('thankYouText', CKEditorType::class, ['widget_form_group_attr' => ['class' => 'col-md-12'], 'autoload' => false]);
+            ->add(
+                'infoText',
+                CKEditorType::class,
+                [
+                ]
+            )
+            ->add(
+                'thankYouText',
+                CKEditorType::class,
+                [
+                    'autoload' => false,
+                ]
+            );
     }
 
     protected function configureListFields(ListMapper $list): void
@@ -144,7 +167,8 @@ class FormAdmin extends BaseAdmin
         $list->addIdentifier('name');
         $list->add('pages', 'string', [
             'virtual_field' => true,
-            'template' => '@NetworkingFormGenerator/Admin/pages.html.twig']);
+            'template' => '@NetworkingFormGenerator/Admin/pages.html.twig',
+        ]);
         $list->add('online', 'boolean', ['editable' => true]);
         $list->add(
             '_action',
@@ -163,19 +187,12 @@ class FormAdmin extends BaseAdmin
         );
     }
 
-    /**
-     * Returns a list of default filters.
-     */
-    protected function configureDefaultFilterValues(array &$filterValues): void
-    {
-
-        $filterValues['online'] = ['value' => 1];
-    }
 
     /**
      * @param $alias
      * @param $field
      * @param $data
+     *
      * @return bool
      */
     public function getAllOnline(ProxyQuery $ProxyQuery, $alias, $field, $data)
@@ -198,12 +215,14 @@ class FormAdmin extends BaseAdmin
         return $active;
     }
 
-    public function configureFormOptions(array &$formOptions) : void
+    public function configureFormOptions(array &$formOptions): void
     {
 
-        if($this->getSubject()?->getId()){
+        if ($this->getSubject()?->getId()) {
             $formOptions['method'] = 'PUT';
         }
-        parent::configureFormOptions($formOptions); // TODO: Change the autogenerated stub
+        parent::configureFormOptions(
+            $formOptions
+        ); // TODO: Change the autogenerated stub
     }
 }

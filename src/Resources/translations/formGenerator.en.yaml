@@ -1,12 +1,16 @@
-breadcrumb.link_form_list: Form Generator
+breadcrumb:
+    link_form_list: Form Generator
+    link_form_create: Create a new form
 form.admin.menu_label: Form Generator
+drag_components_here: Drag components here to add them to the form.
+drag_and_drop_components: Drag & Drop components
 form:
     label:
         form: Formular
     label_name: Title
     label_email: Email addresses
     label_action: Form action
-    label_redirect: 'URL umleiten (Erfolg-Seite)'
+    label_redirect: 'URL redirect (Success page)'
     label_info_text: Info text
     label_thank_you_text: Thank you text
     help:
@@ -23,6 +27,10 @@ filter:
         all: Show all
         online: Online
         offline: Offline
+
+tab:
+    simple_text_fields: Simple text fields
+    choice_fields: Choice / Selection fields
 
 form_created: The form was successfully created
 form_updated: The form was successfully updated
@@ -46,3 +54,21 @@ date: Date
 field: Field
 value: Value
 title_create: Create form
+
+fields:
+    legend: Form legend
+    free_text_area: 'Free text area, with limited HTML markup'
+    text_input: Text input
+    text_area: Text area
+    dropdown_select_menu: Dropdown select menu
+    multiple_dropdown_select_menu: Dropdown select menu (multiple)
+    radio_button_group: Radio button group (vertical)
+    radio_button_group_inline: Radio button group (inline)
+    multiple_checkboxes: Multiple checkboxes (vertical)
+    multiple_checkboxes_inline: Multiple checkboxes (inline)
+    label: Label
+    placeholder: Placeholder
+    required: Required
+    close: Close
+    save: Save
+    options: Options
