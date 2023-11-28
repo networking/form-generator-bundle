@@ -74,3 +74,5 @@ fields:
     close: Schliessen
     save: Speichern
     options: Optionen
+
+"Form is invalid": "Formular ist ungültig, bitte überprüfen Sie Ihre Eingabe."

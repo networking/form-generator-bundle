@@ -169,9 +169,7 @@ class FormAdminController extends AbstractFOSRestController
         }
         $errors = $this->validator->validate($data);
 
-        $message = $this->translator->trans('An error occured', [], $this->admin->getTranslationDomain());
-
-        return $this->view(['violations' => $errors, 'message' => $message], 500);
+        return $this->view($errors, 500);
     }
 
     /**

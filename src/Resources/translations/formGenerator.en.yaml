@@ -72,3 +72,5 @@ fields:
     close: Close
     save: Save
     options: Options
+
+"Form is invalid": "The form is invalid, please check the fields below for details."
