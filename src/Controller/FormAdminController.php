@@ -206,6 +206,19 @@ class FormAdminController extends AbstractFOSRestController
                 $formField->setFieldLabel($field['value']);
                 $formField->setType($field['type']);
                 $formField->setOptions($field['config']);
+                if(array_key_exists('sortOrder', $field)){
+                    $formField->setPosition($field['sortOrder']);
+                }
+
+                if(array_key_exists('position', $field)){
+                    $formField->setPosition($field['position']);
+                }
+
+                if(null === $field->getPosition())
+                {
+                    $formField->setPosition($key);
+                }
+
 
                 $form->addFormField($formField);
             }
