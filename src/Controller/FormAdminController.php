@@ -214,7 +214,7 @@ class FormAdminController extends AbstractFOSRestController
                     $formField->setPosition($field['position']);
                 }
 
-                if(null === $field->getPosition())
+                if(null === $formField->getPosition())
                 {
                     $formField->setPosition($key);
                 }
