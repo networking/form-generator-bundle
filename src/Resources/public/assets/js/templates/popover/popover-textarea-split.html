@@ -1,7 +1,0 @@
-
-<div class="form-group">
-    <label class="col-md-12 control-label"> <%= polyglot.t(label, {_: label}) %> </label>
-    <div class="col-md-10">
-        <textarea class="form-control field" data-type="<%= type %>" id='<%= name %>'><% for ( var i = 0; i < value.length ; i++ ) { %><%= polyglot.t(value[i], {_: value[i]}) %><% if (i < value.length - 1) { %><%= "\n" %><% } %><% } %></textarea>
-    </div>
-</div>
