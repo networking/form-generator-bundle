@@ -15,7 +15,7 @@
         "php": "^8.2",
         "networking/init-cms-bundle": "^6.4 || dev-master",
         "friendsofsymfony/rest-bundle": "^3.4",
-        "symfony/config": "^6.0",
+        "symfony/config": "^6.0 || ^7.0",
         "phpoffice/phpspreadsheet": "^1.4"
     },
     "autoload": {
