@@ -163,7 +163,6 @@ class FormAdmin extends BaseAdmin
 
     protected function configureListFields(ListMapper $list): void
     {
-        parent::configureListFields($list);
         $list->addIdentifier('name');
         $list->add('pages', 'string', [
             'virtual_field' => true,
