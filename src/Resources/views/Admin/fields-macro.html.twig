@@ -16,7 +16,7 @@
 {% macro textInput(id = '', value, config  ) %}
     {% set value = value??'fields.text_input'|trans({}, 'formGenerator') %}
     <div class="mb-3">
-        <label class="control-label {{ config.required?'required':'' }}" for="" data-label>{{ value }}</label>
+        <label class="control-label  {{ config.required|default(false)?'required':'' }}" for="" data-label>{{ value }}</label>
         <input name="" type="text" class="form-control"
                data-placeholder
                placeholder="{{ config.placeholder }}" {% if config.required %} required{% endif %} >
@@ -26,7 +26,7 @@
 {% macro textArea(id = '', value, config  ) %}
     {% set value = value??'fields.text_area'|trans({}, 'formGenerator') %}
     <div class="mb-3">
-        <label class="control-label {{ config.required?'required':'' }}" for="" data-label>{{ value }}</label>
+        <label class="control-label  {{ config.required|default(false)?'required':'' }}" for="" data-label>{{ value }}</label>
         <textarea name="" type="text" class="form-control" cols="30" rows="5"
                   data-placeholder
                   placeholder="{{ config.placeholder }}" {% if config.required %} required{% endif %} ></textarea>
@@ -56,7 +56,7 @@
 {% macro selectMultiple(id = '', value, config  ) %}
     {% set value = value??'fields.multiple_dropdown_select_menu'|trans({}, 'formGenerator')  %}
     <div class="form-group">
-        <label class="col-md-4 control-label {{ config.required?'required':'' }}" for=""
+        <label class="col-md-4 control-label  {{ config.required|default(false)?'required':'' }}" for=""
                data-label>{{ value }}</label>
         <div class="col-md-8">
             <div class="col-md-12 ">
@@ -73,7 +73,7 @@
 
 {% macro multipleRadios(id = '', value, config  ) %}
     {% set value = value??'fields.radio_button_group'|trans({}, 'formGenerator') %}
-    <label class="control-label">{{ value }}</label>
+    <label class="control-label   {{ config.required|default(false)?'required':'' }}" data-label>{{ value }}</label>
     {% set key = random() %}
     <div class="form-group">
         {% for option in config.options %}
@@ -90,7 +90,7 @@
 
 {% macro multipleRadiosInline(id = '', value, config  ) %}
     {% set value = value??'fields.radio_button_group_inline'|trans({}, 'formGenerator')  %}
-    <label class="control-label" data-label>{{ value }}</label>
+    <label class="control-label   {{ config.required|default(false)?'required':'' }}" data-label>{{ value }}</label>
     {% set key = random() %}
     <div class="form-group">
         {% for option in config.options %}
@@ -108,7 +108,7 @@
 {% macro multipleCheckboxes(id = '', value, config  ) %}
     {% set value = value??'fields.multiple_checkboxes'|trans({}, 'formGenerator') %}
 
-    <label class="control-label" data-label>{{ value }}</label>
+    <label class="control-label {{ config.required|default(false)?'required':'' }}" data-label>{{ value }}</label>
     {% set key = random() %}
     <div class="form-group">
         {% for option in config.options %}
@@ -125,7 +125,7 @@
 
 {% macro multipleCheckboxesInline(id = '', value, config  ) %}
     {% set value = value??'fields.multiple_checkboxes_inline'|trans({}, 'formGenerator') %}
-    <label class="control-label" data-label>{{ value }}</label>
+    <label class="control-label {{ config.required|default(false)?'required':'' }}" data-label>{{ value }}</label>
     {% set key = random() %}
     <div class="form-group">
         {% for option in config.options %}
@@ -143,7 +143,7 @@
 {% macro textInputPrependedText(id = '', value = 'Text Feld ', config  ) %}
 
     <div class="form-group">
-        <label class="control-label" for="">Vorangestellter
+        <label class="control-label  {{ config.required|default(false)?'required':'' }}" for="">Vorangestellter
             Text</label>
         <div class="input-group">
             <span class="input-group-text">Text</span>
@@ -154,7 +154,7 @@
 
 {% macro textInputPrependedIcon(id = '', value = 'Text Feld ', config  ) %}
     <div class="form-group">
-        <label class="control-label" for="">Vorangestellter
+        <label class="control-label  {{ config.required|default(false)?'required':'' }}" for="">Vorangestellter
             Ikon</label>
         <div class="input-group">
             <span class="input-group-text"><i class="fa fa-phone"></i></span>
@@ -165,7 +165,7 @@
 {% macro textInputAppendedText(id = '', value = 'Text Feld ', config  ) %}
     <!-- Prepended text-->
     <div class="form-group">
-        <label class="control-label" for="">Angehängter
+        <label class="control-label  {{ config.required|default(false)?'required':'' }}" for="">Angehängter
             Text</label>
         <div class="input-group">
             <input name="" class="form-control" placeholder="" type="text">
@@ -177,7 +177,7 @@
 
     <!-- Prepended text-->
     <div class="form-group">
-        <label class="control-label" for="">Angehängtes
+        <label class="control-label  {{ config.required|default(false)?'required':'' }}" for="">Angehängtes
             Ikon</label>
         <div class="input-group">
             <input name="" class="form-control" placeholder="" type="text">
