@@ -49,39 +49,35 @@ abstract class BaseFormField
      * @var string
      */
     #[ORM\Column(name: 'placeholder', type: 'string', length: 255, nullable: true)]
-    protected $placeholder;
+    protected ?string  $placeholder;
 
     /**
      * @var bool
      */
     #[ORM\Column(name: 'mandatory', type: 'boolean', nullable: true)]
-    protected $mandatory;
+    protected ?bool $mandatory;
 
     /**
      * @var string
      */
     #[ORM\Column(name: 'invalid_message', type: 'string', length: 510, nullable: true)]
-    protected $invalidMessage;
+    protected ?string $invalidMessage;
 
     /**
      * @var string
      */
     #[ORM\Column(name: 'empty_message', type: 'string', length: 510, nullable: true)]
-    protected $emptyMessage;
+    protected ?string $emptyMessage;
 
     /**
      * @var string
      */
     #[ORM\Column(name: 'validation_type', type: 'string', length: 255, nullable: true)]
-    protected $validationType;
+    protected ?string $validationType;
 
-    /**
-     * @var int
-     *
-     * @Gedmo\SortablePosition
-     */
+    #[Gedmo\SortablePosition]
     #[ORM\Column(name: 'position', type: 'integer')]
-    protected $position;
+    protected int $position;
 
     /**
      * Mapping of choice fields to there option, value lists.

@@ -78,6 +78,8 @@ abstract class BaseForm implements \Stringable
     #[Serializer\Exclude()]
     protected $collection = [];
 
+    abstract function getId(): ?int;
+
     public function __clone()
     {
         $this->formData = new ArrayCollection();
