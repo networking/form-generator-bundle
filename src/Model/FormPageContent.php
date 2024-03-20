@@ -48,6 +48,7 @@ class FormPageContent implements ContentInterface
     /**
      * @Sonata\FormCallback
      */
+    #[Sonata\FormCallback()]
     public static function configureFormFields(FormBuilder $formBuilder)
     {
         $formBuilder->add(
