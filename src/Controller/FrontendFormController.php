@@ -134,7 +134,7 @@ class FrontendFormController extends AbstractController
                     foreach($form->getFormFields() as $field){
                         if(isset($data[$field->getName()]) and filter_var($data[$field->getName()], FILTER_VALIDATE_EMAIL)){
                             $sendMail = true;
-                            $recipient = $data[$field->getName();
+                            $recipient = $data[$field->getName()];
                         }
                     }
 
