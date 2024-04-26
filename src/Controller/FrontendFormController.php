@@ -126,11 +126,26 @@ class FrontendFormController extends AbstractController
                         $this->formHelper->saveToDb($form, $data);
                     }
 
+                    //check if confirmation email needs to be send.
+                    $sendMail = false;
+                    $recipient = '';
+                    $mailText =  $form->getThankYouText()." \n\r\n\r----------------\n\r\n\r".$this->formHelper->renderEmailBody($form, $data);
+
+                    foreach($form->getFormFields() as $field){
+                        if(isset($data[$field->getName()]) and filter_var($data[$field->getName()], FILTER_VALIDATE_EMAIL)){
+                            $sendMail = true;
+                            $recipient = $data[$field->getName();
+                        }
+                    }
+
+                    if($sendMail){
+                        $this->sendConfirmationEmail($recipient, $this->emailAddress, $form->getName(), $mailText);
+                    }
+
                     if ($form->getRedirect()) {
                         $this->session->getFlashBag()->add('form_notice', $form->getThankYouText());
                         $redirect = $form->getRedirect();
                     }
-
                 }
 
 
@@ -215,4 +230,24 @@ class FrontendFormController extends AbstractController
     {
         return $this->session->get(self::FORM_DATA, []);
     }
+
+
+    /*
+     * send confirmation email
+     * **/
+    public function sendConfirmationEmail($to, $from, $subject, $text )
+    {
+        $plaineText =  preg_replace( "/\n\s+/", "\n", rtrim(html_entity_decode(strip_tags($text))) );
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->addTo($to)
+            ->setFrom($from)
+            ->setBody($plaineText)
+            ->addPart($text, 'text/html');
+
+
+        return $this->get('mailer')->send($message);
+    }
+
 }

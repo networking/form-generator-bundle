@@ -47,6 +47,15 @@ class FormHelper
         $this->twig = $twig;
     }
 
+
+    public function renderEmailBody(Form $form, array $data){
+        return $this->renderView(
+            'NetworkingFormGeneratorBundle:Email:email.txt.twig',
+            ['data' => $data, 'form' => $form]
+        );
+    }
+
+
     /**
      * Send an plain text email of the data.
      *
