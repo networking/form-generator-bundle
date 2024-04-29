@@ -131,10 +131,10 @@ class FrontendFormController extends AbstractController
                     $recipient = '';
                     $mailText =  $form->getThankYouText()." \n\r\n\r----------------\n\r\n\r".$this->formHelper->renderEmailBody($form, $data);
 
-                    foreach($form->getFormFields() as $field){
-                        if(isset($data[$field->getName()]) and filter_var($data[$field->getName()], FILTER_VALIDATE_EMAIL)){
+                    foreach ($data as $formfield) {
+                        if (is_string($formfield) and  filter_var($formfield, FILTER_VALIDATE_EMAIL)) {
                             $sendMail = true;
-                            $recipient = $data[$field->getName()];
+                            $recipient = $formfield;
                         }
                     }
 
@@ -237,17 +237,24 @@ class FrontendFormController extends AbstractController
      * **/
     public function sendConfirmationEmail($to, $from, $subject, $text )
     {
-        $plaineText =  preg_replace( "/\n\s+/", "\n", rtrim(html_entity_decode(strip_tags($text))) );
 
-        $message = \Swift_Message::newInstance()
-            ->setSubject($subject)
-            ->addTo($to)
-            ->setFrom($from)
-            ->setBody($plaineText)
-            ->addPart($text, 'text/html');
+        $text = strip_tags($text);
+        $text = html_entity_decode($text);
+        $subject = @iconv('UTF-8', 'ISO-8859-15', $subject);
+        mail($to, $subject, $text, 'From: '.$from, '-f'.$from);
 
-
-        return $this->get('mailer')->send($message);
+//
+//        $plaineText =  preg_replace( "/\n\s+/", "\n", rtrim(html_entity_decode(strip_tags($text))) );
+//
+//        $message = \Swift_Message::newInstance()
+//            ->setSubject($subject)
+//            ->addTo($to)
+//            ->setFrom($from)
+//            ->setBody($plaineText)
+//            ->addPart($text, 'text/html');
+//
+//
+//        return $this->get('mailer')->send($message);
     }
 
 }
