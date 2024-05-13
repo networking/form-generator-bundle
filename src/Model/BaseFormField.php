@@ -11,62 +11,50 @@ use Symfony\Component\Serializer\Annotation\Ignore;
 #[ORM\MappedSuperclass]
 abstract class BaseFormField
 {
+    public const TEXT_FIELDS = [
+        'Text Input',
+        'Password Input',
+        'Search Input',
+        'Prepended Text',
+        'Prepended Icon',
+        'Appended Text',
+        'Appended Icon',
+        'Text Area',
+    ];
 
-    public const TEXT_FIELDS  = [
-            'Text Input',
-            'Password Input',
-            'Search Input',
-            'Prepended Text',
-            'Prepended Icon',
-            'Appended Text',
-            'Appended Icon',
-            'Text Area',
-        ];
-
-    public const SINGLE_CHOICE_FIELDS  = [
-            'Select Basic',
-            'Multiple Radios',
-            'Inline Radios',
-        ];
+    public const SINGLE_CHOICE_FIELDS = [
+        'Select Basic',
+        'Multiple Radios',
+        'Inline Radios',
+        'Multiple Radios Inline',
+    ];
 
     public const MULTI_CHOICE_FIELDS = [
-            'Select Multiple',
-            'Multiple Checkboxes',
-            'Inline Checkboxes',
-        ];
+        'Select Multiple',
+        'Multiple Checkboxes',
+        'Inline Checkboxes',
+        'Multiple Checkboxes Inline',
+    ];
 
     public const NON_VALUE_FIELDS = [
-            'Legend',
-            'Infotext',
-        ];
+        'Legend',
+        'Infotext',
+    ];
 
     /**
      * @var Form
-     *
      */
     protected ?BaseForm $form = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'name', type: 'string', length: 255)]
     protected string $name;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'field_label', type: 'string', length: 255)]
     protected string $fieldLabel;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'type', type: 'string', length: 255)]
     protected string $type;
 
-    /**
-     * @var array
-     */
     #[ORM\Column(name: 'options', type: 'json')]
     protected array $options = [];
 
@@ -139,6 +127,7 @@ abstract class BaseFormField
     public function setId($id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -161,8 +150,6 @@ abstract class BaseFormField
     /**
      * Set name.
      *
-     * @param string $name
-     *
      * @return FormField
      */
     public function setName(?string $name)
@@ -174,12 +161,10 @@ abstract class BaseFormField
 
     /**
      * Get name.
-     *
-     * @return string
      */
     public function getName(): ?string
     {
-        return $this->name??null;
+        return $this->name ?? null;
     }
 
     /**
@@ -198,12 +183,10 @@ abstract class BaseFormField
 
     /**
      * Get fieldLabel.
-     *
-     * @return string
      */
     public function getFieldLabel(): ?string
     {
-        return $this->fieldLabel??null;
+        return $this->fieldLabel ?? null;
     }
 
     /**
@@ -222,12 +205,10 @@ abstract class BaseFormField
 
     /**
      * Get type.
-     *
-     * @return string
      */
     public function getType(): ?string
     {
-        return $this->type??null;
+        return $this->type ?? null;
     }
 
     /**
@@ -258,7 +239,7 @@ abstract class BaseFormField
             }
 
             if (!in_array($this->type, self::TEXT_FIELDS)
-                && $key == 'options'
+                && 'options' == $key
             ) {
                 $options[$key] = $option;
             }
@@ -267,11 +248,10 @@ abstract class BaseFormField
                 $this->type,
                 ['Multiple Checkboxes', 'Multiple Checkboxes Inline']
             )
-                && $key == 'checkboxes' && array_key_exists(
+                && 'checkboxes' == $key && array_key_exists(
                     'value',
                     $option)
             ) {
-
                 $options['options'] = $option['value'];
             }
 
@@ -279,7 +259,7 @@ abstract class BaseFormField
                 $this->type,
                 ['Multiple Radios', 'Multiple Radios Inline']
             )
-                && $key == 'radios' && array_key_exists(
+                && 'radios' == $key && array_key_exists(
                     'value',
                     $option)
             ) {
@@ -290,7 +270,7 @@ abstract class BaseFormField
                 $options[$key] = $option;
             }
 
-            if ($key == 'textarea') {
+            if ('textarea' == $key) {
                 $options['placeholder'] = $option;
             }
         }
@@ -418,9 +398,6 @@ abstract class BaseFormField
         return $this->validationType;
     }
 
-    /**
-     * @return mixed
-     */
     public function getPosition()
     {
         return $this->position;
@@ -443,34 +420,32 @@ abstract class BaseFormField
                     $this->options[$options]
                 )
             ) {
-
                 $choices = $this->options[$options]['value'];
                 $valueMap = [];
                 foreach ($choices as $choice => $value) {
                     $valueMap[$value] = $choice;
                 }
+
                 return $valueMap;
             }
 
-            if(array_key_exists($options, $this->options)){
+            if (array_key_exists($options, $this->options)) {
                 $choices = $this->options[$options];
                 $valueMap = [];
                 foreach ($choices as $choice => $value) {
                     $valueMap[$value] = $choice;
                 }
+
                 return $valueMap;
             }
-
 
             $choices = $this->options['options'];
             $valueMap = [];
             foreach ($choices as $choice => $value) {
                 $valueMap[$value] = $choice;
             }
+
             return $valueMap;
-
-
-
         }
 
         return false;
