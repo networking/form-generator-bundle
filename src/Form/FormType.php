@@ -10,19 +10,17 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\FormGeneratorBundle\Form;
 
 use Gedmo\Sluggable\Util\Urlizer;
-use Networking\FormGeneratorBundle\Model\BaseForm;
-use Networking\FormGeneratorBundle\Model\BaseFormField;
-use Networking\FormGeneratorBundle\Model\Form;
-use Networking\FormGeneratorBundle\Model\FormData;
-use Networking\FormGeneratorBundle\Model\FormField;
-use Networking\FormGeneratorBundle\Model\FormFieldData;
 use Networking\FormGeneratorBundle\Form\Type\InfotextType;
 use Networking\FormGeneratorBundle\Form\Type\LegendType;
+use Networking\FormGeneratorBundle\Model\BaseForm;
+use Networking\FormGeneratorBundle\Model\BaseFormField;
+use Networking\FormGeneratorBundle\Model\FormData;
+use Networking\FormGeneratorBundle\Model\FormFieldData;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
@@ -35,7 +33,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FormType extends AbstractType
 {
-
     final public const FRONTEND_INPUT_SIZES = [
         'xs' => 'col-2',
         's' => 'col-4',
@@ -47,13 +44,11 @@ class FormType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-
         $form = $options['form'];
 
-        if (!is_null($form )) {
-            foreach ($form->getFormFields() as $key =>  $field) {
-
-                if(!$name = $field->getName()){
+        if (!is_null($form)) {
+            foreach ($form->getFormFields() as $key => $field) {
+                if (!$name = $field->getName()) {
                     $name = $field->getType().$key;
                 }
                 $id = Urlizer::urlize($name);
@@ -65,19 +60,18 @@ class FormType extends AbstractType
                 );
             }
 
-            $builder->addModelTransformer(new FormDataTransformer($form, $options['data_class'], $options['form_field_data_class']) );
+            $builder->addModelTransformer(new FormDataTransformer($form, $options['data_class'], $options['form_field_data_class']));
         }
     }
 
-
     public function configureOptions(OptionsResolver $resolver): void
     {
+        $setIdAttr = function (Options $options) {
+            if ($options['form'] and $options['form'] instanceof BaseForm) {
+                return ['id' => 'formgenerator_form_'.$options['form']->getId()];
+            }
 
-        $setIdAttr = function(Options $options){
-              if($options['form'] and $options['form'] instanceof BaseForm){
-                  return ['id' => 'formgenerator_form_'.$options['form']->getId()];
-              }
-              return [];
+            return [];
         };
         $resolver->setRequired([
             'form',
@@ -92,9 +86,7 @@ class FormType extends AbstractType
             'csrf_protection' => false,
             'data_class' => FormData::class,
             'form_field_data_class' => FormFieldData::class,
-            'frontend_css_input_sizes' => self::FRONTEND_INPUT_SIZES
-
-
+            'frontend_css_input_sizes' => self::FRONTEND_INPUT_SIZES,
         ]);
         $resolver->setDefined([
             'translation_domain',
@@ -104,7 +96,6 @@ class FormType extends AbstractType
 
     protected function getFieldType($type)
     {
-
         $type = match ($type) {
             'Legend' => LegendType::class,
             'Infotext' => InfotextType::class,
@@ -146,13 +137,13 @@ class FormType extends AbstractType
                 break;
             case 'Prepended Text':
             case 'Prepended Icon':
-                $type = ($field->getType() == 'Prepended Text') ? 'text' : 'icon';
+                $type = ('Prepended Text' == $field->getType()) ? 'text' : 'icon';
                 $fieldOptions['attr']['placeholder'] = $options['placeholder'];
                 $fieldOptions['widget_addon_prepend'] = [$type => $options['prepend']];
                 break;
             case 'Appended Text':
             case 'Appended Icon':
-                $type = ($field->getType() == 'Appended Text') ? 'text' : 'icon';
+                $type = ('Appended Text' == $field->getType()) ? 'text' : 'icon';
                 $fieldOptions['attr']['placeholder'] = $options['placeholder'];
                 $fieldOptions['widget_addon_append'] = [$type => $options['append']];
                 break;
@@ -161,35 +152,28 @@ class FormType extends AbstractType
                 break;
             case 'Multiple Checkboxes':
             case 'Multiple Checkboxes Inline':
-
                 $fieldOptions['choices'] = $field->getValueMap();
                 $fieldOptions['expanded'] = true;
                 $fieldOptions['multiple'] = true;
-                $fieldOptions['required'] = true;
-                if ($field->getType() == 'Multiple Checkboxes Inline') {
+                if ('Multiple Checkboxes Inline' == $field->getType()) {
                     $fieldOptions['label_attr'] = ['class' => 'checkbox-inline'];
                 }
-                $fieldOptions['constraints'] = new NotBlank();
                 break;
             case 'Multiple Radios':
             case 'Multiple Radios Inline':
                 $fieldOptions['choices'] = $field->getValueMap();
                 $fieldOptions['expanded'] = true;
                 $fieldOptions['multiple'] = false;
-                $fieldOptions['required'] = true;
-                if ($field->getType() == 'Multiple Radios Inline') {
+                if ('Multiple Radios Inline' == $field->getType()) {
                     $fieldOptions['label_attr'] = ['class' => 'radio-inline'];
                 }
                 reset($fieldOptions['choices']);
                 $fieldOptions['data'] = current($fieldOptions['choices']);
-                $fieldOptions['constraints'] = new NotBlank();
                 break;
             case 'Select Basic':
                 $fieldOptions['choices'] = $field->getValueMap();
                 $fieldOptions['expanded'] = false;
                 $fieldOptions['multiple'] = false;
-                $fieldOptions['required'] = true;
-                $fieldOptions['constraints'] = new NotBlank();
                 break;
             case 'Select Multiple':
                 $fieldOptions['choices'] = $field->getValueMap();
@@ -204,6 +188,7 @@ class FormType extends AbstractType
 
         if (array_key_exists('required', $options)) {
             $fieldOptions['required'] = $options['required'];
+
             if ($fieldOptions['required']) {
                 $fieldOptions['constraints'] = new NotBlank();
             }
@@ -214,16 +199,13 @@ class FormType extends AbstractType
             $fieldOptions['help'] = $options['helptext'];
         }
 
-
-        if($formOptions['is_admin']){
+        if ($formOptions['is_admin']) {
             $fieldOptions['attr']['disabled'] = true;
             $fieldOptions['attr']['readonly'] = true;
         }
-        
 
         return $fieldOptions;
     }
-
 
     public function getBlockPrefix(): string
     {
