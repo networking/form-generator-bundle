@@ -27,14 +27,13 @@ class FormData extends BaseFormData
     /**
      * @var Form
      */
-    #[ORM\ManyToOne(targetEntity: \Networking\FormGeneratorBundle\Model\Form::class, inversedBy: 'formData')]
+    #[ORM\ManyToOne(targetEntity: Form::class, inversedBy: 'formData')]
     #[ORM\JoinColumn(name: 'form_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     protected $form;
 
     /**
      * @var ArrayCollection;
      */
-    #[ORM\OneToMany(targetEntity: \Networking\FormGeneratorBundle\Model\FormFieldData::class, cascade: ['persist', 'remove'], mappedBy: 'formData', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: FormFieldData::class, cascade: ['persist', 'remove'], mappedBy: 'formData', orphanRemoval: true)]
     protected $formFields = [];
-
 }
