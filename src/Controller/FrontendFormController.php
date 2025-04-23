@@ -131,6 +131,7 @@ class FrontendFormController extends AbstractController
                     $recipient = '';
                     $mailText =  $form->getThankYouText()." \n\r\n\r----------------\n\r\n\r".$this->formHelper->renderEmailBody($form, $data);
 
+                    /*
                     foreach ($data as $formfield) {
                         if (is_string($formfield) and  filter_var($formfield, FILTER_VALIDATE_EMAIL)) {
                             $sendMail = true;
@@ -142,6 +143,7 @@ class FrontendFormController extends AbstractController
                         $this->sendConfirmationEmail($recipient, $this->emailAddress, $form->getName(), $mailText);
                     }
 
+                    */
                     if ($form->getRedirect()) {
                         $this->session->getFlashBag()->add('form_notice', $form->getThankYouText());
                         $redirect = $form->getRedirect();
