@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -194,7 +195,12 @@ class FormAdminController extends AbstractFOSRestController
 
                 $uniqIdField = !array_key_exists('label', $field['fields'])?'name':'label';
 
-                $uniqId = uniqid(substr(Urlizer::transliterate($field['fields'][$uniqIdField]['value']), 0, 3));
+                $fieldString = (new AsciiSlugger())
+                  ->slug($field['fields'][$uniqIdField]['value'], '-')
+                  ->lower()
+                  ->toString();
+
+                $uniqId = uniqid(substr($fieldString, 0, 3));
 
                 if(!array_key_exists('id', $field['fields'])){
                     $field['fields']['id'] = [

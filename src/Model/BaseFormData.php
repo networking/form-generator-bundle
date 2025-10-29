@@ -132,6 +132,10 @@ abstract class BaseFormData implements \ArrayAccess, \Stringable
         return $this->offsetSet($offset, $value);
     }
 
+    public function __isset($offset){
+        return $this->offsetExists($offset);
+    }
+
 
     public function offsetExists($offset): bool
     {

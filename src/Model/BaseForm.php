@@ -6,10 +6,10 @@ namespace Networking\FormGeneratorBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Sluggable\Util\Urlizer;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 #[ORM\MappedSuperclass]
 abstract class BaseForm implements \Stringable
@@ -345,7 +345,7 @@ abstract class BaseForm implements \Stringable
      */
     public function getField($key)
     {
-        $fields = $this->formFields->filter(fn($field) => Urlizer::urlize($field->getName()) == $key);
+        $fields = $this->formFields->filter(fn($field) => (new AsciiSlugger()) ->slug($field->getName(), '-')->lower()->toString() == $key);
 
         if ($fields->count() > 0) {
             return $fields->first();

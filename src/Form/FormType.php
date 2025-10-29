@@ -12,7 +12,6 @@ declare(strict_types=1);
  */
 namespace Networking\FormGeneratorBundle\Form;
 
-use Gedmo\Sluggable\Util\Urlizer;
 use Networking\FormGeneratorBundle\Model\BaseForm;
 use Networking\FormGeneratorBundle\Model\BaseFormField;
 use Networking\FormGeneratorBundle\Model\Form;
@@ -31,6 +30,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FormType extends AbstractType
@@ -55,7 +55,11 @@ class FormType extends AbstractType
                 if(!$name = $field->getName()){
                     $name = $field->getType().$key;
                 }
-                $id = Urlizer::urlize($name);
+
+                $id = (new AsciiSlugger())
+                  ->slug($name, '-')
+                  ->lower()
+                  ->toString();
 
                 $builder->add(
                     $id,
