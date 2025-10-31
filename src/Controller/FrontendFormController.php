@@ -124,9 +124,11 @@ class FrontendFormController extends AbstractController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function renderFormAction(Request $request, BaseForm $form, $actionUrl = null, $template = '@NetworkingFormGenerator/Form/form.html.twig', $options = [])
+    public function renderFormAction(Request $request, ?BaseForm $form, $actionUrl = null, $template = '@NetworkingFormGenerator/Form/form.html.twig', $options = [])
     {
-
+        if(!$form){
+            return new Response();
+        }
         if(!$form->isOnline()){
             return new Response();
         }

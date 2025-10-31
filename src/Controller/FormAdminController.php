@@ -55,32 +55,6 @@ class FormAdminController extends AbstractFOSRestController
     }
 
 
-//    #[Rest\Get(path: "/{id}", requirements: ["_format" => "json|xml", "id" => "\d+"])]
-//    public function getAction(Request $request, $id): Response
-//    {
-//
-//        $repo = $this->registry->getRepository($this->getParameter('networking_form_generator.form_class'));
-//        /** @var Form $form */
-//        $form = $repo->find($id);
-//        if (!$form) {
-//            throw new NotFoundHttpException('Form not found');
-//        }
-//
-//
-//        $view = $this->view([
-//            'name' => $form->getName(),
-//            'id' => $form->getId(),
-//            'collection' => $form->getCollection(),
-//            'action' => $form->getAction(),
-//            'email' => $form->getAction(),
-//            'objectId' => $objectId,
-//        ]);
-//        $view->setFormat('json');
-//
-//        return $this->handleView($view);
-//
-//    }
-
     #[Rest\Post(path: "/", requirements: ["_format" => "json|xml"])]
     public function postAction(Request $request): Response
     {
@@ -225,21 +199,6 @@ class FormAdminController extends AbstractFOSRestController
         }
 
         return $form;
-    }
-
-    #[Rest\Delete(path: "/{id}", requirements: ["_format" => "json|xml", "id" => "\d+"], defaults: ["_format" => "json"])]
-    public function deleteAction(Request $request, $id): void
-    {
-
-        /** @var FormAdmin $admin */
-        $admin = $this->get(\Networking\FormGeneratorBundle\Admin\FormAdmin::class);
-
-        $form = $admin->getObject($id);
-        if (!$form) {
-            throw new NotFoundHttpException('Form not found');
-        }
-
-        $admin->delete($form);
     }
 
 

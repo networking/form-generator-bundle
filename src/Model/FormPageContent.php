@@ -39,10 +39,10 @@ class FormPageContent extends LayoutBlock implements ContentInterface
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
 
-    #[ORM\ManyToOne(targetEntity: \Networking\FormGeneratorBundle\Model\Form::class)]
+    #[ORM\ManyToOne(targetEntity: Form::class)]
     #[ORM\JoinColumn(name: 'form_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[Assert\NotNull]
-    private ?\Networking\FormGeneratorBundle\Model\Form $form = null;
+    private ?Form $form = null;
 
     /**
      * @Sonata\FormCallback
