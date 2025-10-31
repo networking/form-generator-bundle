@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Networking\FormGeneratorBundle\Form;
 
-use Gedmo\Sluggable\Util\Urlizer;
 use Networking\FormGeneratorBundle\Model\BaseForm;
 use Networking\FormGeneratorBundle\Model\Form;
 use Networking\FormGeneratorBundle\Model\FormData;
-use Networking\FormGeneratorBundle\Model\FormFieldData;
+use Networking\InitCmsBundle\Util\Urlizer;
 use Symfony\Component\Form\DataTransformerInterface;
-use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class FormDataTransformer implements DataTransformerInterface
 {
@@ -39,11 +37,7 @@ class FormDataTransformer implements DataTransformerInterface
             if(!$name = $field->getName()){
                 $name = $field->getType().$key;
             }
-            $id = (new AsciiSlugger())
-              ->slug($name, '-')
-              ->lower()
-              ->toString();
-
+            $id = Urlizer::urlize($name);
             $formFieldData = new $this->formFieldDataClass;
             $formFieldData->setLabel($field->getFieldLabel());
 

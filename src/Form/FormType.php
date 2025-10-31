@@ -14,14 +14,12 @@ namespace Networking\FormGeneratorBundle\Form;
 
 use Networking\FormGeneratorBundle\Model\BaseForm;
 use Networking\FormGeneratorBundle\Model\BaseFormField;
-use Networking\FormGeneratorBundle\Model\Form;
 use Networking\FormGeneratorBundle\Model\FormData;
-use Networking\FormGeneratorBundle\Model\FormField;
 use Networking\FormGeneratorBundle\Model\FormFieldData;
 use Networking\FormGeneratorBundle\Form\Type\InfotextType;
 use Networking\FormGeneratorBundle\Form\Type\LegendType;
+use Networking\InitCmsBundle\Util\Urlizer;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
@@ -30,7 +28,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FormType extends AbstractType
@@ -56,11 +53,7 @@ class FormType extends AbstractType
                     $name = $field->getType().$key;
                 }
 
-                $id = (new AsciiSlugger())
-                  ->slug($name, '-')
-                  ->lower()
-                  ->toString();
-
+                $id = Urlizer::urlize($name);
                 $builder->add(
                     $id,
                     $this->getFieldType($field->getType()),

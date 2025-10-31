@@ -7,10 +7,10 @@ namespace Networking\FormGeneratorBundle\Controller;
 use Doctrine\Persistence\ManagerRegistry;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use Gedmo\Sluggable\Util\Urlizer;
 use Networking\FormGeneratorBundle\Admin\FormAdmin;
 use Networking\FormGeneratorBundle\Model\BaseForm;
 use Networking\FormGeneratorBundle\Model\Form;
+use Networking\InitCmsBundle\Util\Urlizer;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Sonata\AdminBundle\Admin\AdminInterface;
@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -58,28 +57,25 @@ class FormAdminController extends AbstractFOSRestController
     #[Rest\Get(path: "/{id}", requirements: ["_format" => "json|xml", "id" => "\d+"])]
     public function getAction(Request $request, $id): Response
     {
-        if (!$id) {
-
+        $repo = $this->registry->getRepository($this->getParameter('networking_form_generator.form_class'));
+        /** @var Form $form */
+        $form = $repo->find($id);
+        if (!$form) {
+            throw new NotFoundHttpException('Form not found');
         }
-            $repo = $this->registry->getRepository($this->getParameter('networking_form_generator.form_class'));
-            /** @var Form $form */
-            $form = $repo->find($id);
-            if (!$form) {
-                throw new NotFoundHttpException('Form not found');
-            }
 
-            $form->setCollection();
+        $form->setCollection();
 
-            $view = $this->view([
-                'name' => $form->getName(),
-                'id' => $form->getId(),
-                'collection' => $form->getCollection(),
-                'action' => $form->getAction(),
-                'email' => $form->getAction(),
-            ]);
-            $view->setFormat('json');
+        $view = $this->view([
+            'name' => $form->getName(),
+            'id' => $form->getId(),
+            'collection' => $form->getCollection(),
+            'action' => $form->getAction(),
+            'email' => $form->getAction(),
+        ]);
+        $view->setFormat('json');
 
-            return $this->handleView($view);
+        return $this->handleView($view);
 
     }
 
@@ -195,10 +191,7 @@ class FormAdminController extends AbstractFOSRestController
 
                 $uniqIdField = !array_key_exists('label', $field['fields'])?'name':'label';
 
-                $fieldString = (new AsciiSlugger())
-                  ->slug($field['fields'][$uniqIdField]['value'], '-')
-                  ->lower()
-                  ->toString();
+                $fieldString = Urlizer::urlize($field['fields'][$uniqIdField]['value']);
 
                 $uniqId = uniqid(substr($fieldString, 0, 3));
 
@@ -251,22 +244,6 @@ class FormAdminController extends AbstractFOSRestController
 
         return $form;
     }
-
-    #[Rest\Delete(path: "/{id}", requirements: ["_format" => "json|xml", "id" => "\d+"], defaults: ["_format" => "json"])]
-    public function deleteAction(Request $request, $id): void
-    {
-
-        /** @var FormAdmin $admin */
-        $admin = $this->get(\Networking\FormGeneratorBundle\Admin\FormAdmin::class);
-
-        $form = $admin->getObject($id);
-        if (!$form) {
-            throw new NotFoundHttpException('Form not found');
-        }
-
-        $admin->delete($form);
-    }
-
 
     public function deleteFormEntryAction(Request $request, $id, $rowid)
     {
