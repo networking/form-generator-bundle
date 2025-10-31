@@ -92,39 +92,26 @@ abstract class BaseFormData implements \ArrayAccess, \Stringable, IgnoreRevertIn
         return $this;
     }
 
-    /**
-     * Get form.
-     *
-     * @return Form
-     */
-    public function getForm()
+    public function getForm(): BaseForm|Form
     {
         return $this->form;
     }
 
-    /**
-     * Get fields.
-     *
-     * @return BaseFormFieldData[]
-     */
-    public function getFormFields()
+    public function getFormFields(): ArrayCollection|array
     {
         return $this->formFields;
     }
 
-    /**
-     * @param ArrayCollection $formFields
-     */
-    public function setFormFields($formFields)
+    public function setFormFields(ArrayCollection $formFields): void
     {
         $this->formFields = new ArrayCollection();
 
-        foreach ($formFields as $field) {
-            $this->addFormField($field);
+        foreach ($formFields as $key =>  $field) {
+            $this->addFormField($field, $key);
         }
     }
 
-    public function addFormField(BaseFormFieldData $formField, $key)
+    public function addFormField(BaseFormFieldData $formField, $key): void
     {
         $formField->setFormData($this);
         $this->formFields[$key] = $formField;
@@ -137,9 +124,13 @@ abstract class BaseFormData implements \ArrayAccess, \Stringable, IgnoreRevertIn
 
     public function __set($offset, $value)
     {
-        return $this->offsetSet($offset, $value);
+        $this->offsetSet($offset, $value);
     }
 
+    public function __isset($offset): bool
+    {
+        return $this->offsetExists($offset);
+    }
 
     public function offsetExists($offset): bool
     {

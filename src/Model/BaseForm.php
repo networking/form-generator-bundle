@@ -6,8 +6,7 @@ namespace Networking\FormGeneratorBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\PersistentCollection;
-use Gedmo\Sluggable\Util\Urlizer;
+use Networking\InitCmsBundle\Util\Urlizer;
 use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;

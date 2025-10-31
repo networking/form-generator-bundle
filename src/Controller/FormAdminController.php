@@ -7,7 +7,7 @@ namespace Networking\FormGeneratorBundle\Controller;
 use Doctrine\Persistence\ManagerRegistry;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use Gedmo\Sluggable\Util\Urlizer;
+use Networking\InitCmsBundle\Util\Urlizer;
 use Networking\FormGeneratorBundle\Admin\FormAdmin;
 use Networking\FormGeneratorBundle\Model\BaseForm;
 use Networking\FormGeneratorBundle\Model\BaseFormField;
@@ -196,7 +196,7 @@ class FormAdminController extends AbstractFOSRestController
 
                 $uniqIdField = !array_key_exists('label', $field)?'name':'label';
 
-                $uniqId = uniqid(substr(Urlizer::transliterate($field[$uniqIdField]), 0, 3));
+                $uniqId = uniqid(substr(Urlizer::urlize($field[$uniqIdField]), 0, 3));
 
                 if(!array_key_exists('id', $field)){
                     $field['id'] =  $uniqId;

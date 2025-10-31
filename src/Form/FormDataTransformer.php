@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Networking\FormGeneratorBundle\Form;
 
-use Gedmo\Sluggable\Util\Urlizer;
+use Networking\InitCmsBundle\Util\Urlizer;
 use Networking\FormGeneratorBundle\Model\BaseForm;
 use Networking\FormGeneratorBundle\Model\BaseFormData;
 use Networking\FormGeneratorBundle\Model\BaseFormField;

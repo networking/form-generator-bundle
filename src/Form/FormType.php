@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of the sko  package.
+ * This file is part of the package.
  *
  * (c) net working AG <info@networking.ch>
  *
@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Networking\FormGeneratorBundle\Form;
 
-use Gedmo\Sluggable\Util\Urlizer;
+use Networking\InitCmsBundle\Util\Urlizer;
 use Networking\FormGeneratorBundle\Form\Type\InfotextType;
 use Networking\FormGeneratorBundle\Form\Type\LegendType;
 use Networking\FormGeneratorBundle\Model\BaseForm;
