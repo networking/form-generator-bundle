@@ -131,6 +131,7 @@ class FormType extends AbstractType
         switch ($field->getType()) {
             case 'Legend':
             case 'Infotext':
+                $fieldOptions['mapped'] = false;
                 break;
             case 'Password Input':
                 $fieldOptions['attr']['placeholder'] = $options['placeholder']['value'];
