@@ -125,14 +125,12 @@ class FormType extends AbstractType
         switch ($field->getType()) {
             case 'Legend':
             case 'Infotext':
+                $fieldOptions['mapped'] = false;
                 break;
-            case 'Password Input':
-                $fieldOptions['attr']['placeholder'] = $options['placeholder'];
-                break;
+            case 'Text Area':
             case 'Search Input':
-                $fieldOptions['attr']['placeholder'] = $options['placeholder'];
-                break;
             case 'Text Input':
+            case 'Password Input':
                 $fieldOptions['attr']['placeholder'] = $options['placeholder'];
                 break;
             case 'Prepended Text':
@@ -146,9 +144,6 @@ class FormType extends AbstractType
                 $type = ('Appended Text' == $field->getType()) ? 'text' : 'icon';
                 $fieldOptions['attr']['placeholder'] = $options['placeholder'];
                 $fieldOptions['widget_addon_append'] = [$type => $options['append']];
-                break;
-            case 'Text Area':
-                $fieldOptions['attr']['placeholder'] = $options['placeholder'];
                 break;
             case 'Multiple Checkboxes':
             case 'Multiple Checkboxes Inline':
