@@ -31,7 +31,7 @@ abstract class BaseFormFieldData
      * Set formData.
      *
      *
-     * @return FormFieldData
+     * @return \Networking\FormGeneratorBundle\Model\BaseFormFieldData
      */
     public function setFormData(BaseFormData $formData)
     {

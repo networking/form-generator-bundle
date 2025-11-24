@@ -97,7 +97,7 @@ abstract class BaseFormData implements \ArrayAccess, \Stringable, IgnoreRevertIn
         return $this->form;
     }
 
-    public function getFormFields(): ArrayCollection|array
+    public function getFormFields(): array|Collection
     {
         return $this->formFields;
     }
@@ -106,7 +106,7 @@ abstract class BaseFormData implements \ArrayAccess, \Stringable, IgnoreRevertIn
     {
         $this->formFields = new ArrayCollection();
 
-        foreach ($formFields as $key =>  $field) {
+        foreach ($formFields as $key => $field) {
             $this->addFormField($field, $key);
         }
     }
@@ -142,7 +142,7 @@ abstract class BaseFormData implements \ArrayAccess, \Stringable, IgnoreRevertIn
     {
         $formFieldData = $this->getFormFieldDataObject($offset);
 
-        if($formFieldData){
+        if ($formFieldData) {
             return $formFieldData->getValue();
         }
         return null;
@@ -152,16 +152,15 @@ abstract class BaseFormData implements \ArrayAccess, \Stringable, IgnoreRevertIn
     {
         $field = $this->getFormFieldDataObject($offset);
         /** @var BaseFormFieldData $field */
-        if($field instanceof BaseFormFieldData){
+        if ($field instanceof BaseFormFieldData) {
             $field->setValue($value);
         }
-
     }
 
 
     public function offsetUnset($offset): void
     {
-        if($this->formFields instanceof Collection){
+        if ($this->formFields instanceof Collection) {
             $this->formFields->remove($offset);
             return ;
         }
@@ -176,16 +175,16 @@ abstract class BaseFormData implements \ArrayAccess, \Stringable, IgnoreRevertIn
     protected function getFormFieldDataObject($offset): ?BaseFormFieldData
     {
         $field = null;
-        if($this->formFields instanceof Collection){
+        if ($this->formFields instanceof Collection) {
             $field = $this->formFields->get($offset);
         }
 
-        if(is_array($this->formFields) && array_key_exists($offset, $this->formFields)) {
+        if (is_array($this->formFields) && array_key_exists($offset, $this->formFields)) {
             $field = $this->formFields[$offset];
         }
 
 
-        if($field instanceof BaseFormFieldData){
+        if ($field instanceof BaseFormFieldData) {
             return $field;
         }
 
@@ -199,5 +198,4 @@ abstract class BaseFormData implements \ArrayAccess, \Stringable, IgnoreRevertIn
     {
         return (string) $this->getId();
     }
-
 }
