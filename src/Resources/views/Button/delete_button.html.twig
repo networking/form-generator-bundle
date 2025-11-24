@@ -11,7 +11,7 @@ file that was distributed with this source code.
 
 {% if admin.hasRoute('edit') and admin.id(object) and admin.isGranted('EDIT', object)%}
 
-    <a  class="btn btn-default sonata-action-element" href="{{ admin.generateUrl('deleteAllFormEntry', {'id': object.id}) }}" onClick="temp=window.confirm('{{ 'confirm_deletion_all'|trans({}, 'formGenerator') }}');return temp;" >
+    <a  class="btn btn-sm  btn-danger sonata-action-element" href="{{ admin.generateUrl('deleteAllFormEntry', {'id': object.id}) }}" onClick="temp=window.confirm('{{ 'confirm_deletion_all'|trans({}, 'formGenerator') }}');return temp;" >
         <i class="glyphicon glyphicon-remove"></i>
         {{ 'link_action_delete_all'|trans({}, 'formGenerator') }}</a>
 
