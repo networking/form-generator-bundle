@@ -1,9 +1,0 @@
-networking_api_forms:
-    type: attribute
-    prefix: /admin/cms/forms/api
-    resource: Networking\FormGeneratorBundle\Controller\FormAdminController
-
-networking_form_view:
-    path: /view_form/{id}
-    defaults: { _controller: 'Networking\FormGeneratorBundle\Controller\FrontendFormController::viewFormAction'}
-

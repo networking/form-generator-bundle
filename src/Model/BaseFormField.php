@@ -6,12 +6,12 @@ namespace Networking\FormGeneratorBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Serializer\Attribute\Ignore;
 
 #[ORM\MappedSuperclass]
 abstract class BaseFormField
 {
-    public const TEXT_FIELDS = [
+    public const array TEXT_FIELDS = [
         'Text Input',
         'Password Input',
         'Search Input',
@@ -22,28 +22,25 @@ abstract class BaseFormField
         'Text Area',
     ];
 
-    public const SINGLE_CHOICE_FIELDS = [
+    public const array SINGLE_CHOICE_FIELDS = [
         'Select Basic',
         'Multiple Radios',
         'Inline Radios',
         'Multiple Radios Inline',
     ];
 
-    public const MULTI_CHOICE_FIELDS = [
+    public const array MULTI_CHOICE_FIELDS = [
         'Select Multiple',
         'Multiple Checkboxes',
         'Inline Checkboxes',
         'Multiple Checkboxes Inline',
     ];
 
-    public const NON_VALUE_FIELDS = [
+    public const array NON_VALUE_FIELDS = [
         'Legend',
         'Infotext',
     ];
 
-    /**
-     * @var Form
-     */
     protected ?BaseForm $form = null;
 
     #[ORM\Column(name: 'name', type: 'string', length: 255)]
@@ -58,51 +55,27 @@ abstract class BaseFormField
     #[ORM\Column(name: 'options', type: 'json')]
     protected array $options = [];
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'placeholder', type: 'string', length: 255, nullable: true)]
-    protected $placeholder;
+    protected ?string $placeholder = null;
 
-    /**
-     * @var bool
-     */
     #[ORM\Column(name: 'mandatory', type: 'boolean', nullable: true)]
-    protected $mandatory;
+    protected ?bool $mandatory = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'invalid_message', type: 'string', length: 510, nullable: true)]
-    protected $invalidMessage;
+    protected ?string $invalidMessage = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'empty_message', type: 'string', length: 510, nullable: true)]
-    protected $emptyMessage;
+    protected ?string $emptyMessage = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'validation_type', type: 'string', length: 255, nullable: true)]
-    protected $validationType;
+    protected ?string $validationType = null;
 
-    /**
-     * @var int
-     *
-     * @Gedmo\SortablePosition
-     */
+    #[Gedmo\SortablePosition]
     #[ORM\Column(name: 'position', type: 'integer')]
-    protected $position;
+    protected ?int $position = null;
 
-    /**
-     * Mapping of choice fields to there option, value lists.
-     *
-     * @var array
-     */
     #[Ignore]
-    protected $mappable
+    protected array $mappable
         = [
             'Select Basic' => ['options' => 'options', 'values' => 'values'],
             'Select Multiple' => ['options' => 'options', 'values' => 'values'],
@@ -124,113 +97,63 @@ abstract class BaseFormField
             ],
         ];
 
-    public function setId($id): self
-    {
-        $this->id = $id;
+    abstract public function setId($id): static;
 
-        return $this;
-    }
-
-    /**
-     * @return Form
-     */
-    public function getForm()
+    public function getForm(): ?BaseForm
     {
         return $this->form;
     }
 
-    /**
-     * @param Form $form
-     */
-    public function setForm($form)
+    public function setForm(?BaseForm $form): static
     {
         $this->form = $form;
+        return $this;
     }
 
-    /**
-     * Set name.
-     *
-     * @return FormField
-     */
-    public function setName(?string $name)
+    public function setName(?string $name = null): static
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name.
-     */
     public function getName(): ?string
     {
         return $this->name ?? null;
     }
 
-    /**
-     * Set fieldLabel.
-     *
-     * @param string $fieldLabel
-     *
-     * @return FormField
-     */
-    public function setFieldLabel($fieldLabel)
+    public function setFieldLabel(?string $fieldLabel = null): static
     {
         $this->fieldLabel = $fieldLabel;
 
         return $this;
     }
 
-    /**
-     * Get fieldLabel.
-     */
     public function getFieldLabel(): ?string
     {
         return $this->fieldLabel ?? null;
     }
 
-    /**
-     * Set type.
-     *
-     * @param string $type
-     *
-     * @return FormField
-     */
-    public function setType($type)
+    public function setType($type): static
     {
         $this->type = $type;
 
         return $this;
     }
 
-    /**
-     * Get type.
-     */
     public function getType(): ?string
     {
         return $this->type ?? null;
     }
 
-    /**
-     * Set options.
-     *
-     * @param string $options
-     *
-     * @return FormField
-     */
-    public function setOptions($options)
+    public function setOptions($options): static
     {
         $this->options = $options;
 
         return $this;
     }
 
-    /**
-     * Get options.
-     *
-     * @return array
-     */
-    public function getOptions()
+    public function getOptions(): array
     {
         $options = [];
         foreach ($this->options as $key => $option) {
@@ -278,137 +201,79 @@ abstract class BaseFormField
         return $options;
     }
 
-    /**
-     * Set placeholder.
-     *
-     * @param string $placeholder
-     *
-     * @return FormField
-     */
-    public function setPlaceholder($placeholder)
+    public function setPlaceholder(?string $placeholder = null): static
     {
         $this->placeholder = $placeholder;
 
         return $this;
     }
 
-    /**
-     * Get placeholder.
-     *
-     * @return string
-     */
-    public function getPlaceholder()
+    public function getPlaceholder(): ?string
     {
         return $this->placeholder;
     }
 
-    /**
-     * Set mandatory.
-     *
-     * @param bool $mandatory
-     *
-     * @return FormField
-     */
-    public function setMandatory($mandatory)
+    public function setMandatory(bool $mandatory): static
     {
         $this->mandatory = $mandatory;
 
         return $this;
     }
 
-    /**
-     * Get mandatory.
-     *
-     * @return bool
-     */
-    public function getMandatory()
+    public function getMandatory(): bool
     {
         return $this->mandatory;
     }
 
-    /**
-     * Set invalidMessage.
-     *
-     * @param string $invalidMessage
-     *
-     * @return FormField
-     */
-    public function setInvalidMessage($invalidMessage)
+    public function setInvalidMessage(?string $invalidMessage = null): static
     {
         $this->invalidMessage = $invalidMessage;
 
         return $this;
     }
 
-    /**
-     * Get invalidMessage.
-     *
-     * @return string
-     */
-    public function getInvalidMessage()
+    public function getInvalidMessage(): ?string
     {
         return $this->invalidMessage;
     }
 
-    /**
-     * Set emptyMessage.
-     *
-     * @param string $emptyMessage
-     *
-     * @return FormField
-     */
-    public function setEmptyMessage($emptyMessage)
+    public function setEmptyMessage(?string $emptyMessage = null): static
     {
         $this->emptyMessage = $emptyMessage;
 
         return $this;
     }
 
-    /**
-     * Get emptyMessage.
-     *
-     * @return string
-     */
-    public function getEmptyMessage()
+    public function getEmptyMessage(): ?string
     {
         return $this->emptyMessage;
     }
 
-    /**
-     * Set validationType.
-     *
-     * @param string $validationType
-     *
-     * @return FormField
-     */
-    public function setValidationType($validationType)
+    public function setValidationType(?string $validationType = null): static
     {
         $this->validationType = $validationType;
 
         return $this;
     }
 
-    /**
-     * Get validationType.
-     *
-     * @return string
-     */
-    public function getValidationType()
+    public function getValidationType(): ?string
     {
         return $this->validationType;
     }
 
-    public function getPosition()
+    public function getPosition(): ?int
     {
         return $this->position;
     }
 
-    public function setPosition(mixed $position)
+    public function setPosition(?int $position = null): static
     {
         $this->position = $position;
+
+        return $this;
     }
 
-    public function getValueMap()
+    public function getValueMap(): false|array
     {
         if (array_key_exists($this->getType(), $this->mappable)) {
             $key = $this->mappable[$this->getType()];

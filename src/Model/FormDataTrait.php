@@ -4,40 +4,28 @@ declare(strict_types=1);
 
 namespace Networking\FormGeneratorBundle\Model;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 trait FormDataTrait
 {
-    /**
-     * @var int
-     */
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    protected $id;
+    protected ?int $id = null;
 
-    /**
-     * @var Form
-     */
-    #[ORM\ManyToOne(targetEntity: \Networking\FormGeneratorBundle\Model\Form::class, inversedBy: 'formData')]
+    #[ORM\ManyToOne(targetEntity: Form::class, inversedBy: 'formData')]
     #[ORM\JoinColumn(name: 'form_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    protected $form;
+    protected BaseForm $form;
 
     /**
-     * @var ArrayCollection;
+     * @var Collection<int, FormFieldData>|array<int, FormFieldData>;
      */
-    #[ORM\OneToMany(targetEntity: \Networking\FormGeneratorBundle\Model\FormFieldData::class, cascade: ['persist', 'remove'], mappedBy: 'formData', orphanRemoval: true)]
-    protected $formFields = [];
+    #[ORM\OneToMany(mappedBy: 'formData', targetEntity: FormFieldData::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    protected Collection|array $formFields;
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
-
 }

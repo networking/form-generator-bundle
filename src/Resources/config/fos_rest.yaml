@@ -1,4 +1,0 @@
-fos_rest:
-    body_listener:
-        enabled: true
-        throw_exception_on_unsupported_content_type:  true

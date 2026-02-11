@@ -13,79 +13,45 @@ use Networking\InitCmsBundle\Model\IgnoreRevertInterface;
 #[ORM\HasLifecycleCallbacks]
 abstract class BaseFormData implements \ArrayAccess, \Stringable, IgnoreRevertInterface
 {
-    /**
-     * @var int
-     */
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    protected $id;
+    protected ?int $id = null;
 
-    /**
-     * @var \DateTime
-     */
     #[ORM\Column(name: 'createdAt', type: 'datetime')]
-    protected $createdAt;
+    protected \DateTime $createdAt;
+
+    protected BaseForm $form;
 
     /**
-     * @var BaseForm
-     *
+     * @var Collection<int, BaseFormFieldData>|array<int, BaseFormFieldData>;
      */
-    protected $form;
-
-    /**
-     * @var ArrayCollection;
-     */
-    protected $formFields = [];
+    protected Collection|array $formFields;
 
     #[ORM\PrePersist]
-    public function onPrePersist()
+    public function onPrePersist(): void
     {
         $this->createdAt = new \DateTime();
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Set createdAt.
-     *
-     * @param \DateTime $createdAt
-     *
-     * @return $this
-     */
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt(\DateTime $createdAt): static
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    /**
-     * Get createdAt.
-     *
-     * @return \DateTime
-     */
-    public function getCreatedAt()
+    public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
 
-    /**
-     * Set form.
-     *
-     * @param Form $form
-     *
-     * @return $this
-     */
-    public function setForm(BaseForm $form)
+    public function setForm(BaseForm $form): static
     {
         $this->form = $form;
 
@@ -97,6 +63,9 @@ abstract class BaseFormData implements \ArrayAccess, \Stringable, IgnoreRevertIn
         return $this->form;
     }
 
+    /**
+     * @return Collection<int, BaseFormFieldData>|array<int, BaseFormFieldData>
+     */
     public function getFormFields(): array|Collection
     {
         return $this->formFields;
@@ -134,9 +103,8 @@ abstract class BaseFormData implements \ArrayAccess, \Stringable, IgnoreRevertIn
 
     public function offsetExists($offset): bool
     {
-        return $this->getFormFieldDataObject($offset) !== null;
+        return null !== $this->getFormFieldDataObject($offset);
     }
-
 
     public function offsetGet($offset): mixed
     {
@@ -145,6 +113,7 @@ abstract class BaseFormData implements \ArrayAccess, \Stringable, IgnoreRevertIn
         if ($formFieldData) {
             return $formFieldData->getValue();
         }
+
         return null;
     }
 
@@ -157,12 +126,12 @@ abstract class BaseFormData implements \ArrayAccess, \Stringable, IgnoreRevertIn
         }
     }
 
-
     public function offsetUnset($offset): void
     {
         if ($this->formFields instanceof Collection) {
             $this->formFields->remove($offset);
-            return ;
+
+            return;
         }
 
         if (!array_key_exists($offset, $this->formFields)) {
@@ -170,7 +139,6 @@ abstract class BaseFormData implements \ArrayAccess, \Stringable, IgnoreRevertIn
         }
         unset($this->formFields[$offset]);
     }
-
 
     protected function getFormFieldDataObject($offset): ?BaseFormFieldData
     {
@@ -183,7 +151,6 @@ abstract class BaseFormData implements \ArrayAccess, \Stringable, IgnoreRevertIn
             $field = $this->formFields[$offset];
         }
 
-
         if ($field instanceof BaseFormFieldData) {
             return $field;
         }
@@ -191,9 +158,6 @@ abstract class BaseFormData implements \ArrayAccess, \Stringable, IgnoreRevertIn
         return null;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return (string) $this->getId();

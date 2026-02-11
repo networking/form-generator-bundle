@@ -59,9 +59,7 @@ And in your template which outputs the dynamic cms content add the following
 code to render the form
 
 ```
-{% if form_page_content is defined %}
-    {{ render(controller('NetworkingFormGeneratorBundle:FrontendForm:renderForm', {'form': form_page_content})) }}
-{% endif %}
+    {{ component('NetworkingFormGenerator:FormPageContent', {isAdmin: is_admin|default(false), formId: layoutBlock.form.id }) }}
 ``` 
     
 Add your configuration for the sender email address

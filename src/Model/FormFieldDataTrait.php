@@ -8,20 +8,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait FormFieldDataTrait
 {
-
-    /**
-     * @var FormData
-     */
-    #[ORM\ManyToOne(targetEntity: \Networking\FormGeneratorBundle\Model\FormData::class, inversedBy: 'formFields')]
+    #[ORM\ManyToOne(targetEntity: FormData::class, inversedBy: 'formFields')]
     #[ORM\JoinColumn(name: 'form_data_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    protected $formData;
+    protected BaseFormData $formData;
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }

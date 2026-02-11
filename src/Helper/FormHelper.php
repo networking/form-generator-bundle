@@ -10,98 +10,56 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\FormGeneratorBundle\Helper;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Networking\FormGeneratorBundle\Model\BaseForm;
 use Networking\FormGeneratorBundle\Model\BaseFormData;
-use Networking\FormGeneratorBundle\Model\Form;
-use Networking\FormGeneratorBundle\Model\FormData;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
-use Symfony\Component\Mime\Message;
 use Twig\Environment;
+use Twig\Error\Error;
 
-class FormHelper
+
+readonly class FormHelper
 {
-    /**
-     * @var MailerInterface
-     */
-    public $mailer;
-
-    /**
-     * @var ManagerRegistry
-     */
-    protected $doctrine;
-
-    /**
-     * @var Environment
-     */
-    protected $twig;
-
-    /**
-     * FormHelper constructor.
-     */
-    public function __construct(MailerInterface $mailer, ManagerRegistry $doctrine, Environment $twig)
+    public function __construct(
+        private MailerInterface $mailer,
+        private ManagerRegistry $doctrine,
+        private Environment $twig)
     {
-        $this->mailer = $mailer;
-        $this->doctrine = $doctrine;
-        $this->twig = $twig;
     }
 
-    /**
-     * Send an plain text email of the data.
-     *
-     * @param Form $form
-     * @param string $emailFrom
-     * @return int
-     */
-    public function sendEmail(BaseForm $form, BaseFormData $formData, $emailFrom = '')
+    public function sendEmail(BaseForm $form, BaseFormData $formData, string $emailFrom = ''): bool
     {
-        $messageText = $this->renderView(
-            '@NetworkingFormGenerator/Email/email.txt.twig',
-            ['formData' => $formData]
-        );
+        try {
+            $messageText = $this->twig->render(
+                '@NetworkingFormGenerator/Email/email.txt.twig',
+                ['formData' => $formData]
+            );
 
-        $email = (new Email())
-            ->from($emailFrom)
-            ->subject($form->getName())
-            ->text($messageText);
+            $email = new Email()
+              ->from($emailFrom)
+              ->subject($form->getName())
+              ->text($messageText);
 
-        foreach (explode(',', (string) $form->getEmail()) as $emailAddress) {
-            $email->addTo(trim($emailAddress));
+            foreach (explode(',', (string) $form->getEmail()) as $emailAddress) {
+                $email->addTo(trim($emailAddress));
+            }
+            $this->mailer->send($email);
+
+            return true;
+        } catch (Error|TransportExceptionInterface) {
+            return false;
         }
-
-        return $this->mailer->send($email);
-
-
     }
 
-    /**
-     * Save form data to the DB.
-     *
-     * @param Form $form
-     * @param array $data
-     * @param \Symfony\Component\Form\Form|null $originalForm
-     */
-    public function saveToDb(BaseForm $form, BaseFormData $formData)
+    public function saveToDb(BaseFormData $formData): void
     {
-
         $em = $this->doctrine->getManager();
         $em->persist($formData);
         $em->flush();
-    }
-
-    /**
-     * Returns a rendered view.
-     *
-     * @param string $view The view name
-     * @param array $parameters An array of parameters to pass to the view
-     *
-     * @return string The rendered view
-     */
-    public function renderView($view, array $parameters = [])
-    {
-        return $this->twig->render($view, $parameters);
     }
 }

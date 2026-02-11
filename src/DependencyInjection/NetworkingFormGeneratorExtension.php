@@ -5,21 +5,34 @@ declare(strict_types=1);
 namespace Networking\FormGeneratorBundle\DependencyInjection;
 
 use Networking\FormGeneratorBundle\Form\FormType;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 
 /**
  * This is the class that loads and manages your bundle configuration.
  *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
+ * To learn more see
+ * {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class NetworkingFormGeneratorExtension extends Extension
+class NetworkingFormGeneratorExtension extends Extension implements PrependExtensionInterface
 {
-    /**
-     * {@inheritdoc}
-     */
+    public function prepend(ContainerBuilder $container): void
+    {
+        if ($container->hasExtension('twig_component')) {
+            $container->prependExtensionConfig('twig_component', [
+                'defaults' => [
+                    'Networking\\FormGeneratorBundle\\Twig\\Components\\' => [
+                        'template_directory' => '@NetworkingFormGenerator/components/',
+                        'name_prefix' => 'NetworkingFormGenerator',
+                    ],
+                ],
+            ]);
+        }
+    }
+
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
@@ -34,8 +47,7 @@ class NetworkingFormGeneratorExtension extends Extension
         $cssInputSizes = array_merge(FormType::FRONTEND_INPUT_SIZES, $config['frontend_css_input_sizes']);
 
         $container->setParameter('networking_form_generator.frontend_css_input_sizes', $cssInputSizes);
-
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.yaml');
+        $loader = new Loader\PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('services.php');
     }
 }

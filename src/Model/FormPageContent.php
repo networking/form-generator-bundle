@@ -2,42 +2,25 @@
 
 declare(strict_types=1);
 
-/**
- * This file is part of the sko  package.
- *
- * (c) net working AG <info@networking.ch>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Networking\FormGeneratorBundle\Model;
 
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Networking\InitCmsBundle\Form\Type\AutocompleteType;
-use Networking\InitCmsBundle\Model\ContentInterface;
 use Networking\InitCmsBundle\Annotation as Sonata;
 use Networking\InitCmsBundle\Entity\LayoutBlock;
+use Networking\InitCmsBundle\Form\Type\AutocompleteType;
+use Networking\InitCmsBundle\Model\ContentInterface;
 use Sonata\AdminBundle\Form\FormMapper;
-use Symfony\Component\Form\FormBuilder;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * FormPageContent.
- */
 #[ORM\Table(name: 'form_page_content')]
 #[ORM\Entity]
 class FormPageContent extends LayoutBlock implements ContentInterface
 {
-    /**
-     * @var int
-     *
-     */
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    protected $id;
+    protected ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Form::class)]
     #[ORM\JoinColumn(name: 'form_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
@@ -69,46 +52,29 @@ class FormPageContent extends LayoutBlock implements ContentInterface
         );
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return Form
-     */
-    public function getForm()
+    public function getForm(): ?Form
     {
         return $this->form;
     }
 
-    /**
-     * @return $this
-     */
-    public function setForm(Form $form)
+    public function setForm(Form $form): static
     {
         $this->form = $form;
 
         return $this;
     }
 
-    /**
-     * @param array $params
-     *
-     * @return array
-     */
     public function getTemplateOptions($params = []): array
     {
         return [];
     }
 
-    /**
-     * @return array
-     */
-    public function getAdminContent():array
+    public function getAdminContent(): array
     {
         return [];
     }

@@ -4,44 +4,34 @@ declare(strict_types=1);
 
 namespace Networking\FormGeneratorBundle\Model;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Serializer\Attribute\Ignore;
 
-/**
- * Form.
- */
 #[ORM\Table(name: 'form')]
 #[ORM\Entity]
 class Form extends BaseForm
 {
     use FormTrait;
 
-    /**
-     * @var int
-     */
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    protected $id;
+    protected ?int $id = null;
 
-    /**
-     * @var FormField[];
-     */
-    #[ORM\OneToMany(targetEntity: \Networking\FormGeneratorBundle\Model\FormField::class, cascade: ['persist', 'remove'], mappedBy: 'form', orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'form', targetEntity: FormField::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['position' => 'ASC'])]
-    protected $formFields;
+    protected Collection|array $formFields;
 
-    /**
-     * @var FormData[];
-     */
-    #[ORM\OneToMany(targetEntity: \Networking\FormGeneratorBundle\Model\FormData::class, cascade: ['remove'], mappedBy: 'form', orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'form', targetEntity: FormData::class, cascade: ['remove'], orphanRemoval: true)]
     #[Ignore]
-    protected $formData;
-
+    protected Collection|array $formData;
 
     public function __clone()
     {
         $this->id = null;
         parent::__clone();
     }
+
+
 }

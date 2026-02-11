@@ -5,26 +5,16 @@ declare(strict_types=1);
 namespace Networking\FormGeneratorBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
-
 use Gedmo\Mapping\Annotation as Gedmo;
 
 trait FormFieldTrait
 {
-
-    /**
-     * @var Form
-     * @Gedmo\SortableGroup
-     */
-    #[ORM\ManyToOne(targetEntity: \Networking\FormGeneratorBundle\Model\Form::class, inversedBy: 'formFields')]
+    #[Gedmo\SortableGroup]
+    #[ORM\ManyToOne(targetEntity: Form::class, inversedBy: 'formFields')]
     #[ORM\JoinColumn(name: 'form_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     protected ?BaseForm $form = null;
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }

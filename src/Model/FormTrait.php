@@ -4,41 +4,39 @@ declare(strict_types=1);
 
 namespace Networking\FormGeneratorBundle\Model;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Serializer\Attribute\Ignore;
 
 trait FormTrait
 {
-    /**
-     * @var int
-     */
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    protected $id;
+    protected ?int $id = null;
 
     /**
-     * @var FormField[];
+     * @var Collection<int, FormField>|array<int, FormField>;
      */
-    #[ORM\OneToMany(targetEntity: \Networking\FormGeneratorBundle\Model\FormField::class, cascade: ['persist', 'remove'], mappedBy: 'form', orphanRemoval: true)]
-    protected $formFields;
+    #[ORM\OneToMany(mappedBy: 'form', targetEntity: FormField::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    protected Collection|array $formFields;
 
     /**
-     * @var FormData[];
+     * @var Collection<int, FormData>|array<int, FormData>;
      */
     #[Ignore]
-    #[ORM\OneToMany(targetEntity: \Networking\FormGeneratorBundle\Model\FormData::class, cascade: ['remove'], mappedBy: 'form', orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'form', targetEntity: FormData::class, cascade: ['remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['createdAt' => 'DESC'])]
-    protected $formData;
+    protected Collection|array $formData;
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(?int $id = null): static
+    {
+        $this->id = $id;
+        return $this;
     }
 }

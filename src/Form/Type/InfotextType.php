@@ -7,7 +7,7 @@ namespace Networking\FormGeneratorBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class InfotextType extends AbstractType
 {
@@ -17,7 +17,7 @@ class InfotextType extends AbstractType
         $view->vars['text'] = $options['label'];
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver): void
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setRequired([
             'text',

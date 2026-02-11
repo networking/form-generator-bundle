@@ -26,8 +26,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class FormAdmin extends BaseAdmin
 {
-
-
     protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
     {
         return 'cms/forms';
@@ -52,7 +50,7 @@ class FormAdmin extends BaseAdmin
         )
             ->add(
                 'deleteFormEntry',
-                'delete-form-entry/{id}/entry/{rowid}',
+                'delete-form-entry/{id}/entry/{rowId}',
                 ['_controller' => 'Networking\FormGeneratorBundle\Controller\FormAdminController::deleteFormEntryAction']
             )
             ->add(
@@ -67,9 +65,6 @@ class FormAdmin extends BaseAdmin
             );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureDatagridFilters(DatagridMapper $filter): void
     {
         $filter
@@ -78,7 +73,6 @@ class FormAdmin extends BaseAdmin
                 null,
                 [
                     'field_options' => [
-
                         'row_attr' => ['class' => 'form-floating'],
                     ],
                 ],
@@ -89,7 +83,6 @@ class FormAdmin extends BaseAdmin
                 [
                     'callback' => $this->getAllOnline(...),
                     'field_options' => [
-
                         'row_attr' => ['class' => 'form-floating'],
                     ],
                 ],
@@ -108,9 +101,6 @@ class FormAdmin extends BaseAdmin
             );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureFormFields(FormMapper $form): void
     {
         $form
@@ -133,7 +123,8 @@ class FormAdmin extends BaseAdmin
             )
             ->add('action', ChoiceType::class, [
                 'layout' => 'horizontal',
-                'row_attr' => ['class' => 'form-floating mb-3'],
+                'expanded' => true,
+                'label_attr' => ['class' => 'radio-inline'],
                 'choices' => [
                     'Email' => 'email',
                     'DB' => 'db',
@@ -186,12 +177,7 @@ class FormAdmin extends BaseAdmin
         );
     }
 
-
     /**
-     * @param $alias
-     * @param $field
-     * @param $data
-     *
      * @return bool
      */
     public function getAllOnline(ProxyQuery $ProxyQuery, $alias, $field, $data)
@@ -201,22 +187,20 @@ class FormAdmin extends BaseAdmin
 
         $qb = $ProxyQuery->getQueryBuilder();
 
-        if ($value === 1) {
+        if (1 === $value) {
             $qb->andWhere(sprintf('%s.%s IS NULL', $alias, $field));
             $qb->orWhere(sprintf('%s.%s = 1', $alias, $field));
         }
 
-        if ($value === 0) {
+        if (0 === $value) {
             $qb->andWhere(sprintf('%s.%s = 0', $alias, $field));
         }
-
 
         return $active;
     }
 
     public function configureFormOptions(array &$formOptions): void
     {
-
         if ($this->getSubject()?->getId()) {
             $formOptions['method'] = 'PUT';
         }

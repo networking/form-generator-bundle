@@ -5,78 +5,49 @@ declare(strict_types=1);
 namespace Networking\FormGeneratorBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Networking\InitCmsBundle\Util\Urlizer;
-use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\MappedSuperclass]
 abstract class BaseForm implements \Stringable
 {
-    public const EMAIL = 'email';
-    public const DB = 'db';
-    public const EMAIL_DB = 'email_db';
+    public const string EMAIL = 'email';
+    public const string DB = 'db';
+    public const string EMAIL_DB = 'email_db';
 
-    /**
-     * @var string
-     */
     #[Assert\NotBlank]
     #[ORM\Column(name: 'name', type: 'string', length: 255)]
-    protected $name;
+    protected string $name;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'info_text', type: 'text', nullable: true)]
-    protected $infoText;
+    protected ?string $infoText = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'thank_you_text', type: 'text', nullable: true)]
-    protected $thankYouText;
+    protected ?string $thankYouText = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'email', type: 'text', nullable: true)]
-    protected $email;
+    protected ?string $email = null;
 
-    /**
-     * @var string
-     */
     #[Assert\NotBlank]
     #[ORM\Column(name: 'action', type: 'string', length: 255)]
-    protected $action = 'email';
+    protected string $action = self::EMAIL;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'redirect', type: 'string', length: 255, nullable: true)]
-    protected $redirect;
+    protected ?string $redirect = null;
 
-    /**
-     * @var bool
-     */
     #[ORM\Column(name: 'online', type: 'boolean', nullable: true)]
-    protected $online = true;
+    protected bool $online = true;
 
-    /**
-     * @var ArrayCollection;
-     */
-    protected $formFields;
+    protected Collection|array $formFields;
 
-    /**
-     * @var ArrayCollection;
-     */
-    protected $formData;
+    protected Collection|array $formData;
 
-    /**
-     * @var array
-     */
     #[Ignore]
-    protected $collection = [];
+    protected array $collection = [];
 
     public function __construct()
     {
@@ -92,14 +63,11 @@ abstract class BaseForm implements \Stringable
         $this->name = $this->name.' copy '.$date->format('d.m.Y H:i:s');
     }
 
-    public function setId($id): self
-    {
-        $this->id = $id;
-        return $this;
-    }
+    abstract public function getId(): ?int;
+    abstract public function setId(?int $id = null): static;
 
     #[Assert\Callback]
-    public function validate(ExecutionContextInterface $context)
+    public function validate(ExecutionContextInterface $context): void
     {
         // check if the name is actually a fake name
         if ($this->isEmailAction() && !$this->getEmail()) {
@@ -123,89 +91,60 @@ abstract class BaseForm implements \Stringable
         }
     }
 
-    /**
-     * @return bool
-     */
-    public function isEmailAction()
+    public function isEmailAction(): bool
     {
         return in_array($this->getAction(), [self::EMAIL, self::EMAIL_DB]);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAction()
+    public function getAction(): string
     {
         return $this->action;
     }
 
-    public function setAction(mixed $action)
+    public function setAction(string $action): static
     {
         $this->action = $action;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function setEmail(mixed $email)
+    public function setEmail(?string $email = null): static
     {
         $this->email = $email;
+
+        return $this;
     }
 
-    /**
-     * Get infoText.
-     *
-     * @return string
-     */
-    public function getInfoText()
+    public function getInfoText(): ?string
     {
         return $this->infoText;
     }
 
-    /**
-     * Set infoText.
-     *
-     * @param string $infoText
-     *
-     * @return Form
-     */
-    public function setInfoText($infoText)
+    public function setInfoText(?string $infoText): static
     {
         $this->infoText = $infoText;
 
         return $this;
     }
 
-    /**
-     * Get thankyouText.
-     *
-     * @return string
-     */
-    public function getThankYouText()
+    public function getThankYouText(): ?string
     {
         return $this->thankYouText;
     }
 
-    /**
-     * Set thankYouText.
-     *
-     * @param string $thankYouText
-     *
-     * @return Form
-     */
-    public function setThankYouText($thankYouText)
+    public function setThankYouText(?string $thankYouText): static
     {
         $this->thankYouText = $thankYouText;
 
         return $this;
     }
 
-    public function removeFields()
+    public function removeFields(): void
     {
         foreach ($this->getFormFields() as $field) {
             $this->formFields->removeElement($field);
@@ -213,39 +152,95 @@ abstract class BaseForm implements \Stringable
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection<int, BaseFormData>
      */
-    public function getFormData()
+    public function getFormData(): Collection
     {
         return $this->formData;
     }
 
-    /**
-     * @param ArrayCollection $formData
-     */
-    public function setFormData($formData)
+    public function setFormData(?Collection $formData = null): void
     {
         $this->formData = $formData;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRedirect()
+    public function getRedirect(): ?string
     {
         return $this->redirect;
     }
 
-    public function setRedirect(mixed $redirect)
+    public function setRedirect(?string $redirect = null): void
     {
         $this->redirect = $redirect;
     }
 
     /**
-     * @return array
+     * @return Collection<int, BaseFormField>|array<int, BaseFormField>
      */
+    public function getFormFields(): Collection|array
+    {
+        return $this->formFields ?? [];
+    }
+
+    public function setFormFields(Collection|array $formFields): static
+    {
+        foreach ($formFields as $field) {
+            $this->addFormField($field);
+        }
+
+        return $this;
+    }
+
+    public function addFormField(BaseFormField $formField): static
+    {
+        $formField->setForm($this);
+        $this->formFields->add($formField);
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name = null): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function isOnline(): bool
+    {
+        return $this->online ?? true;
+    }
+
+    public function setOnline(?bool $online): static
+    {
+        $this->online = $online;
+
+        return $this;
+    }
+
+    public function isDbAction(): bool
+    {
+        return in_array($this->getAction(), [self::DB, self::EMAIL_DB]);
+    }
+
+    public function getField($key): false|FormField
+    {
+        $fields = $this->formFields->filter(fn ($field) => Urlizer::urlize($field->getName()) == $key);
+
+        if ($fields->count() > 0) {
+            return $fields->first();
+        }
+
+        return false;
+    }
+
     #[Ignore]
-    public function getFormFieldConfiguration()
+    public function getFormFieldConfiguration(): array
     {
         foreach ($this->getFormFields() as $formField) {
             $this->collection[] = [
@@ -259,99 +254,8 @@ abstract class BaseForm implements \Stringable
         return $this->collection;
     }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function getFormFields()
-    {
-        return $this->formFields??[];
-    }
-
-    /**
-     * @param ArrayCollection $formFields
-     */
-    public function setFormFields($formFields)
-    {
-        foreach ($formFields as $field) {
-            $this->addFormField($field);
-        }
-    }
-
-    /**
-     * @param FormField $formField
-     */
-    public function addFormField(BaseFormField $formField)
-    {
-        $formField->setForm($this);
-        $this->formFields->add($formField);
-    }
-
     public function __toString(): string
     {
         return $this->getName();
-    }
-
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return Form
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isOnline(): bool
-    {
-        return $this->online ?? true;
-    }
-
-    /**
-     * @param bool $online
-     */
-    public function setOnline(?bool $online): void
-    {
-        $this->online = $online;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDbAction()
-    {
-        return in_array($this->getAction(), [self::DB, self::EMAIL_DB]);
-    }
-
-    /**
-     * @param $key
-     *
-     * @return FormField
-     */
-    public function getField($key)
-    {
-        $fields = $this->formFields->filter(fn($field) => Urlizer::urlize($field->getName()) == $key);
-
-        if ($fields->count() > 0) {
-            return $fields->first();
-        }
-
-        return false;
     }
 }

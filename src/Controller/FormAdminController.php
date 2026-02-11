@@ -5,84 +5,59 @@ declare(strict_types=1);
 namespace Networking\FormGeneratorBundle\Controller;
 
 use Doctrine\Persistence\ManagerRegistry;
-use FOS\RestBundle\Controller\AbstractFOSRestController;
-use FOS\RestBundle\Controller\Annotations as Rest;
-use Networking\InitCmsBundle\Util\Urlizer;
 use Networking\FormGeneratorBundle\Admin\FormAdmin;
 use Networking\FormGeneratorBundle\Model\BaseForm;
 use Networking\FormGeneratorBundle\Model\BaseFormField;
 use Networking\FormGeneratorBundle\Model\Form;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use Sonata\AdminBundle\Admin\AdminInterface;
+use Networking\InitCmsBundle\Util\Urlizer;
+use OpenSpout\Common\Entity\Cell;
+use OpenSpout\Common\Entity\Row;
+use OpenSpout\Common\Entity\Style\Style;
+use OpenSpout\Writer\XLSX\Options;
+use OpenSpout\Writer\XLSX\Properties;
+use OpenSpout\Writer\XLSX\Writer;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Sonata\AdminBundle\Exception\ModelManagerThrowable;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class FormAdminController extends AbstractFOSRestController
+class FormAdminController extends AbstractController
 {
-    /**
-     * @var AdminInterface
-     */
-    protected $admin;
-
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-
-    /**
-     * @var ValidatorInterface
-     */
-    protected $validator;
-
-    /**
-     * @var ManagerRegistry
-     */
-    protected $registry;
-
-    public function __construct(FormAdmin $formAdmin, TranslatorInterface $translator, ValidatorInterface $validator, ManagerRegistry $registry)
-    {
-        $this->admin = $formAdmin;
-        $this->translator = $translator;
-        $this->validator = $validator;
-        $this->registry = $registry;
+    public function __construct(
+        private readonly FormAdmin $admin,
+        private readonly TranslatorInterface $translator,
+        private readonly ValidatorInterface $validator,
+        private readonly ManagerRegistry $registry,
+    ) {
     }
 
-
-    #[Rest\Post(path: "/", requirements: ["_format" => "json|xml"])]
+    #[Route('/', name: 'networking_formgenerator_formadmin_post', methods: ['POST'])]
     public function postAction(Request $request): Response
     {
-        $view = $this->view([], 200);
         try {
             /** @var FormAdmin $admin */
             $form = $this->admin->getNewInstance();
             $adminForm = $this->setupAdminForm($request, $form);
-            $view = $this->processForm($request, $adminForm, 'create');
-        } catch (\Exception $e) {
-            $view = $this->view(['message' => $e->getMessage()], 500);
+
+            return $this->processForm($request, $adminForm, 'create');
+        } catch (\Exception|ModelManagerThrowable $e) {
+            return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-
-        $view->setFormat('json');
-
-        return $this->handleView($view);
     }
 
-    /**
-     * @param $id
-     * @return Response
-     */
-    #[Rest\Put(path: "/{id}", requirements: ["_format" => "json|xml", "id" => "\d+"])]
+    #[Route('/{id}', name: 'networking_formgenerator_formadmin_put', requirements: ['id' => '\d+'], methods: ['PUT'])]
     public function putAction(Request $request, $id): Response
     {
-
-        $view = null;
-
         try {
             if ($id) {
                 /** @var BaseForm $form */
@@ -91,20 +66,21 @@ class FormAdminController extends AbstractFOSRestController
                     throw new NotFoundHttpException('Form not found');
                 }
                 $adminForm = $this->setupAdminForm($request, $form);
-                $view = $this->processForm($request, $adminForm, 'update');
+
+                return $this->processForm($request, $adminForm, 'update');
             }
-        } catch (\Exception $e) {
-            $view = $this->view(['message' => $e->getMessage()], 500);
+        } catch (\Exception|ModelManagerThrowable $e) {
+            return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $view->setFormat('json');
-
-        return $this->handleView($view);
+        return new JsonResponse(['message' => 'Form not found'], Response::HTTP_NOT_FOUND);
     }
 
-    protected function setupAdminForm(Request $request, BaseForm $form): ?\Symfony\Component\Form\FormInterface
-    {
-        $this->admin->setUniqid($request->get('uniqid'));
+    protected function setupAdminForm(
+        Request $request,
+        BaseForm $form,
+    ): ?FormInterface {
+        $this->admin->setUniqid($request->query->get('uniqid'));
         $this->admin->setSubject($form);
         $adminForm = $this->admin->getForm();
         $adminForm->setData($form);
@@ -113,86 +89,90 @@ class FormAdminController extends AbstractFOSRestController
     }
 
     /**
-     * @param $action
-     * @return \FOS\RestBundle\View\View
      * @throws \Sonata\AdminBundle\Exception\LockException
-     * @throws \Sonata\AdminBundle\Exception\ModelManagerThrowable
+     * @throws ModelManagerThrowable
      */
-    protected function processForm(Request $request, FormInterface $adminForm, $action = 'create'): \FOS\RestBundle\View\View
-    {
+    protected function processForm(
+        Request $request,
+        FormInterface $adminForm,
+        $action = 'create',
+    ): JsonResponse {
         $adminForm->handleRequest($request);
         /** @var BaseForm $data */
         $data = $adminForm->getData();
 
-
-
         if ($adminForm->isSubmitted() && $adminForm->isValid()) {
-            if ($action === 'update') {
+            if ('update' === $action) {
                 $data->removeFields();
                 $data = $this->setFields($request, $data);
                 $this->admin->update($data);
             }
-            if ($action === 'create') {
+            if ('create' === $action) {
                 $data = $this->setFields($request, $data);
                 $this->admin->create($data);
             }
 
-            $message = $action === 'create' ? 'form_created' : 'form_updated';
+            $message = 'create' === $action ? 'form_created' : 'form_updated';
 
-            return $this->view(['id' => $data->getId(), 'message' => $this->translator->trans($message, [], $this->admin->getTranslationDomain())], 200);
+            return new JsonResponse([
+                'id' => $data->getId(),
+                'message' => $this->translator->trans(
+                    $message,
+                    [],
+                    $this->admin->getTranslationDomain()
+                ),
+            ]);
         }
         $errors = $this->validator->validate($data);
 
-        return $this->view($errors, 500);
+        return new JsonResponse($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     /**
      * @param Form $form
+     *
      * @return Form
      */
     protected function setFields(Request $request, BaseForm $form): BaseForm
     {
-
         $collectionJson = $request->request->get('collection');
 
         $collection = json_decode($collectionJson, true);
 
-
-
-        $formFieldClass = $this->getParameter('networking_form_generator.form_field_class');
-
+        $formFieldClass = $this->getParameter(
+            'networking_form_generator.form_field_class'
+        );
 
         foreach ($collection as $key => $field) {
-
             /** @var BaseFormField $formField */
-            $formField = new $formFieldClass;
+            $formField = new $formFieldClass();
             if (is_array($field)) {
+                $uniqIdField = !array_key_exists('label', $field) ? 'name'
+                  : 'label';
 
-                $uniqIdField = !array_key_exists('label', $field)?'name':'label';
+                $uniqId = uniqid(
+                    substr(Urlizer::urlize($field[$uniqIdField]), 0, 3)
+                );
 
-                $uniqId = uniqid(substr(Urlizer::urlize($field[$uniqIdField]), 0, 3));
-
-                if(!array_key_exists('id', $field)){
-                    $field['id'] =  $uniqId;
+                if (!array_key_exists('id', $field)) {
+                    $field['id'] = $uniqId;
                 }
 
                 $formField->setName($field['id']);
                 $formField->setFieldLabel($field['value']);
                 $formField->setType($field['type']);
                 $formField->setOptions($field['config']);
-                if(array_key_exists('sortOrder', $field)){
+                if (array_key_exists('sortOrder', $field)) {
                     $formField->setPosition($field['sortOrder']);
                 }
 
-                if(array_key_exists('position', $field)){
+                if (array_key_exists('position', $field)) {
                     $formField->setPosition($field['position']);
                 }
 
-                if(null === $formField->getPosition())
-                {
+                if (null === $formField->getPosition()) {
                     $formField->setPosition($key);
                 }
-
 
                 $form->addFormField($formField);
             }
@@ -201,23 +181,30 @@ class FormAdminController extends AbstractFOSRestController
         return $form;
     }
 
-
-    public function deleteFormEntryAction(Request $request, $id, $rowid)
+    public function deleteFormEntryAction(int $id, int $rowId): RedirectResponse
     {
         $em = $this->registry->getManager();
-        $repo = $em->getRepository($this->getParameter('networking_form_generator.form_data_class'));
+        $repo = $em->getRepository(
+            $this->getParameter('networking_form_generator.form_data_class')
+        );
 
-        $formData = $repo->find($rowid);
+        $formData = $repo->find($rowId);
         $em->remove($formData);
         $em->flush();
 
-        return $this->redirectToRoute('admin_networking_forms_show', ['id' => $id]);
+        return $this->redirectToRoute(
+            'admin_networking_forms_show',
+            ['id' => $id]
+        );
     }
 
-    public function deleteAllFormEntryAction(Request $request, $id)
-    {
+    public function deleteAllFormEntryAction(
+        $id,
+    ): RedirectResponse {
         $em = $this->registry->getManager();
-        $repo = $em->getRepository($this->getParameter('networking_form_generator.form_data_class'));
+        $repo = $em->getRepository(
+            $this->getParameter('networking_form_generator.form_data_class')
+        );
 
         $formData = $repo->findBy(['form' => $id]);
         foreach ($formData as $record) {
@@ -225,96 +212,79 @@ class FormAdminController extends AbstractFOSRestController
             $em->flush();
         }
 
-        return $this->redirectToRoute('admin_networking_forms_show', ['id' => $id]);
+        return $this->redirectToRoute(
+            'admin_networking_forms_show',
+            ['id' => $id]
+        );
     }
 
-    /**
-     * @param $id
-     *
-     * @return StreamedResponse
-     *
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     */
-    public function excelExportAction(Request $request, $id)
+    public function excelExportAction($id): StreamedResponse
     {
-        $repo = $this->registry->getRepository($this->getParameter('networking_form_generator.form_class'));
+        $repo = $this->registry->getRepository(
+            $this->getParameter('networking_form_generator.form_class')
+        );
         /** @var Form $form */
         $form = $repo->find($id);
         $formFields = $form->getFormFields();
         $formData = $form->getFormData();
-        $spreadsheet = new Spreadsheet();
 
-        $spreadsheet->getProperties()->setCreator('initCms')
-            ->setTitle('Export')
-            ->setSubject('Export');
-
-        $col = 'A';
-        $row = '1';
-        //Titel-Zeile ausgeben
-        foreach ($formFields as $key => $field) {
-            $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, $field->getFieldLabel());
-            ++$col;
+        $data = [];
+        $header = [];
+        foreach ($formFields as $field) {
+            if (in_array($field->getType(), BaseFormField::NON_VALUE_FIELDS)) {
+                continue;
+            }
+            $header[] = Cell::fromValue($field->getFieldLabel());
         }
-        $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, 'Date');
 
-        //Daten ausgeben
+        $header[] = Cell::fromValue('Datum');
+        $data[] = $header;
+        $dateStyle = new Style()->withFormat('dd.MM.yyyy H:mm:ss');
         foreach ($formData as $rowData) {
-            $col = 'A';
-            ++$row;
-            $formFields = $rowData->getFormFields();
-            foreach ($formFields as $field) {
-                $value = $field->getValue();
+            $formFieldData = $rowData->getFormFields();
+
+            $values = [];
+            foreach ($formFieldData as $fieldData) {
+                $value = $fieldData->getValue();
                 if (is_array($value)) {
                     $value = implode(' ', $value);
                 }
-                $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, $value);
-                ++$col;
+
+                $values[] = Cell::fromValue($value);
             }
-            $spreadsheet->setActiveSheetIndex(0)->setCellValue($col.$row, $rowData->getCreatedAt());
+
+            $values[] = Cell::fromValue($rowData->getCreatedAt(), $dateStyle);
+            $data[] = $values;
         }
-
-        $spreadsheet->getActiveSheet()->setTitle('export');
-        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-        $spreadsheet->setActiveSheetIndex(0);
-
-        // create the writer
-
-        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-
-        // create the response
-        $response = new StreamedResponse(
-            function () use ($writer) {
-                $writer->save('php://output');
-            },
-            200,
-            []
+        $properties = new Properties(
+            title: 'form-export-'.date('Y-m-d'),
+            creator: 'initCms'
         );
+        $options = new Options(properties: $properties);
+        $options->setColumnWidth(10);
+        $writer = new Writer($options);
+        $writer->openToBrowser('form-export-'.date('Y-m-d').'.xlsx');
 
-        // adding headers
-        $dispositionHeader = $response->headers->makeDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            'form-export-'.date('Y-m-d').'.xlsx'
-        );
+        $response = new StreamedResponse(function () use ($writer, $data) {
+            $writer->openToBrowser('filename.xlsx');
 
-        $response->headers->set(
-            'Content-Type',
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8'
-        );
-        $response->headers->set('Pragma', 'public');
-        $response->headers->set('Cache-Control', 'maxage=1');
-        $response->headers->set('Content-Disposition', $dispositionHeader);
+            foreach ($data as $cells) {
+                $row = new Row($cells);
+                $writer->addRow($row);
+            }
+
+            $writer->close();
+        });
+        $response->headers->set('Content-Type', 'application/vnd.ms-excel');
 
         return $response;
     }
 
-    /**
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     */
-    public function copyAction(Request $request, $id): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+    public function copyAction(Request $request, $id): RedirectResponse|Response
     {
-        $repo = $this->registry->getRepository($this->getParameter('networking_form_generator.form_class'));
+        $repo = $this->registry->getRepository(
+            $this->getParameter('networking_form_generator.form_class')
+        );
         $em = $this->registry->getManager();
         /** @var Form $form */
         $form = $repo->find($id);
@@ -323,9 +293,8 @@ class FormAdminController extends AbstractFOSRestController
             throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
         }
 
-        if ($request->getMethod() == 'POST') {
+        if ('POST' == $request->getMethod()) {
             try {
-                /** @var Form $formCopy */
                 $formCopy = clone $form;
 
                 foreach ($form->getFormFields()->toArray() as $field) {
@@ -369,73 +338,57 @@ class FormAdminController extends AbstractFOSRestController
     }
 
     /**
-     * Returns true if the request is a XMLHttpRequest.
-     *
-     * @return bool True if the request is an XMLHttpRequest, false otherwise
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
      */
-    protected function isXmlHttpRequest()
+    protected function isXmlHttpRequest(): bool
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
 
-        return $request->isXmlHttpRequest() || $request->query->get('_xml_http_request');
+        return $request->isXmlHttpRequest()
+          || $request->query->get(
+              '_xml_http_request'
+          );
     }
 
-    /**
-     * Returns the base template name.
-     *
-     * @return string The template name
-     */
-    protected function getBaseTemplate()
+    protected function getBaseTemplate(): string
     {
-        if ($this->isXmlHttpRequest()) {
-            return $this->admin->getTemplateRegistry()->getTemplate('ajax');
+        try {
+            if ($this->isXmlHttpRequest()) {
+                return $this->admin->getTemplateRegistry()->getTemplate('ajax');
+            }
+        } catch (NotFoundExceptionInterface|ContainerExceptionInterface) {
         }
 
         return $this->admin->getTemplateRegistry()->getTemplate('layout');
     }
 
-    /**
-     * @param $view
-     * @param Response|null $response
-     *
-     * @return Response
-     * @throws \Twig\Error\Error
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     */
-    public function renderWithExtraParams($view, array $parameters = [], Response $response = null)
-    {
+    public function renderWithExtraParams(
+        $view,
+        array $parameters = [],
+        ?Response $response = null,
+    ): ?Response {
         $parameters['admin'] ??= $this->admin;
 
         $parameters['base_template'] ??= $this->getBaseTemplate();
 
-        $parameters['admin_pool'] = ''; //$this->get('sonata.admin.pool');
+        $parameters['admin_pool'] = ''; // $this->get('sonata.admin.pool');
 
         return $this->renderTemplate($view, $parameters, $response);
     }
 
-    /**
-     * @param $view
-     * @param Response|null $response
-     *
-     * @return Response
-     *
-     * @throws \Twig\Error\Error
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     */
-    public function renderTemplate($view, array $parameters = [], Response $response = null)
-    {
-        if ($this->container->has('templating')) {
-            $content = $this->container->get('templating')->render($view, $parameters);
-        } elseif ($this->container->has('twig')) {
-            $content = $this->container->get('twig')->render($view, $parameters);
-        } else {
-            throw new \LogicException(
-                'You can not use the "render" method if the Templating Component or the Twig Bundle are not available. Try running "composer require symfony/twig-bundle".'
+    public function renderTemplate(
+        $view,
+        array $parameters = [],
+        ?Response $response = null,
+    ): ?Response {
+        if ($this->container->has('twig')) {
+            $content = $this->container->get('twig')->render(
+                $view,
+                $parameters
             );
+        } else {
+            throw new \LogicException('You can not use the "render" method if the Templating Component or the Twig Bundle are not available. Try running "composer require symfony/twig-bundle".');
         }
 
         if (null === $response) {

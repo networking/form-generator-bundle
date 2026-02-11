@@ -9,58 +9,31 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\MappedSuperclass]
 abstract class BaseFormFieldData
 {
+    protected BaseFormData $formData;
 
-    /**
-     *
-     */
-    protected $formData;
-
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'label', type: 'text')]
-    protected $label;
+    protected string $label;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'value', type: 'json', nullable: true)]
-    protected $value;
+    protected array|string|null $value = null;
 
-    /**
-     * Set formData.
-     *
-     *
-     * @return \Networking\FormGeneratorBundle\Model\BaseFormFieldData
-     */
-    public function setFormData(BaseFormData $formData)
+    public function setFormData(BaseFormData $formData): static
     {
         $this->formData = $formData;
 
         return $this;
     }
 
-    /**
-     * Get formData.
-     *
-     * @return FormData
-     */
-    public function getFormData()
+    public function getFormData(): BaseFormData
     {
         return $this->formData;
     }
 
-    /**
-     * Set value.
-     *
-     * @param $value
-     * @return $this
-     */
-    public function setFormFieldValue(FormField $formField, $value)
+    public function setFormFieldValue(FormField $formField, $value): static
     {
         if (is_array($value) && $map = $formField->getValueMap()) {
             foreach ($value as $key => $val) {
-                $value[$key] = $val; //$map[$val];
+                $value[$key] = $val; // $map[$val];
             }
         }
 
@@ -69,37 +42,27 @@ abstract class BaseFormFieldData
         return $this;
     }
 
-    public function setValue($value)
+    public function setValue($value): static
     {
         $this->value = $value;
 
         return $this;
     }
 
-    /**
-     * Get value.
-     *
-     * @return string
-     */
-    public function getValue()
+    public function getValue(): array|string|null
     {
         return $this->value;
     }
 
-    /**
-     * @return string
-     */
-    public function getLabel()
+    public function getLabel(): string
     {
         return $this->label;
     }
 
-    /**
-     * @param string $label
-     */
-    public function setLabel($label)
+    public function setLabel(?string $label = null): static
     {
         $this->label = $label;
-    }
 
+        return $this;
+    }
 }

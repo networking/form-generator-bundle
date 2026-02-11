@@ -28,52 +28,23 @@ use Twig\TwigFunction;
  */
 class FormHelperExtension extends AbstractExtension
 {
-    /**
-     * Container.
-     *
-     * @var ContainerInterface
-     */
-    protected $container;
+    protected bool $captureLock = false;
 
-    /**
-     * @var bool
-     */
-    protected $captureLock = false;
+    protected array $collectedHtml = [];
 
-    /**
-     * @var array
-     */
-    protected $collectedHtml = [];
+    protected bool $ckeditorRendered = false;
 
-    /**
-     * @var bool
-     */
-    protected $ckeditorRendered = false;
+    protected ArrayCollection $formBlocks;
 
-    /**
-     * @var ArrayCollection
-     */
-    protected $formBlocks;
+    protected Pool $pool;
 
-    /**
-     * @var Pool
-     */
-    protected $pool;
+    protected ManagerRegistry $managerRegistry;
 
-    /**
-     * @var ManagerRegistry
-     */
-    protected $managerRegistry;
-
-    /**
-     * @param string $pageClass
-     * @param string $pageContentClass
-     */
     public function __construct(
         Pool $pool,
         ManagerRegistry $managerRegistry,
-        protected $pageClass,
-        protected $pageContentClass
+        protected string $pageClass,
+        protected string $pageContentClass,
     ) {
         $this->pool = $pool;
         $this->managerRegistry = $managerRegistry;
@@ -94,7 +65,7 @@ class FormHelperExtension extends AbstractExtension
      *
      * @return array An array of functions
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction(
@@ -105,10 +76,7 @@ class FormHelperExtension extends AbstractExtension
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function getPageLinks($formId)
+    public function getPageLinks($formId): array
     {
         $content = $this->managerRegistry->getRepository(
             $this->pageContentClass

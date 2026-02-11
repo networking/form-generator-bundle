@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FormType extends AbstractType
 {
-    final public const FRONTEND_INPUT_SIZES = [
+    final public const array FRONTEND_INPUT_SIZES = [
         'xs' => 'col-2',
         's' => 'col-4',
         'm' => 'col-6',
@@ -94,20 +94,17 @@ class FormType extends AbstractType
         ]);
     }
 
-    protected function getFieldType($type)
+    protected function getFieldType($type): string
     {
-        $type = match ($type) {
+        return match ($type) {
             'Legend' => LegendType::class,
-            'Infotext' => InfotextType::class,
-            'ckeditor' => InfotextType::class,
+            'Infotext', 'ckeditor' => InfotextType::class,
             'Password Input' => PasswordType::class,
             'Search Input' => SearchType::class,
             'Text Area' => TextareaType::class,
             'Multiple Checkboxes', 'Multiple Checkboxes Inline', 'Multiple Radios', 'Multiple Radios Inline', 'Select Basic', 'Select Multiple' => ChoiceType::class,
             default => TextType::class,
         };
-
-        return $type;
     }
 
     protected function extractFieldOptions(BaseFormField $field, array $formOptions): array

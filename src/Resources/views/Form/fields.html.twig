@@ -1,10 +1,6 @@
-{% block form_legend_widget %}
-    {% apply spaceless %}
+{% block form_legend_widget -%}
         <legend>{{ legend }}</legend>
-    {% endapply %}
-{% endblock %}
-{% block infotext_widget %}
-    {% apply spaceless %}
+{%- endblock %}
+{% block infotext_widget -%}
         {{ text|raw }}
-    {% endapply %}
-{% endblock %}
+{%- endblock %}
