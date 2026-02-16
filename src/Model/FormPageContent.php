@@ -17,10 +17,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity]
 class FormPageContent extends LayoutBlock implements ContentInterface
 {
-    #[ORM\Id]
-    #[ORM\Column(type: 'integer')]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
-    protected ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Form::class)]
     #[ORM\JoinColumn(name: 'form_id', referencedColumnName: 'id', onDelete: 'CASCADE')]

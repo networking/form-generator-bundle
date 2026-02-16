@@ -9,10 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait FormDataTrait
 {
-    #[ORM\Column(name: 'id', type: 'integer')]
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
-    protected ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Form::class, inversedBy: 'formData')]
     #[ORM\JoinColumn(name: 'form_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
@@ -21,11 +17,7 @@ trait FormDataTrait
     /**
      * @var Collection<int, FormFieldData>|array<int, FormFieldData>;
      */
-    #[ORM\OneToMany(mappedBy: 'formData', targetEntity: FormFieldData::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: FormFieldData::class, mappedBy: 'formData', cascade: ['persist', 'remove'], orphanRemoval: true)]
     protected Collection|array $formFields;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 }
